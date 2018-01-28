@@ -2,6 +2,8 @@
 
 Proposal: To create a risk application to help display and calculate common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Optimal Portfolio weights, Current Return, Systematic risk (Fama - French / CAPM)
 
+To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+
 Needed dependencies:
 
 ```
