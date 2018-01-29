@@ -26,6 +26,8 @@ To run:
 python dashapp.py
 ```
 
+Current default is to run on a local host at [127.0.0.1](http://127.0.0.1:8050/)
+
 ## Current Features
 
 - Query an individual stock
