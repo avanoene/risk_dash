@@ -26,6 +26,46 @@ To run:
 python dashapp.py
 ```
 
+## Object Model
+
+- Portofolio
+  - Security
+- SimulationGenerator
+- MarketData
+
+MarketData objects should be the source of the data for a particular Security (or underlier if a derivative security), attributes:
+- Prices
+- Source engine (where the data comes from)
+- Common metrics (first integrated series 'daily price change', shape, dispersion)
+
+SimulationGenerator objects should dictate how any simulation should be conducted, attributes:
+- Transformation methods
+- Number of observations
+- Lookback period, if necessary
+
+Security objects could be any asset, those assets have:
+- Market Data
+- Value Function
+- Approprate SimulationGenerator as default, pass in a SimulationGenerator
+- Risk Attributes
+
+What I'm planning on doing is using the Portfolio object as a collection of Security objects
+- This then should house the VCV and common historic market data
+
+## File Structure
+
+```
+-app.py
+-dashapp.py
+-pages
+  | -- portfolio_metrics.py
+  | -- single_ticker.py
+-objects
+  | -- portfolio.py
+  | -- simgen.py
+  | -- market_data.py
+```
+
 ## Current Features
 
 - Query an individual stock
@@ -42,8 +82,7 @@ python dashapp.py
 ## Future Features
 
 - User upload stock portfolio
-- VCV and Min Variance Portfolio Weights
-- Max Expected Return Weights
+- Expected Return / Variance / Distrubtion
 - Beta to selected market
   - S\&P 500
   - Russel 5000
