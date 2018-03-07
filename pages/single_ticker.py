@@ -222,8 +222,8 @@ def summary_table(sim):
              'Simulated Percent 1D VaR',
              'Historic Dist 1D VaR',
              'Simulated Volatility',
-             'Historic Exponentially Weighted Vol',
-             'Historic Simply Weighted Vol',
+             'Historic Exponentially Weighted Annualized Vol',
+             'Historic Simply Weighted Annualized Vol',
              'Expected SW Annualized Return',
              'Expected EW Annualized Return'
              ]

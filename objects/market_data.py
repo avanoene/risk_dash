@@ -7,6 +7,9 @@ import numpy as np
 
 class MarketData(object):
 
+    def __init__(self):
+        self.market_data = self.gather()
+
     def gather(self):
         pass
 
