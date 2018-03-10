@@ -12,6 +12,8 @@ class MarketData(object):
 
     def gather(self):
         pass
+    def currentprice(self):
+        pass
 
 class QuandlStockData(MarketData):
 
@@ -51,6 +53,9 @@ class QuandlStockData(MarketData):
         self.market_data['sw_average_dailyincrease'] = self.market_data['percentchange'].rolling(days).mean()
         self.currentexmean = self.market_data.loc[self.market_data['date']==self.maxdate, 'exp_average_dailyincrease'].values[0]
         self.currentswmean = self.market_data.loc[self.market_data['date']==self.maxdate, 'sw_average_dailyincrease'].values[0]
+
+    def currentprice(self):
+        return(self.market_data.loc[self.market_data['date']==self.maxdate, 'adj_price'].values[0])
 
 
 

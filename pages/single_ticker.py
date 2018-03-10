@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output, State
 
 from app import app
 from objects import market_data as md, simgen as mc
-from apiconfig import quandl_apikey
+from apiconfig import quandl_apikey as apikey
 
 
 time_options =['5D',

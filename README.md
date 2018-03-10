@@ -1,8 +1,10 @@
 # risk_dash
 
-Proposal: To create a risk application to help display and calculate common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Optimal Portfolio weights, Current Return, Systematic risk (Fama - French / CAPM)
+Thesis Proposal: First create an object framework to handle a portfolio of assets, then create a risk application that uses that framework to calculate and display common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Optimal Portfolio weights, Current Return, Systematic risk (Fama - French / CAPM)
 
-To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+
+The object model is housed in `~/objects/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py` 
 
 Needed dependencies:
 
