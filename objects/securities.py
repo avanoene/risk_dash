@@ -1,11 +1,11 @@
-from . import market_data as mc
+from . import market_data as md
 
 class Security(object):
 
-    def __init__(self, name, market_data: mc.MarketData, **kwargs):
+    def __init__(self, name, market_data: md.MarketData, **kwargs):
         self.name = name
-        for i, j in kwargs:
-            self.i = self.j
+        for i in kwargs:
+            self.__setattr__(i, kwargs[i])
         self.market_data = market_data
 
     def valuation(self, current_price):
@@ -13,9 +13,20 @@ class Security(object):
 
 class Equity(Security):
 
+    def __init__(self, name, market_data : md.MarketData, ordered_price, quantity):
+        self.name = name
+        self.market_data = market_data
+        self.ordered_price = ordered_price
+        self.quantity = quantity
+
     def valuation(self, current_price):
-        value = self.ordered_price * self.quantity - current_price
+        value = (current_price - self.ordered_price) * self.quantity
         return(value)
+
+    def mark_to_market(self, current_price):
+        self.marketvalue = self.quantity * current_price
+        change = (current_price - self.ordered_price) * self.quantity
+        return(change)
 
 
 class Trade(object):
@@ -41,8 +52,8 @@ class Trade(object):
 
 class Portfolio(object):
 
-    port = dict()
-
     def __init__(self, securities):
+        port = dict()
         for i in securities:
-            self.port[securities.name] = securities
+            port[i.name] = i
+        self.port = port

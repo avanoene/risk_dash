@@ -8,9 +8,8 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 
 from app import app
-from objects import market_data as md, montecarlo as mc
-
-apikey = 'ypi4REFshCpdRxC3PKyR'
+from objects import market_data as md, simgen as mc
+from apiconfig import quandl_apikey
 
 
 time_options =['5D',

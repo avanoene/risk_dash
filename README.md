@@ -22,6 +22,19 @@ All should be availble with a `pip install`
 
 To run:
 
+First add file `apiconfig.py` to the directory at the same level as `dashapp.py`. That file should contain all of the api information to source the market data. I'm using [Quandl](https://www.quandl.com/) so my `apiconfig.py` file is the following:
+
+```
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+quandl_apikey = 'quandl-api-key-replace-with-valid-key'
+```
+
+To use a different market data source, first write a specific `MarketData` class in `market_data.py`
+
+To run the server locally, run the following command:
+
 ```
 python dashapp.py
 ```
@@ -62,6 +75,7 @@ What I'm planning on doing is using the Portfolio object as a collection of Secu
   | -- single_ticker.py
 -objects
   | -- portfolio.py
+  | -- securities.py
   | -- simgen.py
   | -- market_data.py
 ```
