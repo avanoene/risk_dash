@@ -12,6 +12,7 @@ import io
 from objects import market_data as md, securities as sec
 import pandas as pd
 from apiconfig import quandl_apikey as apikey
+from datetime import datetime
 
 import urllib
 
@@ -32,6 +33,7 @@ def create_portoflio(input):
 def create_template():
     csv_string = 'Type,Ticker,Ordered Price,Quantity\n'
     csv_string = 'data:text/csv;charset=utf-8,' + urllib.parse.quote(csv_string)
+    return(csv_string)
 
 def parse_content(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -48,15 +50,15 @@ def parse_content(contents, filename, date):
             )
     except Exception as e:
         print(e)
-        return(html.Div(['There was an error processing this file']))
+        return([html.Div(['There was an error processing this file'])])
 
-    return(html.Div([
+    return([html.Div([
         html.H5('File Contents'),
         html.H5(filename),
-        html.H6(pd.to_datetime(date).strftime('%m/%d/%Y %H:%M:%S')),
+        html.H6(datetime.fromtimestamp(date).strftime('%m/%d/%Y %H:%M:%S')),
         dt.DataTable(rows = df.to_dict('records'))
     ], className = 'col-md-12'
-    )
+    )]
     )
 
 layout = html.Div(
@@ -88,7 +90,9 @@ layout = html.Div(
             },
         ),
         html.Div(
-            id='uploadoutput'
+            children=[html.H5('Upload Portfolio')],
+            id='uploadoutput',
+            className = 'row'
         )
     ],
     className='container-fluid'
