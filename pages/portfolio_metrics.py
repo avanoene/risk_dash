@@ -90,7 +90,7 @@ layout = html.Div(
             },
         ),
         html.Div(
-            children=[html.H5('Upload Portfolio')],
+            children=html.H5('Upload Portfolio'),
             id='uploadoutput',
             className = 'row'
         )

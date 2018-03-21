@@ -87,6 +87,7 @@ def get_data(n_clicks,stock, obs, lookback):
             'data': data.market_data.to_json(date_format='iso', orient='records'),
             'dist': list(dist),
             'hist_dist': list(hist_dist),
+            'currentvol': data.currentexvol,
             'currentexvol': data.currentexvol * np.sqrt(252),
             'currentswvol': data.currentswvol * np.sqrt(252),
             'currentexr': (1 + data.currentexmean) ** (252 / lookback) - 1,
@@ -210,17 +211,19 @@ def summary_table(sim):
     simdata = json.loads(sim)
     var = np.nanpercentile(simdata['dist'], 2.5)
     percentvar = simdata['percentVaR']
+    percentvol = simdata['currentvol'] * 2
     actvar = np.nanpercentile(simdata['hist_dist'], 2.5)
     simvol = np.nanstd(simdata['dist'])
     exvol = simdata['currentexvol']
     swvol = simdata['currentswvol']
     exreturn = simdata['currentswr']
     ewexreturn = simdata['currentexr']
-    metrics = [var, percentvar, actvar, simvol, exvol, swvol, exreturn, ewexreturn]
+    metrics = [var, percentvar, actvar, percentvol, simvol, exvol, swvol, exreturn, ewexreturn]
     names = ['Simulated Dollar 1D Value at Risk',
              'Simulated Percent 1D VaR',
              'Historic Dist 1D VaR',
-             'Simulated Volatility',
+             'Historic 1D Percent VaR @ 2 SD',
+             'Dollar SD Move',
              'Historic Exponentially Weighted Annualized Vol',
              'Historic Simply Weighted Annualized Vol',
              'Expected SW Annualized Return',
@@ -236,5 +239,6 @@ def summary_table(sim):
             ]
         )
     ]
-    tbl_out = tbl_out + [html.Tr([html.Td(i), html.Td(j)]) for i , j in zip(names, metrics)]
+    tbl_out = tbl_out + [html.Tr([html.Td(i), html.Td('{:.3f}'.format(j))])
+                         for i , j in zip(names, metrics)]
     return(html.Table(tbl_out, className='table'))

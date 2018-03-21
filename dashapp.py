@@ -1,6 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import dash_table_experiments as dt
 
 from app import app
 from pages import single_ticker, portfolio_metrics
@@ -52,7 +53,8 @@ app.layout = html.Div(
         ],
         className='nav navbar-toggleable-md navbar-inverse'
     ),
-    html.Div(id='page_content', className = 'container')
+    html.Div(id='page_content', className = 'container'),
+    html.Div(dt.DataTable(rows=[{}]), style={'display' : 'none'})
 ]
 )
 
