@@ -52,8 +52,17 @@ class Trade(object):
 
 class Portfolio(object):
 
-    def __init__(self, securities):
+    def __init__(self, securities : Security):
         port = dict()
         for i in securities:
             port[i.name] = i
         self.port = port
+
+    def value(self):
+        value = 0
+        for i in self.port.keys():
+            value += self.port[i].valuation(self.port[i].market_data.currentprice())
+        return(value)
+    def mark(self):
+        for i in self.port.keys():
+            self.port[i].mark_to_market(self.port[i].market_data.currentprice())

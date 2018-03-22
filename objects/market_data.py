@@ -55,7 +55,7 @@ class QuandlStockData(MarketData):
         self.currentswmean = self.market_data.loc[self.market_data['date']==self.maxdate, 'sw_average_dailyincrease'].values[0]
 
     def currentprice(self):
-        return(self.market_data.loc[self.market_data['date']==self.maxdate, 'adj_price'].values[0])
+        return(self.market_data.loc[self.market_data['date']==self.maxdate, 'adj_close'].values[0])
 
 
 
