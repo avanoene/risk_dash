@@ -90,8 +90,8 @@ def get_data(n_clicks,stock, obs, lookback):
             'currentvol': data.currentexvol,
             'currentexvol': data.currentexvol * np.sqrt(252),
             'currentswvol': data.currentswvol * np.sqrt(252),
-            'currentexr': (1 + data.currentexmean) ** (252 / lookback) - 1,
-            'currentswr': (1 + data.currentswmean) ** (252 / lookback) - 1,
+            'currentexr': (1 + data.currentexmean) ** (252) - 1,
+            'currentswr': (1 + data.currentswmean) ** (252) - 1,
             'percentVaR': np.nanpercentile(sim.simulated_distribution, 2.5)})
         )
 
@@ -103,8 +103,8 @@ def chart(data, stock):
     tempdata = json.loads(data)
     tempdata = pd.DataFrame(json.loads(tempdata['data']))
     line = go.Scatter(
-        x=tempdata['date'],
-        y=tempdata['adj_close'],
+        x = tempdata['date'],
+        y = tempdata['adj_close'],
         name = stock + ' Adjusted Price'
     )
 
@@ -127,8 +127,8 @@ def chart(data, stock):
     )
 
     outlayout = dict(
-        title= stock + ' Adjusted Prices',
-        xaxis=dict(
+        title = stock + ' Adjusted Prices',
+        xaxis = dict(
         rangeselector=dict(
             buttons=list([
                 dict(
