@@ -176,7 +176,8 @@ def chart(data, stock):
                 dict(
                     step='all'
                 )]
-            )
+            ),
+            visible=True
         )
         )
     )

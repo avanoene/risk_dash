@@ -1,4 +1,6 @@
 from . import market_data as md
+import pandas as pd
+import numpy as np
 
 class Security(object):
 
@@ -10,6 +12,9 @@ class Security(object):
 
     def valuation(self, current_price):
         pass
+
+    def get_marketdata(self):
+        return(self.market_data)
 
 class Equity(Security):
 
@@ -63,6 +68,52 @@ class Portfolio(object):
         for i in self.port.keys():
             value += self.port[i].valuation(self.port[i].market_data.currentprice())
         return(value)
+
     def mark(self):
+        val = 0
         for i in self.port.keys():
-            self.port[i].mark_to_market(self.port[i].market_data.currentprice())
+            temp = self.port[i].mark_to_market(self.port[i].market_data.currentprice())
+            val += temp
+        self.market_change = val
+
+    def get_date(self):
+        temp = [len(self.port[i].get_marketdata().market_data.index) for i in self.port.keys()]
+        temp = max(temp)
+        temp = [self.port[i].get_marketdata().market_data.index
+                for i in self.port.keys()
+                if len(self.port[i].get_marketdata().market_data.index) == temp]
+        return(temp[0])
+
+    def set_portfolio_marketdata(self, key):
+        marketdata = pd.DataFrame(index = self.get_date())
+        weights = self.get_weights()
+        for i in self.port.keys():
+            marketdata[i] = self.port[i].get_marketdata().market_data[key]
+            marketdata[i + '_port_weighted'] = marketdata[i] * weights[i]
+        marketdata = marketdata.interpolate('linear')
+        marketdata['portfolio'] = marketdata.loc[:,marketdata.columns.str.contains('_port_weighted')].sum(axis=1)
+        self.market_data = marketdata
+        return(marketdata)
+
+    def get_weights(self):
+        port_val = {
+            i : j.quantity * j.ordered_price
+            for i, j in self.port.items()
+        }
+        total_val = sum(port_val.values())
+        weights = {
+            i: j / total_val
+            for i, j in port_val.items()
+        }
+        self.weights = weights
+        return(weights)
+
+    def get_port_variance(self):
+        weights = self.get_weights()
+        covar = self.market_data.loc[:, ~self.market_data.columns.str.contains('port')].cov()
+        order = covar.columns
+        weight_array = np.array([weights[i] for i in order])
+        cov_mat = np.array(covar)
+        variance = np.matmul(np.matmul(weight_array.T, cov_mat), weight_array)
+        self.port_variance = variance
+        return(variance)

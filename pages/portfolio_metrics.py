@@ -11,6 +11,7 @@ import io
 import pandas as pd
 import plotly.graph_objs as go
 import numpy as np
+import pickle
 
 from objects import market_data as md, securities as sec
 from apiconfig import quandl_apikey as apikey
@@ -96,9 +97,9 @@ layout = html.Div(
         html.Div(
             html.Div(
                 dt.DataTable(
-                    rows=[{}],
-                    id='portfolio',
-                    columns=['Type','Ticker', 'Ordered Date', 'Ordered Price', 'Quantity']
+                    rows=[{} for i in range(10)],
+                    columns = ['Type','Ticker', 'Ordered Date', 'Ordered Price', 'Quantity'],
+                    id='portfolio'
                 ),
                 className='col-md-12'
             ),
@@ -132,12 +133,14 @@ def output_upload(contents, filename):
         rows = df.to_dict('records')
         return(rows)
 
-@app.callback(Output('table', 'children'),
+@app.callback(Output('mtm', 'children'),
               [Input('portfolio', 'rows')])
 def displayport(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
-        #port = create_portoflio(df)
+        port = create_portoflio(df)
+        pickle.dump(port, open('pickle_file.p', 'wb'))
+        port.mark()
         header = df.columns.tolist()
         tbl = [html.Tr([html.Th(i) for i in header])]
         tbl = tbl + [html.Tr([html.Td(j) for j in df.loc[i]]) for i in df.index]
@@ -145,7 +148,7 @@ def displayport(contents):
 
 @app.callback(Output('portfolio_weights', 'figure'),
               [Input('portfolio', 'rows')])
-def create_pie(contents):
+def create_vis(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
         df['portval'] = [a * b
@@ -161,7 +164,10 @@ def create_pie(contents):
         tickers += ['Total']
         # base
         base = [0]
-        base += [i for i in longs['portval']]
+        if [i for i in shorts['portval']] == []:
+            base += [i for i in longs['portval']][:-1]
+        else:
+            base += [i for i in longs['portval']]
         base += [i for i in shorts['portval']][1:]
         base = np.cumsum(base).tolist()
         base += [0]
@@ -171,25 +177,29 @@ def create_pie(contents):
             y = base,
             marker=dict(
                 color='rgba(1,1,1,0)'
-            )
+            ),
+            showlegend=False
         )
         #long positions
         trace1 = go.Bar(
             x = tickers,
             y = [i for i in longs['portval']] + [0 for i in shorts['portval']] + [0],
-            marker = dict(color='rgba(63, 127, 191, 0.9)')
+            marker = dict(color='rgba(63, 127, 191, 0.9)'),
+            showlegend = False
         )
         #short positions
         trace2 = go.Bar(
             x=tickers,
             y=[0 for i in longs['portval']] + [i for i in shorts['portval']] + [0],
-            marker=dict(color='rgba(178, 76, 76, 0.9)')
+            marker=dict(color='rgba(178, 76, 76, 0.9)'),
+            showlegend=False
         )
         #total
         trace3 = go.Bar(
             x = tickers,
             y = [0 for i in longs['portval']] + [0 for i in shorts['portval']] + [totalval],
-            marker = dict(color='rgba(76, 178, 76, 0.9)')
+            marker = dict(color='rgba(76, 178, 76, 0.9)'),
+            showlegend=False
         )
         data = [trace0, trace1, trace2, trace3]
         layout = go.Layout(barmode='stack')

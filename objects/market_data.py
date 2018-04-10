@@ -21,6 +21,7 @@ class QuandlStockData(MarketData):
         self.apikey = apikey
         self.ticker = ticker
         self.market_data = self.gather()
+        self.market_data.index = self.market_data['date']
         self.maxdate = max(self.market_data['date'])
         self.set_volatility(days)
         self.set_expected(days)
