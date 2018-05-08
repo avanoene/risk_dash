@@ -4,7 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import dash_table_experiments as dt
 
-from app import app
+from app import app, server
 from pages import single_ticker, portfolio_metrics
 
 
