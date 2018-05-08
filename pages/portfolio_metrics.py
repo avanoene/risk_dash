@@ -19,8 +19,6 @@ from datetime import datetime
 
 import urllib
 
-userinput = pd.read_excel('input_test.xlsx')
-
 def create_portoflio(input):
     temp = []
     for i in input.index:
