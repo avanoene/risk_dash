@@ -138,9 +138,24 @@ def output_upload(contents, filename):
 def displayport(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
-        port = create_portoflio(df)
-        pickle.dump(port, open('pickle_file.p', 'wb'))
-        port.mark()
+        portolio = create_portoflio(df)
+        pickle.dump(portolio, open('pickle_file.p', 'wb'))
+        portolio.mark()
+        marked = portolio.marked_portfolio
+        df['Current Price'] = df['Ticker'].map(
+            {
+                i : portolio.port[i].market_data.currentprice()
+                for i in portolio.port.keys()
+            }
+        )
+        df['Initial Value'] = df['Ticker'].map(
+            {i : j[0] for i, j in marked.items()}
+        )
+        df['Market Value'] = df['Ticker'].map(
+            {i : j[1] for i, j in marked.items()}
+        )
+        df['Return'] = ((df['Market Value'] / df['Initial Value']) - 1) /  100
+        df = df[['Ticker', 'Current Price', 'Initial Value', 'Market Value', 'Return']]
         header = df.columns.tolist()
         tbl = [html.Tr([html.Th(i) for i in header])]
         tbl = tbl + [html.Tr([html.Td(j) for j in df.loc[i]]) for i in df.index]

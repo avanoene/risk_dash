@@ -23,6 +23,7 @@ class Equity(Security):
         self.market_data = market_data
         self.ordered_price = ordered_price
         self.quantity = quantity
+        self.initial_value = ordered_price * quantity
 
     def valuation(self, current_price):
         value = (current_price - self.ordered_price) * self.quantity
@@ -71,10 +72,13 @@ class Portfolio(object):
 
     def mark(self):
         val = 0
+        port_val = {}
         for i in self.port.keys():
             temp = self.port[i].mark_to_market(self.port[i].market_data.currentprice())
             val += temp
+            port_val[i] = (self.port[i].initial_value, self.port[i].marketvalue)
         self.market_change = val
+        self.marked_portfolio = port_val
 
     def get_date(self):
         temp = [len(self.port[i].get_marketdata().market_data.index) for i in self.port.keys()]

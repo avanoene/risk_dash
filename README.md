@@ -4,7 +4,7 @@ Thesis Proposal: First create an object framework to handle a portfolio of asset
 
 To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
 
-The object model is housed in `~/objects/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py` 
+The object model is housed in `~/objects/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py`
 
 Needed dependencies:
 
@@ -43,7 +43,7 @@ python dashapp.py
 
 ## Object Model
 
-- Portofolio
+- Portfolio
   - Security
 - SimulationGenerator
 - MarketData
@@ -94,10 +94,13 @@ What I'm planning on doing is using the Portfolio object as a collection of Secu
     - Simply Weighted/ Exponentially Weighted
   - Variable lookback period
   - Variable sample size
+- User upload stock portfolio
+  - Mark at current price
+  - Calculate portfolio weights
 
 ## Future Features
 
-- User upload stock portfolio
+
 - Expected Return / Variance / Distrubtion
 - Beta to selected market
   - S\&P 500
