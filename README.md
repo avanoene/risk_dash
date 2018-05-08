@@ -1,6 +1,10 @@
 # risk_dash
 
-Thesis Proposal: First create an object framework to handle a portfolio of assets, then create a risk application that uses that framework to calculate and display common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Optimal Portfolio weights, Current Return, Systematic risk (Fama - French / CAPM)
+## Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl's WIKI EOD Stock Prices.
+
+Find the source code on [GitHub](https://github.com/avanoene/risk_dash). Find my resume [here](./resume.pdf)
+
+Thesis Proposal: First create an object framework to handle a portfolio of assets, then create a risk application that uses that framework to calculate and display common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Current Return, Systematic risk (Fama - French / CAPM)
 
 To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
 
@@ -22,7 +26,7 @@ scipy
 ```
 All should be availble with a `pip install`
 
-To run:
+## Getting Started
 
 First add file `apiconfig.py` to the directory at the same level as `dashapp.py`. That file should contain all of the api information to source the market data. I'm using [Quandl](https://www.quandl.com/) so my `apiconfig.py` file is the following:
 
@@ -100,7 +104,6 @@ What I'm planning on doing is using the Portfolio object as a collection of Secu
 
 ## Future Features
 
-
 - Expected Return / Variance / Distrubtion
 - Beta to selected market
   - S\&P 500
@@ -113,3 +116,7 @@ What I'm planning on doing is using the Portfolio object as a collection of Secu
   - ARIMA
 - Backtesting tool - common trading strategies
   - "Buy and Hold"
+
+## License
+
+This project is licensed under the the MIT License - see the LICENSE.md file for details
