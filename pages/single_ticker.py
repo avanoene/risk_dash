@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
 import pandas as pd
+from pandas.tseries.offsets import BDay
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 
@@ -35,22 +36,48 @@ layout = html.Div([
         className='row'
     ),
     html.Div(
-        [dcc.Input(
-        id='obs',
-        type='number',
-        placeholder='Number of MC Obs',
-        value=1000
-        ),
-        dcc.RadioItems(
-            id='lookback',
-            options=[
-                {'label': 20, 'value': 20},
-                {'label': 80, 'value': 80},
-                {'label': 100, 'value': 100}
+        [
+            html.Div(
+                [
+                    html.H5('Number of Simulations'),
+                    dcc.Input(
+                        id='obs',
+                        type='number',
+                        placeholder='Number of MC Obs',
+                        value=1000
+                    )
+                ],
+                className='col-md-2'
+            ),
+            html.Div(
+                [
+                    html.H5('Lookback Period for Volatility Parameterization'),
+                    dcc.RadioItems(
+                        id='lookback',
+                        options=[
+                            {'label': 20, 'value': 20},
+                            {'label': 80, 'value': 80},
+                            {'label': 100, 'value': 100}
+                        ],
+                        value = 80,
+                        labelStyle={'display': 'inline-block'}
+                    )
+                ],
+                className = 'col-md-2'
+            ),
+            html.Div(
+                [
+                    html.H5('Number of Days Forward'),
+                    dcc.Input(
+                        id='periods_forward',
+                        type='number',
+                        placeholder = 'Number of Days Forward',
+                        value = 10
+                    )
+                ],
+                className = 'col-md-2'
+            )
         ],
-            value = 80,
-            labelStyle={'display': 'inline-block'}
-        )],
         className='row'
     ),
     html.Div([
@@ -73,42 +100,77 @@ layout = html.Div([
               [Input('submit', 'n_clicks')],
               [State('stock', 'value'),
                State('obs', 'value'),
-               State('lookback', 'value')]
+               State('lookback', 'value'),
+               State('periods_forward', 'value')]
               )
 
-def get_data(n_clicks,stock, obs, lookback):
+def get_data(n_clicks,stock, obs, lookback, forward):
     if n_clicks != 0:
         data = md.QuandlStockData(apikey, stock, days=lookback)
-        gen = mc.NormalDistribution(data.currentexmean, data.currentexvol)
-        sim = mc.NaiveMonteCarlo(gen, obs=obs)
-        dist = sim.simulated_distribution * data.market_data['adj_close'].iloc[-1]
-        hist_dist = (data.market_data['percentchange'] * data.market_data['adj_close'].iloc[-1]).dropna()
-        return (json.dumps({
-            'data': data.market_data.to_json(date_format='iso', orient='records'),
-            'dist': list(dist),
-            'hist_dist': list(hist_dist),
-            'currentvol': data.currentexvol,
-            'currentexvol': data.currentexvol * np.sqrt(252),
-            'currentswvol': data.currentswvol * np.sqrt(252),
-            'currentexr': (1 + data.currentexmean) ** (252) - 1,
-            'currentswr': (1 + data.currentswmean) ** (252) - 1,
-            'percentVaR': np.nanpercentile(sim.simulated_distribution, 2.5)})
+        gen = mc.NormalDistribution(
+            location = data.currentexmean,
+            scale = data.currentexvol
         )
+        sim = mc.NaiveMonteCarlo(
+            gen,
+            obs=obs
+        )
+        sim.simulate(forward, obs)
+        dist = sim.simulated_distribution * data.current_price()
+        hist_dist = (data.market_data['percentchange'] * data.current_price()).dropna()
+        return json.dumps(
+                {
+                'data': data.market_data.to_json(date_format='iso', orient='records'),
+                'dist': list(dist),
+                'hist_dist': list(hist_dist),
+                'currentvol': data.currentexvol,
+                'currentexvol': data.currentexvol * np.sqrt(252),
+                'currentswvol': data.currentswvol * np.sqrt(252),
+                'currentexr': (1 + data.currentexmean) ** (252) - 1,
+                'currentswr': (1 + data.currentswmean) ** (252) - 1,
+                'percentVaR': np.nanpercentile(sim.simulated_distribution, 2.5),
+                'forwardSimulationMean': list(np.exp(sim.simulation_mean) * data.current_price()),
+                'forwardSimulationLower': list(np.exp(sim.simulation_mean - 2 * sim.simulation_std) * data.current_price()),
+                'forwardSimulationUpper' : list(np.exp(sim.simulation_mean + 2 * sim.simulation_std) * data.current_price()),
+                'currentprice': data.current_price()
+                }
+            )
+
 
 
 @app.callback(Output('equityline', 'figure'),
               [Input('querydata', 'children'),
                Input('stock', 'value')])
 def chart(data, stock):
-    tempdata = json.loads(data)
-    tempdata = pd.DataFrame(json.loads(tempdata['data']))
+    data = json.loads(data)
+    tempdata = pd.DataFrame(json.loads(data['data']))
+    tempdata['date'] = pd.to_datetime(tempdata['date'])
+    forward_dates = pd.bdate_range(
+            tempdata['date'].max() + BDay(1) ,
+            tempdata['date'].max() + BDay(len(data['forwardSimulationMean']))
+    )
     line = go.Scatter(
         x = tempdata['date'],
         y = tempdata['adj_close'],
-        name = stock + ' Adjusted Price'
+        name = stock + ' Adjusted Close Price'
+    )
+    average = go.Scatter(
+        x = forward_dates,
+        y = data['forwardSimulationMean'],
+        name = 'Simulation Average'
+    )
+    lower_std = go.Scatter(
+        x = forward_dates,
+        y = data['forwardSimulationLower'],
+        name = 'Simulation Lower Bound'
+    )
+    upper_std = go.Scatter(
+        x = forward_dates,
+        y = data['forwardSimulationUpper'],
+        name = 'Simulation Upper Bound'
     )
 
-    line = go.Candlestick(x = tempdata['date'],
+    line_candle = go.Candlestick(x = tempdata['date'],
                           open=tempdata['adj_open'],
                           close = tempdata['adj_close'],
                           low=tempdata['adj_low'],
@@ -181,25 +243,31 @@ def chart(data, stock):
         )
         )
     )
-    fig = go.Figure(data=[line], layout=outlayout)
+    fig = go.Figure(data=[line, upper_std, average, lower_std], layout=outlayout)
     return(fig)
 
 @app.callback(Output('montecarlo', 'figure'),
-              [Input('querydata', 'children')
+              [Input('querydata', 'children'),
+               Input('periods_forward', 'value')
                ])
-def montecarlohistigram(simdata):
+def montecarlohistigram(simdata, forward):
     simdata = json.loads(simdata)
-    data = [
-        go.Histogram(x=simdata['dist'],
-                     histnorm='probability',
-                     opacity=.75,
-                     name='MC 1D Simulation')
-    ]
+    tempdata = pd.DataFrame(json.loads(simdata['data']))
+    data = list(
+        go.Histogram(
+            x=simdata['dist'],
+            histnorm='probability',
+            opacity=.75,
+            name='MC {}D Simulation'.format(forward)
+        )
+    )
     data.append(
-        go.Histogram(x=simdata['hist_dist'],
-                     histnorm='probability',
-                     opacity=.75,
-                     name='Historic 1D Distribution')
+        go.Histogram(
+            x = tempdata['percentchange'].rolling(forward).sum() * simdata['currentprice'],
+            histnorm='probability',
+            opacity=.75,
+            name='Historic {}D Distribution'.format(forward)
+        )
     )
     layout = go.Layout(barmode='overlay')
     fig = go.Figure(data=data, layout=layout)
