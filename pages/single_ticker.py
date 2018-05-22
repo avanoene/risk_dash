@@ -253,15 +253,15 @@ def chart(data, stock):
 def montecarlohistigram(simdata, forward):
     simdata = json.loads(simdata)
     tempdata = pd.DataFrame(json.loads(simdata['data']))
-    data = list(
+    fig_data = [
         go.Histogram(
             x=simdata['dist'],
             histnorm='probability',
             opacity=.75,
             name='MC {}D Simulation'.format(forward)
         )
-    )
-    data.append(
+    ]
+    fig_data.append(
         go.Histogram(
             x = tempdata['percentchange'].rolling(forward).sum() * simdata['currentprice'],
             histnorm='probability',
@@ -270,7 +270,7 @@ def montecarlohistigram(simdata, forward):
         )
     )
     layout = go.Layout(barmode='overlay')
-    fig = go.Figure(data=data, layout=layout)
+    fig = go.Figure(data=fig_data, layout=layout)
     return(fig)
 
 
