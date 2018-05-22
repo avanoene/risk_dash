@@ -137,12 +137,11 @@ def displayport(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
         portolio = create_portoflio(df)
-        pickle.dump(portolio, open('pickle_file.p', 'wb'))
         portolio.mark()
         marked = portolio.marked_portfolio
         df['Current Price'] = df['Ticker'].map(
             {
-                i : portolio.port[i].market_data.currentprice()
+                i : portolio.port[i].market_data.current_price()
                 for i in portolio.port.keys()
             }
         )
@@ -152,11 +151,22 @@ def displayport(contents):
         df['Market Value'] = df['Ticker'].map(
             {i : j[1] for i, j in marked.items()}
         )
-        df['Return'] = ((df['Market Value'] / df['Initial Value']) - 1) /  100
-        df = df[['Ticker', 'Current Price', 'Initial Value', 'Market Value', 'Return']]
+        df['Return %'] = ((df['Market Value'] - df['Initial Value']) / df['Initial Value'].abs()) * 100
+        df = df[['Ticker', 'Current Price', 'Initial Value', 'Market Value', 'Return %']]
         header = df.columns.tolist()
         tbl = [html.Tr([html.Th(i) for i in header])]
         tbl = tbl + [html.Tr([html.Td(j) for j in df.loc[i]]) for i in df.index]
+        tbl += [
+            html.Tr(
+                [
+                html.Td('Total'),
+                html.Td(''),
+                html.Td(df['Initial Value'].sum()),
+                html.Td(df['Market Value'].sum()),
+                html.Td(((df['Market Value'].sum() - df['Initial Value'].sum()) / df['Initial Value'].sum()) * 100)
+            ]
+            )
+        ]
         return(tbl)
 
 @app.callback(Output('portfolio_weights', 'figure'),

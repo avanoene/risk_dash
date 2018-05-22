@@ -1,6 +1,7 @@
 from . import market_data as md
 import pandas as pd
 import numpy as np
+from scipy.stats import norm
 
 class Security(object):
 
@@ -11,6 +12,9 @@ class Security(object):
         self.market_data = market_data
 
     def valuation(self, current_price):
+        pass
+
+    def mark_to_market(self, current_price):
         pass
 
     def get_marketdata(self):
@@ -67,14 +71,14 @@ class Portfolio(object):
     def value(self):
         value = 0
         for i in self.port.keys():
-            value += self.port[i].valuation(self.port[i].market_data.currentprice())
+            value += self.port[i].valuation(self.port[i].market_data.current_price())
         return(value)
 
     def mark(self):
         val = 0
         port_val = {}
         for i in self.port.keys():
-            temp = self.port[i].mark_to_market(self.port[i].market_data.currentprice())
+            temp = self.port[i].mark_to_market(self.port[i].market_data.current_price())
             val += temp
             port_val[i] = (self.port[i].initial_value, self.port[i].marketvalue)
         self.market_change = val
@@ -101,18 +105,18 @@ class Portfolio(object):
 
     def get_weights(self):
         port_val = {
-            i : j.quantity * j.ordered_price
-            for i, j in self.port.items()
+            name : security.quantity * security.ordered_price
+            for name, security in self.port.items()
         }
         total_val = sum(port_val.values())
         weights = {
-            i: j / total_val
-            for i, j in port_val.items()
+            name : security_value / total_val
+            for name, security_value in port_val.items()
         }
         self.weights = weights
         return(weights)
 
-    def get_port_variance(self):
+    def get_port_variance(self, confidence_interval = norm.pdf(.025)):
         weights = self.get_weights()
         covar = self.market_data.loc[:, ~self.market_data.columns.str.contains('port')].cov()
         order = covar.columns
@@ -120,4 +124,6 @@ class Portfolio(object):
         cov_mat = np.array(covar)
         variance = np.matmul(np.matmul(weight_array.T, cov_mat), weight_array)
         self.port_variance = variance
+        self.parametric_portfolio_value_at_risk = variance * confidence_interval
         return(variance)
+
