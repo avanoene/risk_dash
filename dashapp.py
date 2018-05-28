@@ -11,6 +11,9 @@ from pages import single_ticker, portfolio_metrics
 with open('./README.md', 'r') as f:
     readme = f.read()
 
+with open('./Documentation.md', 'r') as f:
+    docs = f.read()
+
 app.css.append_css(
     {'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
      'integrity' : 'sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u',
@@ -60,6 +63,14 @@ app.layout = html.Div(
                     [
                         html.Li(
                             html.A(
+                                'Documentation',
+                                href='/docs',
+                                className='nav-link'
+                            ),
+                            className='nav-item'
+                        ),
+                        html.Li(
+                            html.A(
                                 'Portfolio',
                                 href='/portfolio',
                                 className='nav-link'
@@ -102,6 +113,8 @@ def get_layout(url):
             return(portfolio_metrics.layout)
         elif url == '/single':
             return(single_ticker.layout)
+        elif url == '/docs':
+            return(dcc.Markdown())
         else:
             return(dcc.Markdown(readme))
 

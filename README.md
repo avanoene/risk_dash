@@ -1,32 +1,22 @@
 # risk_dash
 
-## Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl's WIKI EOD Stock Prices.
+[risk_dash](https://github.com/avanoene/risk_dash) is a framework to help simplify the data flow for a portfolio of assets and handle market risk metrics at the asset and portfolio level. If you clone the source [repository](https://github.com/avanoene/risk_dash), included is a [Dash](https://plot.ly/dash/) application to be an example of some of the uses for the package.
 
-Find the source code on [GitHub](https://github.com/avanoene/risk_dash).
+## Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl's WIKI EOD Stock Prices found in the example application.
 
-Thesis Proposal: First create an object framework to handle a portfolio of assets, then create a risk application that uses that framework to calculate and display common risk factors and metrics, including: Value at Risk, Expected Portfolio Return and Volatility, Current Return, Systematic risk (Fama - French / CAPM)
+Thesis Proposal: First create a framework package, risk_dash, to handle a portfolio of assets, then create a risk application to calculate and display common risk factors and metrics to present common uses for the framework, including: Value at Risk, Expected Portfolio Return and Volatility, Current Return, Systematic risk (Fama - French / CAPM)
 
-To accomplish this task, I am planning on using current research and python packages to deliver a stable user experience. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+To accomplish this task, I am planning on using current research and python packages. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
 
-The object model is housed in `~/objects/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py`
+The object model is housed in `~/risk_dash/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py`
 
-Needed dependencies:
+While risk_dash only needs a few dependencies,[pandas](https://pandas.pydata.org/), [numpy](http://www.numpy.org/), [scipy](https://www.scipy.org/), and [requests](http://docs.python-requests.org/en/master/), the included application uses the dependencies listed in [requirements.txt](https://github.com/avanoene/risk_dash/requirements.txt) which can be installed by:
 
-```
-dash
-dash_html_components
-dash_core_components
-dash.dependencies
-plotly
-pandas
-quandl
-json
-numpy
-scipy
-```
-All should be availble with a `pip install`
+```pip install -r requirements.txt```
 
-## Getting Started
+It is highly recommended that you should use a virtual environment when running the package, for details check the [Python documentation](https://docs.python.org/3/tutorial/venv.html)
+
+## Getting Started - Locally Running the Dash App
 
 First add file `apiconfig.py` to the directory at the same level as `dashapp.py`. That file should contain all of the api information to source the market data. I'm using [Quandl](https://www.quandl.com/) so my `apiconfig.py` file is the following:
 
@@ -34,23 +24,39 @@ First add file `apiconfig.py` to the directory at the same level as `dashapp.py`
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-quandl_apikey = 'quandl-api-key-replace-with-valid-key'
+quandl_apikey = 'quandl-api-key' # replace with valid key
 ```
 
 To use a different market data source, first write a specific `MarketData` class in `market_data.py`
 
-To run the server locally, run the following command:
+To run the server locally using the underlying Flask Server, run the following command:
 
 ```
 python dashapp.py
 ```
 
+If you wanted to use `gunicorn` to run the server, you would just run `gunicorn dashapp:server` from the command line.
+
+## Documentation
+
+Hosted documentation is coming soon. Below is a high level overview of the project:
+
 ### Object Model
+
+The framework seeks to address a solution to the data pipeline, since the scale is managiable within memory at the moment, that pipeline includes:
+
+- Gathering required data from source systems, i.e. market data, portfolio data, security data
+- Managing that data, potentially storing as scale increases
+- Manipulating to create new data
+- Returning or storing results
+
+To handle that pipeline, the current model is:
 
 - Portfolio
   - Security
 - SimulationGenerator
 - MarketData
+- FundamentalData (Not implemented)
 
 MarketData objects should be the source of the data for a particular Security (or underlier if a derivative security), attributes:
 - Prices
@@ -67,8 +73,9 @@ Security objects could be any asset, those assets have:
 - Value Function
 - Approprate SimulationGenerator as default, pass in a SimulationGenerator
 - Risk Attributes
+- Fundamental Data
 
-What I'm planning on doing is using the Portfolio object as a collection of Security objects
+The Portfolio object as a collection of Security objects and potentially other Portfolio objects, since we could have different hierarchal structures within the book
 - This then should house the VCV and common historic market data
 
 ### File Structure

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from objects import market_data
+from . import market_data
 
 class RandomGen():
     def __init__(self, **kwargs):

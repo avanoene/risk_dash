@@ -13,7 +13,7 @@ import plotly.graph_objs as go
 import numpy as np
 import pickle
 
-from objects import market_data as md, securities as sec
+from risk_dash import market_data as md, securities as sec
 from apiconfig import quandl_apikey as apikey
 from datetime import datetime
 

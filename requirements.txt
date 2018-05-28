@@ -34,6 +34,7 @@ python-dateutil==2.7.2
 pytz==2018.4
 Quandl==3.3.0
 requests==2.18.4
+requests-toolbelt==0.8.0
 scipy==1.1.0
 six==1.11.0
 traitlets==4.3.2

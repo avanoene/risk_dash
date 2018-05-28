@@ -28,6 +28,7 @@ class Equity(Security):
         self.ordered_price = ordered_price
         self.quantity = quantity
         self.initial_value = ordered_price * quantity
+        self.type = 'Equity'
 
     def valuation(self, current_price):
         value = (current_price - self.ordered_price) * self.quantity
@@ -62,11 +63,16 @@ class Trade(object):
 
 class Portfolio(object):
 
-    def __init__(self, securities : Security):
-        port = dict()
-        for i in securities:
-            port[i.name] = i
-        self.port = port
+    def __init__(self, securities=None, input=None, apikey=None):
+        if securities:
+            port = dict()
+            for asset in securities:
+                port[asset.name + ' ' + asset.type] = asset
+            self.port = port
+        elif input and apikey:
+            self.construct_portfolio_csv(input, apikey)
+        else:
+            self.port = None
 
     def value(self):
         value = 0
@@ -126,4 +132,22 @@ class Portfolio(object):
         self.port_variance = variance
         self.parametric_portfolio_value_at_risk = variance * confidence_interval
         return(variance)
+
+    def construct_portfolio_csv(self, input, apikey):
+        assets = []
+        portfolio_data = pd.read_csv(input)
+        for i in portfolio_data.index:
+            if portfolio_data.loc[i, 'Type'] == 'Equity':
+                tempsecurity = Equity(portfolio_data.loc[i, 'Ticker'],
+                                          tempdata,
+                                          ordered_price=input.loc[i, 'Ordered Price'],
+                                          quantity=input.loc[i, 'Quantity'])
+                tempdata = md.QuandlStockData(apikey, portfolio_data.loc[i, 'Ticker'], days=80)
+                assets.append(tempsecurity)
+            else:
+                print('Type of security not defined!')
+                self.port = None
+                return(self.port)
+        self.port = {asset.name + ' ' + asset.type : asset for asset in assets}
+        return(self.port)
 
