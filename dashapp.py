@@ -114,7 +114,7 @@ def get_layout(url):
         elif url == '/single':
             return(single_ticker.layout)
         elif url == '/docs':
-            return(dcc.Markdown())
+            return(dcc.Markdown(docs))
         else:
             return(dcc.Markdown(readme))
 
