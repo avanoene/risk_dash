@@ -1,3 +1,6 @@
+# iCloud store reference
+*.icloud
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
