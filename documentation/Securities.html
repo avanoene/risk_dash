@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+      $("table").attr("class", "table");
+  });
+  
+  </script>
+</head>
+<body>
+<h3 id="securityname-market_data-kwargs">** _Security<strong>(<em>name</em>, <em>market_data</em>, </strong><em>kwargs</em>)</h3>
+<p>Generic class for Security objects, shouldn't externally be used</p>
+<h4 id="parameters">Parameters</h4>
+<p><strong>name</strong> : string identifier for security, i.e. 'AAPL'</p>
+<p><strong>market_data</strong> : MarketData object reference for the Market Data associated with the Security</p>
+<p>****kwargs** : Generic arguments</p>
+<h4 id="attributes">Attributes</h4>
+<h3 id="portfoliosecuritiesnone-inputnone-apikeynone"><strong>Portfolio</strong>(<em>securities=None</em>, <em>input=None</em>, <em>apikey=None</em>)</h3>
+<p>Main handler for portfolio data. A Portfolio is a collection of Security objects in the <code>port</code> dictionary.</p>
+<h4 id="parameters-1">Parameters</h4>
+<p><strong>securities</strong> : array-like of Security objects - should contain all securities in portoflio</p>
+<p><strong>input</strong> : either <code>pandas.core.frame.DataFrame</code> or string for csv input path</p>
+<p><strong>apikey</strong> : String for quandl apikey</p>
+<h4 id="attributes-1">Attributes</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#port">port</a></td>
+<td>dict of all securities in Portfolio</td>
+</tr>
+</tbody>
+</table>
+<h4 id="methods">Methods</h4>
+<table style="width:31%;">
+<colgroup>
+<col width="11%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#value">value()</a></td>
+<td>calculate the current valuation of the portfolio</td>
+</tr>
+<tr class="even">
+<td><a href="#mark">mark()</a></td>
+<td>mark the portfolio at the current market price</td>
+</tr>
+<tr class="odd">
+<td><a href="#get_date">get_date()</a></td>
+<td>grab the max date available</td>
+</tr>
+<tr class="even">
+<td><a href="#set_portfolio_marketdata">set_portfolio_marketdata()</a></td>
+<td>combine individual security market_data into one pandas dataframe</td>
+</tr>
+<tr class="odd">
+<td><a href="#set_port_variance">set_port_variance()</a></td>
+<td>set the portfolio variance using weights and covariance matrix</td>
+</tr>
+<tr class="even">
+<td><a href="#set_weights">set_weights()</a></td>
+<td>set the portfolio weights by invested value</td>
+</tr>
+<tr class="odd">
+<td><a href="#construct_portfolio_csv">construct_portfolio_csv()</a></td>
+<td>create the portfolio from a .csv matching format portfolio_example.csv</td>
+</tr>
+<tr class="even">
+<td><a href="#get_portfolio_marketdata">get_portfolio_marketdata()</a></td>
+<td>return shared market_data object</td>
+</tr>
+<tr class="odd">
+<td><a href="#get_weights">get_weights()</a></td>
+<td>return portfolio weights</td>
+</tr>
+<tr class="even">
+<td><a href="#get_port_variance">get_port_variance()</a></td>
+<td>return value weighted portfolio</td>
+</tr>
+</tbody>
+</table>
+<h5 id="value"><strong>value</strong>()</h5>
+<h5 id="mark"><strong>mark</strong>()</h5>
+<h5 id="get_date"><strong>get_date()</strong></h5>
+<h5 id="set_portfolio_marketdata"><strong>set_portfolio_marketdata()</strong>*</h5>
+</body>
+</html>

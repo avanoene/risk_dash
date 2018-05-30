@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 import numpy as np
 
 
-class MarketData(object):
+class _MarketData(object):
 
     def __init__(self):
         self.market_data = self.gather()
@@ -16,7 +16,7 @@ class MarketData(object):
     def current_price(self):
         pass
 
-class QuandlStockData(MarketData):
+class QuandlStockData(_MarketData):
 
     def __init__(self, apikey, ticker, days=80):
         self.apikey = apikey

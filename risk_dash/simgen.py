@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from . import market_data
 
-class RandomGen():
+class _RandomGen():
     def __init__(self, **kwargs):
         self.args = {
             name: argument
@@ -12,9 +12,9 @@ class RandomGen():
     def generate(self, **kwargs):
         pass
 
-class Simulation():
+class _Simulation():
 
-    def __init__(self, Generator: RandomGen, **kwargs):
+    def __init__(self, Generator: _RandomGen, **kwargs):
         self.Generator = Generator
         self.args = {
             name : argument
@@ -25,7 +25,7 @@ class Simulation():
         pass
 
 
-class NormalDistribution(RandomGen):
+class NormalDistribution(_RandomGen):
 
     def __init__(self, location, scale):
         self.args = {
@@ -37,7 +37,7 @@ class NormalDistribution(RandomGen):
         return(np.random.normal(self.args['location'], self.args['scale'], obs))
 
 
-class NaiveMonteCarlo(Simulation):
+class NaiveMonteCarlo(_Simulation):
 
     def simulate(self, periods_forward, number_of_simulations):
         '''
