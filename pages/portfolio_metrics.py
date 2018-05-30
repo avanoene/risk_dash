@@ -23,10 +23,12 @@ def create_portoflio(input):
     temp = []
     for i in input.index:
         tempdata = md.QuandlStockData(apikey, input.loc[i, 'Ticker'], days=80)
-        tempsecurity = sec.Equity(input.loc[i, 'Ticker'],
-                                  tempdata,
-                                  ordered_price=input.loc[i, 'Ordered Price'],
-                                  quantity=input.loc[i, 'Quantity'])
+        tempsecurity = sec.Equity(
+            input.loc[i, 'Ticker'],
+            market_data = tempdata,
+            ordered_price = input.loc[i, 'Ordered Price'],
+            quantity=input.loc[i, 'Quantity'],
+            date_ordered=input.loc[i, 'Ordered Date'])
         temp.append(tempsecurity)
     outport = sec.Portfolio(temp)
     return(outport)
@@ -136,22 +138,23 @@ def output_upload(contents, filename):
 def displayport(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
-        portolio = create_portoflio(df)
-        portolio.mark()
-        marked = portolio.marked_portfolio
-        df['Current Price'] = df['Ticker'].map(
+        portfolio = create_portoflio(df)
+        portfolio.mark()
+        marked = portfolio.marked_portfolio
+        df['Type'] = [i + ' Equity' for i in df['Ticker']]
+        df.loc[:,'Current Price'] = df['Type'].map(
             {
-                i : portolio.port[i].market_data.current_price()
-                for i in portolio.port.keys()
+                i : portfolio.port[i].market_data.current_price()
+                for i in portfolio.port.keys()
             }
         )
-        df['Initial Value'] = df['Ticker'].map(
+        df.loc[:,'Initial Value'] = df['Type'].map(
             {i : j[0] for i, j in marked.items()}
         )
-        df['Market Value'] = df['Ticker'].map(
+        df.loc[:,'Market Value'] = df['Type'].map(
             {i : j[1] for i, j in marked.items()}
         )
-        df['Return %'] = ((df['Market Value'] - df['Initial Value']) / df['Initial Value'].abs()) * 100
+        df.loc[:,'Return %'] = ((df['Market Value'] - df['Initial Value']) / df['Initial Value'].abs()) * 100
         df = df[['Ticker', 'Current Price', 'Initial Value', 'Market Value', 'Return %']]
         header = df.columns.tolist()
         tbl = [html.Tr([html.Th(i) for i in header])]

@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from scipy.stats import norm
 
+
 class _Security(object):
 
     def __init__(self, name, market_data: md._MarketData, **kwargs):
@@ -19,6 +20,7 @@ class _Security(object):
 
     def get_marketdata(self):
         return(self.market_data)
+
 
 class Equity(_Security):
 
@@ -231,4 +233,3 @@ class Portfolio(object):
                 return(self.port)
         self.port = {asset.name + ' ' + asset.type : asset for asset in assets}
         return(self.port)
-
