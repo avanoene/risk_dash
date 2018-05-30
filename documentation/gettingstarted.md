@@ -3,9 +3,8 @@
 
 - [Overview](#overview)
 - [Getting Started](#getting-started)
-- [Bulding Custom Classes](#building-custom-classes)
+- [Building Custom Classes](#building-custom-classes)
 - [Simulating Distributions](#simulating-distributions)
-
 
 ## Overview
 
@@ -17,7 +16,7 @@
 
 Since the package is in heavy development, to install the package fork or clone the [repository][1] and run `pip install -e risk_dash/` from the directory above your local repository.
 
-To see if installation was sucessful run `python -c 'import risk_dash; print(*dir(risk_dash), sep="\n")'` in the command line, currently the output should match the following:
+To see if installation was successful run `python -c 'import risk_dash; print(*dir(risk_dash), sep="\n")'` in the command line, currently the output should match the following:
 
 ```bash
 $ python -c 'import risk_dash; print(*dir(risk_dash), sep="\n")'
@@ -36,17 +35,17 @@ securities
 simgen
 ```
 
-### Quick Start
+### Getting Started
 
 Now that we have the package installed, let's go through the object workflow to construct a simple long/short equity portfolio.
 
 High level, we need to specify:
 
 1. Portfolio Data
-  - Security weights, what securities are in the portfolio
+    - Security weights, what securities are in the portfolio
 2. Security data
-  - Identification data
-  - Market data
+    - Identification data
+    - Market data
 3. Portfolio/security constructors to handle the above data
 
 ```mermaid
@@ -57,9 +56,9 @@ C --- D[Market Data Store - risk_dash.market_data._MarketData]
 C --- E[Fundamental Data Store - not implemented]
 ```
 
-To do so, we'll need subclasses for the [_Security][3] and [_MarketData][2] classes to model specific types of securities. Currently supported is the Equity class. Once we have the portfolio constructed, we will specify and caclulate parameters to simulate or look at historic distrubtions. We'll then create a subclass of [_Simulation][4] and [_RandomGen][5]
+To do so, we'll need subclasses for the [_Security][3] and [_MarketData][2] classes to model specific types of securities. Currently supported is the Equity class. Once we have the portfolio constructed, we will specify and calculate parameters to simulate or look at historic distributions. We'll then create a subclass of [_Simulation][4] and [_RandomGen][5]
 
-#### _Security objects
+#### Security data, _Security objects, and creating Security Subclasses
 
 The core of the package is in the _Security and Portfolio objects. Portfolio objects are naturally a collection of Securities, however we want to specify the type of securities that are in the portfolio. Since we're focusing on a long/short equity portfolio we want to create a Equity subclass.
 
@@ -89,10 +88,11 @@ To break down the inputs, we want to keep in mind that the goal of this subclass
 
 * ticker is going to be the ticker code for the equity, such as 'AAPL'
 * market_data is going to be a subclass of the _MarketData object
-* ordered_price is going to be the price which the trade occured
+* ordered_price is going to be the price which the trade occurred
 * quantity for Equity will be the number of shares
 * date_ordered should be the date the order was placed
 
+Currently the implemented _MarketData subclass is QuandlStockData, which is a wrapper for [this Quandl dataset api](https://www.quandl.com/databases/WIKIP). This data is no longer being updated, for current market prices you must create a _MarketData subclass for your particular market data. Information to construct the subclass is [below][2].
 
 ```python
 class Equity(_Security):
@@ -135,9 +135,9 @@ Since the Equity class is already implemented in the package, we can create an i
 50.0
 ```
 
-> Note: Another important distinction is that the Equity class will only keep a reference to the underlying QuandlStockData, which will minimize dulpication of data. However, at scale, you'd want minimize price calls to your data source, so that could probably be better dealt at the Portfolio level.
+> Note: Another important distinction is that the Equity class will only keep a reference to the underlying QuandlStockData, which will minimize duplication of data. However, at scale, you'd want minimize price calls to your data source, so that could probably be better dealt at the Portfolio level.
 
-#### Sourcing Portfolio Data
+#### Portfolio Data and creating a Portfolio Object
 
 To have an equity position in your portfolio you need what quantity you ordered, what price, and when you ordered the position. In this example, we'll use the following theoretical portfolio found in `portfolio_example.csv`:
 
@@ -180,10 +180,3 @@ The [`Portfolio` object](/Securities.html#portfolio) is main portfolio handler f
 ### _Simulation
 
 ## Simulating Distributions
-
-
-[1]: https://github.com/avanoene/risk_dash 'risk_dash'
-[2]: #marketdata
-[3]: #security
-[4]: #simulation
-[5]: #randomgen

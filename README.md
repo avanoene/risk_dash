@@ -43,7 +43,7 @@ Hosted documentation is coming soon. Below is a high level overview of the proje
 
 ### Object Model
 
-The framework seeks to address a solution to the data pipeline, since the scale is managiable within memory at the moment, that pipeline includes:
+The framework seeks to address a solution to the data pipeline, since the scale is manageable within memory at the moment, that pipeline includes:
 
 - Gathering required data from source systems, i.e. market data, portfolio data, security data
 - Managing that data, potentially storing as scale increases
@@ -71,7 +71,7 @@ SimulationGenerator objects should dictate how any simulation should be conducte
 Security objects could be any asset, those assets have:
 - Market Data
 - Value Function
-- Approprate SimulationGenerator as default, pass in a SimulationGenerator
+- Appropriate SimulationGenerator as default, pass in a SimulationGenerator
 - Risk Attributes
 - Fundamental Data
 
@@ -87,7 +87,6 @@ The Portfolio object as a collection of Security objects and potentially other P
   | -- portfolio_metrics.py
   | -- single_ticker.py
 -objects
-  | -- portfolio.py
   | -- securities.py
   | -- simgen.py
   | -- market_data.py
@@ -111,7 +110,7 @@ The Portfolio object as a collection of Security objects and potentially other P
 
 ### Future Features
 
-- Expected Return / Variance / Distrubtion
+- Expected Return / Variance / Distribution
 - Beta to selected market
   - S\&P 500
   - Russel 5000
@@ -119,7 +118,7 @@ The Portfolio object as a collection of Security objects and potentially other P
 - User selection of MonteCarlo Method
 - Option Pricing for individual stock
 - Forward looking PDF for Portfolio returns
-  - Basian modeling
+  - Bayesian modeling
   - ARIMA
 - Backtesting tool - common trading strategies
   - "Buy and Hold"
