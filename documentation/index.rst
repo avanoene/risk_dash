@@ -7,9 +7,10 @@ Welcome to risk_dash's documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
+   gettingstarted
 
 
 Indices and tables

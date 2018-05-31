@@ -43,7 +43,8 @@ class QuandlStockData(_MarketData):
 
     def setpricechanges(self):
         self.market_data['pricechange'] = self.market_data['adj_close'].diff(1)
-        self.market_data['percentchange'] = np.log(self.market_data['adj_close']) - np.log(self.market_data['adj_close'].shift(1))
+        self.market_data['percentchange'] = np.log(self.market_data['adj_close']) - np.log(self.market_data['adj_close'].shift(1)).fillna(0)
+
 
     def set_volatility(self, days):
         self.setpricechanges()

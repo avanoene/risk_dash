@@ -40,12 +40,12 @@ class NormalDistribution(_RandomGen):
 class NaiveMonteCarlo(_Simulation):
 
     def simulate(self, periods_forward, number_of_simulations):
-        '''
+        """
 
         :param periods_forward:
         :param number_of_simulations:
         :return:
-        '''
+        """
         simulations = [self.Generator.generate(periods_forward) for i in range(number_of_simulations)]
 
         simulations = [simulation.cumsum() for simulation in simulations]

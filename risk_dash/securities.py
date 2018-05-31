@@ -21,6 +21,9 @@ class _Security(object):
     def get_marketdata(self):
         return(self.market_data)
 
+    def simulate(self, SimulationGenerator):
+        pass
+
 
 class Equity(_Security):
 
@@ -65,17 +68,45 @@ class Trade(object):
         pass
 
 class Portfolio(object):
+    """
+    The Portfolio class handles interactions with the portfolio data and the associated securities in the portfolio.
+
+    :param securities:
+    :param data_input:
+    :param apikey:
+
+    """
 
     def __init__(self, securities=None, data_input=None, apikey=None):
         if securities:
-            port = dict()
             for asset in securities:
-                port[asset.name + ' ' + asset.type] = asset
-            self.port = port
+                self.add_security(asset)
         elif data_input and apikey:
             self.construct_portfolio_csv(data_input, apikey)
         else:
             self.port = None
+
+    def add_security(self, security, overwrite=True):
+        if self.port is not None:
+            if (security.name + ' ' + security.type not in self.port.keys()) or overwrite:
+                self.port[security.name + ' ' + security.type] = security
+            else:
+                raise Exception('Security type and name already in portfolio')
+        else:
+            self.port = dict()
+            self.port[security.name + ' ' + security.type] = security
+
+    def remove_security(self, security=None, security_name=None, security_type=None):
+        try:
+            if security:
+                self.port.pop(security.name + ' ' + security.type)
+            elif security_name and security_type:
+                self.port.pop(security_name + ' ' + security_type)
+            else:
+                raise Exception('Must pass in either security or name and type')
+        except KeyError:
+            raise Exception('Security not in portfolio')
+
 
     def value(self):
         """
@@ -124,7 +155,8 @@ class Portfolio(object):
             for i in self.port.keys():
                 marketdata[i] = self.port[i].get_marketdata().market_data[key]
                 marketdata[i + '_port_weighted'] = marketdata[i] * weights[i]
-            marketdata = marketdata.interpolate('linear')
+            marketdata = marketdata.dropna()
+            marketdata = marketdata.interpolate('linear').bfill()
             marketdata['portfolio'] = marketdata.loc[:,marketdata.columns.str.contains('_port_weighted')].sum(axis=1)
             self.market_data = marketdata
             return(marketdata)
@@ -138,10 +170,29 @@ class Portfolio(object):
         :return: pandas DataFrame self.market_data
         """
         try:
+            if key:
+                self.set_portfolio_marketdata(key)
             return self.market_data
         except:
             self.set_portfolio_marketdata(key)
             return self.market_data
+
+    def plot_cumulative_returns(self, key = 'adj_close'):
+        """
+
+        :param key:
+        :return:
+        """
+
+        market_data = self.get_portfolio_marketdata(key)
+        market_data = market_data.loc[
+            :,
+            market_data.columns.str.contains('port')
+        ]
+        market_data = np.log(market_data) - np.log(market_data.shift(1))
+        np.exp(market_data.cumsum()).plot()
+        return market_data
+
 
     def set_weights(self):
         """
@@ -185,7 +236,7 @@ class Portfolio(object):
         variance = np.matmul(np.matmul(weight_array.T, cov_mat), weight_array)
         self.port_variance = variance
         self.parametric_portfolio_value_at_risk = variance * confidence_interval
-        return(variance)
+        return variance
 
     def get_port_variance(self):
         """
@@ -232,4 +283,7 @@ class Portfolio(object):
                 self.port = None
                 return(self.port)
         self.port = {asset.name + ' ' + asset.type : asset for asset in assets}
-        return(self.port)
+        return self.port
+
+    def simulate(self, SimulationGenerator):
+        pass

@@ -10,7 +10,7 @@ To accomplish this task, I am planning on using current research and python pack
 
 The object model is housed in `~/risk_dash/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py`
 
-While risk_dash only needs a few dependencies,[pandas](https://pandas.pydata.org/), [numpy](http://www.numpy.org/), [scipy](https://www.scipy.org/), and [requests](http://docs.python-requests.org/en/master/), the included application uses the dependencies listed in [requirements.txt](https://github.com/avanoene/risk_dash/requirements.txt) which can be installed by:
+While risk_dash only needs a few dependencies,[pandas](https://pandas.pydata.org/), [numpy](http://www.numpy.org/), [scipy](https://www.scipy.org/),[quandl](https://www.quandl.com/tools/python), and [requests](http://docs.python-requests.org/en/master/), the included application uses the dependencies listed in [requirements.txt](https://github.com/avanoene/risk_dash/requirements.txt) which can be installed by:
 
 ```pip install -r requirements.txt```
 
@@ -69,11 +69,10 @@ SimulationGenerator objects should dictate how any simulation should be conducte
 - Lookback period, if necessary
 
 Security objects could be any asset, those assets have:
-- Market Data
-- Value Function
-- Appropriate SimulationGenerator as default, pass in a SimulationGenerator
+- Identification data: Ticker, CUSIP, Exchange
+- Security specific data: expiry, valuation functions
+- Market data: Closing prices, YTM
 - Risk Attributes
-- Fundamental Data
 
 The Portfolio object as a collection of Security objects and potentially other Portfolio objects, since we could have different hierarchal structures within the book
 - This then should house the VCV and common historic market data
@@ -92,7 +91,7 @@ The Portfolio object as a collection of Security objects and potentially other P
   | -- market_data.py
 ```
 
-## #Current Features
+### Current App Features
 
 - Query an individual stock
   - See the past 5 YR candlestick chart
@@ -108,7 +107,7 @@ The Portfolio object as a collection of Security objects and potentially other P
   - Mark at current price
   - Calculate portfolio weights
 
-### Future Features
+### Future App/Package Features
 
 - Expected Return / Variance / Distribution
 - Beta to selected market
