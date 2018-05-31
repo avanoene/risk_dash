@@ -137,7 +137,7 @@ the Equity data.
 -  quantity for Equity will be the number of shares
 -  date\_ordered should be the date the order was placed
 
-.. note:: Currently the implemented \_MarketData subclass is
+    Note: Currently the implemented \_MarketData subclass is
     QuandlStockData, which is a wrapper for `this Quandl dataset
     api <https://www.quandl.com/databases/WIKIP>`__. This data is no
     longer being updated, for current market prices you must create a
@@ -264,7 +264,7 @@ represents an order of 50 shares at close on March 9th, 2018:
 As we can see ``aapl_stock`` now is a container that we can use to
 access it's attributes at the Portfolio level.
 
-.. note:: Another important distinction is that the Equity subclass will
+    Note: Another important distinction is that the Equity subclass will
     only keep a reference to the underlying QuandlStockData, which will
     minimize duplication of data. However, at scale, you'd want minimize
     price calls to your data source, you could then do one call at the

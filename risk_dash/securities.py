@@ -12,7 +12,7 @@ class _Security(object):
             self.__setattr__(i, kwargs[i])
         self.market_data = market_data
 
-    def valuation(self, current_price):
+    def valuation(self, price):
         pass
 
     def mark_to_market(self, current_price):
@@ -33,14 +33,14 @@ class Equity(_Security):
         self.date_ordered = date_ordered
         self.type = 'Equity'
 
-    def valuation(self, current_price):
-        value = (current_price - self.ordered_price) * self.quantity
+    def valuation(self, price):
+        value = (price - self.ordered_price) * self.quantity
         return(value)
 
     def mark_to_market(self, current_price):
-        self.marketvalue = self.quantity * current_price
-        change = (current_price - self.ordered_price) * self.quantity
-        return(change)
+        self.market_value = self.quantity * current_price
+        self.marked_change = self.valuation(current_price)
+        return(self.marked_change)
 
 
 class Trade(object):
@@ -79,7 +79,7 @@ class Portfolio(object):
 
     def value(self):
         """
-        Value current portfolio with market prices
+        Value current portfolio with current market prices.
         :return: value of the portfolio
         """
         value = 0
@@ -89,7 +89,7 @@ class Portfolio(object):
 
     def mark(self):
         """
-        Mark portfolio with current market prices, sets marked_portfolio and market_change
+        Mark portfolio with current market prices, sets marked_portfolio and market_change.
         """
         val = 0
         port_val = {}
@@ -102,7 +102,7 @@ class Portfolio(object):
 
     def get_date(self):
         """
-        Grab the latest shared date
+        Grab the latest shared date.
         :return: returns a datetime object of the latest shared date
         """
         temp = [len(self.port[i].get_marketdata().market_data.index) for i in self.port.keys()]
@@ -114,7 +114,7 @@ class Portfolio(object):
 
     def set_portfolio_marketdata(self, key):
         """
-        Combine individual market data into one pandas dataframe
+        Combine individual market data into one pandas DataFrame.
         :param key: Common column name for each security
         :return: pandas DataFrame containing columns for each security's common market_data
         """
@@ -145,7 +145,7 @@ class Portfolio(object):
 
     def set_weights(self):
         """
-        Calculate value weighted portfolio
+        Calculate value weighted portfolio.
         :return: dict for each security weight
         """
         port_val = {

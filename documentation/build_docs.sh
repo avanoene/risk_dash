@@ -6,8 +6,9 @@ pandoc gettingstarted.md links.md -F mermaid-filter -o gettingstarted.pdf
 
 pandoc gettingstarted.md links.md -s -F mermaid-filter -f markdown -t rst -o gettingstarted.rst
 
-pandoc securities.md -s -F mermaid-filter -f markdown -t rst -o securities.rst
+ex -sc '1i|.. _gettingstarted:' -cx gettingstarted.rst
+ex -sc '2i| ' -cx gettingstarted.rst
 
-pandoc -F mermaid-filter -o securities.pdf securities.md
+sed -i.bu 's/    Note:/.. note::/g' gettingstarted.rst
 
 pandoc gettingstarted.md dashapp_documentation.md securities.md links.md -F mermaid-filter -o total_documentation.pdf
