@@ -24,9 +24,16 @@ time_options =['5D',
 ]
 
 layout = html.Div([
-    html.Label('Ticker'),
-    dcc.Input(id='stock', value='AAPL', type='text'),
-    html.Button(id='submit', n_clicks = 0, children='Query'),
+    html.H2('Individual Equity Analysis'),
+    html.Div(
+        [
+            html.H5('Enter ticker symbol and hit Run to run simulation'),
+            html.Label('Ticker'),
+            dcc.Input(id='stock', value='AAPL', type='text'),
+            html.Button(id='submit', n_clicks=0, children='Run')
+        ],
+        className='row'
+    ),
     html.Div(id='querydata', style={'display':'none'}),
     html.Div(id='simdata', style={'display':'none'}),
     html.Div(
@@ -96,13 +103,16 @@ layout = html.Div([
     className='container-fluid'
 )
 
-@app.callback(Output('querydata', 'children'),
-              [Input('submit', 'n_clicks')],
-              [State('stock', 'value'),
-               State('obs', 'value'),
-               State('lookback', 'value'),
-               State('periods_forward', 'value')]
-              )
+@app.callback(
+        Output('querydata', 'children'),
+        [Input('submit', 'n_clicks')],
+        [
+            State('stock', 'value'),
+            State('obs', 'value'),
+            State('lookback', 'value'),
+            State('periods_forward', 'value')
+        ]
+    )
 
 def get_data(n_clicks,stock, obs, lookback, forward):
     if n_clicks != 0:
@@ -119,7 +129,7 @@ def get_data(n_clicks,stock, obs, lookback, forward):
         dist = sim.simulated_distribution * data.current_price()
         hist_dist = (data.market_data['percentchange'] * data.current_price()).dropna()
         return json.dumps(
-                {
+            {
                 'data': data.market_data.to_json(date_format='iso', orient='records'),
                 'dist': list(dist),
                 'hist_dist': list(hist_dist),
@@ -133,14 +143,17 @@ def get_data(n_clicks,stock, obs, lookback, forward):
                 'forwardSimulationLower': list(np.exp(sim.simulation_mean - 2 * sim.simulation_std) * data.current_price()),
                 'forwardSimulationUpper' : list(np.exp(sim.simulation_mean + 2 * sim.simulation_std) * data.current_price()),
                 'currentprice': data.current_price()
-                }
-            )
+            }
+        )
 
 
-
-@app.callback(Output('equityline', 'figure'),
-              [Input('querydata', 'children'),
-               Input('stock', 'value')])
+@app.callback(
+    Output('equityline', 'figure'),
+    [
+        Input('querydata', 'children'),
+        Input('stock', 'value')
+    ]
+)
 def chart(data, stock):
     data = json.loads(data)
     tempdata = pd.DataFrame(json.loads(data['data']))
@@ -191,65 +204,70 @@ def chart(data, stock):
     outlayout = dict(
         title = stock + ' Adjusted Prices',
         xaxis = dict(
-        rangeselector=dict(
-            buttons=list([
-                dict(
-                    count=5,
-                    label='5D',
-                    step='day',
-                    stepmode='backward'
+            rangeselector=dict(
+                buttons=list([
+                    dict(
+                        count=5,
+                        label='5D',
+                        step='day',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        count=20,
+                        label='20D',
+                        step='day',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        count=3,
+                        label='3M',
+                        step='month',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        count=6,
+                        label='6M',
+                        step='month',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        count=1,
+                        label='YTD',
+                        step='year',
+                        stepmode='todate'
+                    ),
+                    dict(
+                        count=1,
+                        label='1Y',
+                        step='year',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        count=5,
+                        label='5Y',
+                        step='year',
+                        stepmode='backward'
+                    ),
+                    dict(
+                        step='all'
+                    )
+                ]
                 ),
-                dict(
-                    count=20,
-                    label='20D',
-                    step='day',
-                    stepmode='backward'
-                ),
-                dict(
-                    count=3,
-                    label='3M',
-                    step='month',
-                    stepmode='backward'
-                ),
-                dict(
-                    count=6,
-                    label='6M',
-                    step='month',
-                    stepmode='backward'
-                ),
-                dict(
-                    count=1,
-                    label='YTD',
-                    step='year',
-                    stepmode='todate'
-                ),
-                dict(
-                    count=1,
-                    label='1Y',
-                    step='year',
-                    stepmode='backward'
-                ),
-                dict(
-                    count=5,
-                    label='5Y',
-                    step='year',
-                    stepmode='backward'
-                ),
-                dict(
-                    step='all'
-                )]
-            ),
-            visible=True
-        )
+                visible=True
+            )
         )
     )
     fig = go.Figure(data=[line, upper_std, average, lower_std], layout=outlayout)
-    return(fig)
+    return fig
 
-@app.callback(Output('montecarlo', 'figure'),
-              [Input('querydata', 'children'),
-               Input('periods_forward', 'value')
-               ])
+
+@app.callback(
+    Output('montecarlo', 'figure'),
+    [
+        Input('querydata', 'children'),
+        Input('periods_forward', 'value')
+    ]
+)
 def montecarlohistigram(simdata, forward):
     simdata = json.loads(simdata)
     tempdata = pd.DataFrame(json.loads(simdata['data']))
@@ -271,12 +289,13 @@ def montecarlohistigram(simdata, forward):
     )
     layout = go.Layout(barmode='overlay')
     fig = go.Figure(data=fig_data, layout=layout)
-    return(fig)
+    return fig
 
 
 @app.callback(Output('metrics_table', 'children'),
-              [Input('querydata', 'children')])
-def summary_table(sim):
+              [Input('querydata', 'children'),
+               Input('periods_forward', 'value')])
+def summary_table(sim, forward):
     simdata = json.loads(sim)
     var = np.nanpercentile(simdata['dist'], 2.5)
     percentvar = simdata['percentVaR']
@@ -288,10 +307,10 @@ def summary_table(sim):
     exreturn = simdata['currentswr']
     ewexreturn = simdata['currentexr']
     metrics = [var, percentvar, actvar, percentvol, simvol, exvol, swvol, exreturn, ewexreturn]
-    names = ['Simulated Dollar 1D Value at Risk',
-             'Simulated Percent 1D VaR',
-             'Historic Dist 1D VaR',
-             'Historic 1D Percent VaR @ 2 SD',
+    names = ['Simulated Dollar {}D Value at Risk'.format(forward),
+             'Simulated Percent {}D VaR'.format(forward),
+             'Historic Dist {}D VaR'.format(forward),
+             'Historic {}D Percent VaR @ 2 SD'.format(forward),
              'Dollar SD Move',
              'Historic Exponentially Weighted Annualized Vol',
              'Historic Simply Weighted Annualized Vol',
@@ -310,4 +329,4 @@ def summary_table(sim):
     ]
     tbl_out = tbl_out + [html.Tr([html.Td(i), html.Td('{:.3f}'.format(j))])
                          for i , j in zip(names, metrics)]
-    return(html.Table(tbl_out, className='table'))
+    return html.Table(tbl_out, className='table')

@@ -4,7 +4,7 @@
 - [Overview](#overview)
 - [Getting Started](#getting-started)
     - [Security data, _Security objects, and creating Security Subclasses](#security-data-security-objects-and-creating-security-subclasses)
-    - [Portfolio Data and creating a Portfolio Object](#portfolio-data-and-creating-a-portfolio-object)
+    - [Portfolio Data and creating a Portfolio](#portfolio-data-and-creating-a-portfolio)
     - [Calculating Risk Metrics and Using the Portfolio Class](#calculating-risk-metrics-and-using-the-portfolio-class)
 
 ## Overview
@@ -104,7 +104,7 @@ To break down the inputs, we want to keep in mind that the goal of this subclass
 * quantity for Equity will be the number of shares
 * date_ordered should be the date the order was placed
 
-> Note: Currently the implemented _MarketData subclass is QuandlStockData, which is a wrapper for [this Quandl dataset api](https://www.quandl.com/databases/WIKIP). This data is no longer being updated, for current market prices you must create a _MarketData subclass for your particular market data. Information to construct the subclass is [below][2].
+> Note: Currently the implemented _MarketData subclass is QuandlStockData, which is a wrapper for [this Quandl dataset api](https://www.quandl.com/databases/WIKIP). This data is no longer being updated, for current market prices you must create a _MarketData subclass for your particular market data. Information to construct the subclass is on [Building Custom Classes][2].
 
 Required Inputs at the _Security level are intentionally limited, for example if we wanted to create a class for Fixed Income securities, we would want more information than this Equity subclass. An example Bond class might look like this:
 
@@ -204,7 +204,7 @@ As we can see `aapl_stock` now is a container that we can use to access it's att
 
 Now that we have a feeling for the _Security class, we now want to build a Portfolio that contains the _Security instances.
 
-### Portfolio Data and creating a Portfolio Object
+### Portfolio Data and creating a Portfolio
 
 To iterate on what we said before, an equity position in your portfolio is represented by the quantity you ordered, the price ordered at, and when you ordered or settled the position. In this example, we'll use the following theoretical portfolio found in `portfolio_example.csv`:
 
@@ -277,4 +277,25 @@ If we want to add a security to this portfolio, we can call the `add_security` m
 {}
 ```
 
+Now that we have our `Portfolio` constructed with the securities we have on the book let's use the class to calculate some market risk metrics.
+
 ### Calculating Risk Metrics and Using the Portfolio class
+
+Let's first mark the current portfolio. Since we want to know the current value of the portfolio, the mark method will calculate the value of the portfolio at the current price for each security. The current price is going to be the last known mark, the price at the closest date to today.
+
+> Note: Since the QuandlStockData source hasn't been updated since 3/27/2018, we would expect the last shared date to be 3/27/2018. However, you should use the last shared date as a flag to see if an asset's _MarketData isn't updating. With certain assets, such as Bonds or illiquid securities, marking daily might not make as much sense, so common shared date doesn't mean as much.
+
+```python
+>>> current_portfolio.mark()
+>>> vars(current_portfolio)
+{'port': {'AAPL Equity': <risk_dash.securities.Equity at 0x1a1f538c88>,
+  'AMD Equity': <risk_dash.securities.Equity at 0x1a1710a1d0>,
+  'INTC Equity': <risk_dash.securities.Equity at 0x1a1f61dd30>,
+  'GOOG Equity': <risk_dash.securities.Equity at 0x1a17197278>},
+ 'market_change': -1476.6999999999989,
+ 'marked_portfolio': {'AAPL Equity': (8999.0, 8417.0),
+  'AMD Equity': (1170.0, 1000.0),
+  'INTC Equity': (-2609.5, -2559.5),
+  'GOOG Equity': (5800.1999999999998, 5025.5)},
+ 'date_marked': Timestamp('2018-03-27 00:00:00')}
+```

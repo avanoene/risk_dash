@@ -127,21 +127,33 @@ class Portfolio(object):
         for i in self.port.keys():
             temp = self.port[i].mark_to_market(self.port[i].market_data.current_price())
             val += temp
-            port_val[i] = (self.port[i].initial_value, self.port[i].marketvalue)
+            port_val[i] = (self.port[i].initial_value, self.port[i].market_value)
         self.market_change = val
         self.marked_portfolio = port_val
+        self.date_marked = self.get_last_shared_date()
 
     def get_date(self):
         """
-        Grab the latest shared date.
-        :return: returns a datetime object of the latest shared date
+        Grab the security with the most dates.
+        :return: returns a DatetimeIndex to construct a shared portfolio market_data DataFrame
         """
         temp = [len(self.port[i].get_marketdata().market_data.index) for i in self.port.keys()]
         temp = max(temp)
         temp = [self.port[i].get_marketdata().market_data.index
                 for i in self.port.keys()
                 if len(self.port[i].get_marketdata().market_data.index) == temp]
-        return(temp[0])
+        return temp[0]
+
+    def get_last_shared_date(self):
+        """
+        Return the last shared date
+        :return: DateTime object
+        """
+        temp = min(
+            self.port[i].get_marketdata().market_data.index[-1]
+            for i in self.port.keys()
+        )
+        return temp
 
     def set_portfolio_marketdata(self, key):
         """
