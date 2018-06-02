@@ -6,6 +6,8 @@
     - [Security data, _Security objects, and creating Security Subclasses](#security-data-security-objects-and-creating-security-subclasses)
     - [Portfolio Data and creating a Portfolio](#portfolio-data-and-creating-a-portfolio)
     - [Calculating Risk Metrics and Using the Portfolio Class](#calculating-risk-metrics-and-using-the-portfolio-class)
+        - [Mark the Portfolio](#mark-the-portfolio)
+        - [Calculating Historic Returns]
 
 ## Overview
 
@@ -277,9 +279,11 @@ If we want to add a security to this portfolio, we can call the `add_security` m
 {}
 ```
 
+### Calculating Risk Metrics and Using the Portfolio class
+
 Now that we have our `Portfolio` constructed with the securities we have on the book let's use the class to calculate some market risk metrics.
 
-### Calculating Risk Metrics and Using the Portfolio class
+#### Mark the Portfolio
 
 Let's first mark the current portfolio. Since we want to know the current value of the portfolio, the mark method will calculate the value of the portfolio at the current price for each security. The current price is going to be the last known mark, the price at the closest date to today.
 
@@ -327,6 +331,7 @@ As we can see, this portfolio is pretty volatile, but has almost doubled over th
 >>> print(volatility)
 0.087426688807602335
 ```
+
 We calculated 8.7% daily standard deviation or daily volatility, which seems incredibly high. Even looking at a graph of just the summed portfolio returns:
 
 ```python
@@ -334,3 +339,10 @@ We calculated 8.7% daily standard deviation or daily volatility, which seems inc
 ```
 
 ![Portfolio Returns](portfolio_returns.png)
+
+We can visually see that 8.7% doesn't look appropriate as the standard deviation over the time period since there's only one day that the return is over 8.7% around August 2015. If one standard deviation is really 8.7% and the distribution is normally distributed, then we would expect that roughly, on average, 1/3 of the observations would exceed 8.7%. Let's do a little more investigation as to why we would calculate such a high number:
+
+```python
+>>>
+
+```
