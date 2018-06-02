@@ -189,7 +189,7 @@ class Portfolio(object):
             self.set_portfolio_marketdata(key)
             return self.market_data
 
-    def quick_plot(self, returns = True, key = 'adj_close'):
+    def quick_plot(self, returns = True, key = 'adj_close', plot=True):
         """
 
         :param key:
@@ -212,7 +212,7 @@ class Portfolio(object):
             )
             market_data = long_positions.join(short_positions)
             np.exp(market_data.cumsum()).plot()
-        else:
+        if plot:
             market_data.plot()
         return market_data
 
@@ -245,23 +245,32 @@ class Portfolio(object):
             self.set_weights()
             return self.weights
 
-    def set_port_variance(self, confidence_interval = norm.pdf(.025)):
+    def set_port_variance(self, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
         """
         Calulates parametric Variance by calculating Weight**-1 * Cov * Weight
         :param confidence_interval: For value at risk, what distribution score - default 1.96 for normal distribution
         :return: float portfolio variance
         """
+        market_data = self.get_portfolio_marketdata(key)
+        if lookback_periods == 0:
+            covar = market_data.loc[:, ~market_data.columns.str.contains('port')].cov()
+        else:
+            covar = market_data.loc[
+                market_data.index[-lookback_periods:],
+                ~market_data.columns.str.contains('port')
+            ].cov()
         weights = self.get_weights()
-        covar = self.market_data.loc[:, ~self.market_data.columns.str.contains('port')].cov()
         order = covar.columns
         weight_array = np.array([weights[i] for i in order])
         cov_mat = np.array(covar)
         variance = np.matmul(np.matmul(weight_array.T, cov_mat), weight_array)
+        VaR = np.sqrt(variance * var_horizon) * confidence_interval
+        self.cov = covar
         self.port_variance = variance
-        self.parametric_portfolio_value_at_risk = variance * confidence_interval
-        return variance
+        self.parametric_portfolio_value_at_risk = VaR
+        return variance, VaR
 
-    def get_port_variance(self):
+    def get_port_variance(self, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
         """
         Returns portfolio variance
         :return:
@@ -269,7 +278,7 @@ class Portfolio(object):
         try:
             return(self.port_variance, self.parametric_portfolio_value_at_risk)
         except:
-            self.set_port_variance()
+            self.set_port_variance(confidence_interval, var_horizon, lookback_periods, key)
             return (self.port_variance, self.parametric_portfolio_value_at_risk)
 
     def construct_portfolio_csv(self, data_input, apikey):

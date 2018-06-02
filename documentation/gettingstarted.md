@@ -51,7 +51,7 @@ High level, we need to specify:
         - Market data: Closing prices, YTM
 3. Portfolio/security constructors to handle the above data
 
-To visualize these constructors, the below chart shows how to
+To visualize these constructors, the below chart shows how the data will sit:
 
 ```mermaid
 graph TD
@@ -159,7 +159,7 @@ Our mark to market then would need to make the distinction between this valuatio
 
 The final piece to creating the Equity subclass is then to add a `get_marketdata()`method. Since we just want a copy of the reference of the `market_data`, we can just inherit the `get_marketdata()` from the _Security class.
 
-The Equity subclass is already implemented in the package, we can create an instance from `risk_dash.securities`. Let's make an instance that represents an order of 50 shares at close on March 9th, 2018:
+The Equity subclass is already implemented in the package, we can create an instance from `risk_dash.securities`. Let's make an instance that represents an order of 50 shares of AAPL, Apple Inc, at close on March 9th, 2018:
 
 ```python
 >>> from risk_dash.market_data import QuandlStockData
@@ -310,10 +310,27 @@ The `mark` method now creates the `marked_portfolio` dictionary that stores a tu
 -0.11053391917483169
 ```
 
-This hypothetical portfolio apparently hasn't performed over the month since inception, but let's look at historic returns. We can call `portfolio.quick_plot` to look at a `matplotlib` generated cumulative return series of the portfolio. If you wanted more control over plotting, you could use the returned `pandas DataFrame. In fact, the current implementation is just using the `pandas DataFrame` method `plot()`:
+This hypothetical portfolio apparently hasn't performed over the month since inception, it's lost 11%, but let's look at historic returns before we give up on the portfolio. We can call `portfolio.quick_plot` to look at a `matplotlib` generated cumulative return series of the portfolio. If you wanted more control over plotting, you could use the returned `pandas DataFrame. In fact, the current implementation is just using the `pandas DataFrame` method `plot()`:
 
 ```python
 >>> marketdata = current_portfolio.quick_plot()
 ```
 
 ![quick_plot() Output](quick_plot_image.png)
+
+As we can see, this portfolio is pretty volatile, but has almost doubled over the last four years. Let's calculate what the portfolio daily volatility over the period based off the percent change by calling `get_port_volatility` using `percentchange` from the `market_data`:
+```python
+>>> variance, value_at_risk = current_portfolio.get_port_variance(
+  key = 'percentchange'
+)
+>>> volatility = np.sqrt(variance)
+>>> print(volatility)
+0.087426688807602335
+```
+We calculated 8.7% daily standard deviation or daily volatility, which seems incredibly high. Even looking at a graph of just the summed portfolio returns:
+
+```python
+>>> marketdata['portfolio'].plot(title='Portfolio Daily Returns')
+```
+
+![Portfolio Returns](portfolio_returns.png)
