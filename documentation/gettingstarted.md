@@ -288,14 +288,32 @@ Let's first mark the current portfolio. Since we want to know the current value 
 ```python
 >>> current_portfolio.mark()
 >>> vars(current_portfolio)
-{'port': {'AAPL Equity': <risk_dash.securities.Equity at 0x1a1f538c88>,
-  'AMD Equity': <risk_dash.securities.Equity at 0x1a1710a1d0>,
-  'INTC Equity': <risk_dash.securities.Equity at 0x1a1f61dd30>,
-  'GOOG Equity': <risk_dash.securities.Equity at 0x1a17197278>},
+{'port': {'AAPL Equity': <risk_dash.securities.Equity at 0x10f8b2940>,
+  'AMD Equity': <risk_dash.securities.Equity at 0x1a1f6b0908>,
+  'INTC Equity': <risk_dash.securities.Equity at 0x110538d30>,
+  'GOOG Equity': <risk_dash.securities.Equity at 0x110548e10>},
  'market_change': -1476.6999999999989,
  'marked_portfolio': {'AAPL Equity': (8999.0, 8417.0),
   'AMD Equity': (1170.0, 1000.0),
   'INTC Equity': (-2609.5, -2559.5),
   'GOOG Equity': (5800.1999999999998, 5025.5)},
- 'date_marked': Timestamp('2018-03-27 00:00:00')}
+ 'date_marked': Timestamp('2018-03-27 00:00:00'),
+ 'initial_value': 13359.700000000001}
+
 ```
+
+The `mark` method now creates the `marked_portfolio` dictionary that stores a tuple, (initial_value, market_value), for every security in the portfolio. We also now can calculate a quick holding period return, `holdingreturn = (current_portfolio.initial_value + current_portfolio.market_change)/current_portfolio.initial_value`
+
+```python
+>>> holdingreturn = (current_portfolio.market_change)/current_portfolio.initial_value
+>>> print(holdingreturn)
+-0.11053391917483169
+```
+
+This hypothetical portfolio apparently hasn't performed over the month since inception, but let's look at historic returns. We can call `portfolio.quick_plot` to look at a `matplotlib` generated cumulative return series of the portfolio. If you wanted more control over plotting, you could use the returned `pandas DataFrame. In fact, the current implementation is just using the `pandas DataFrame` method `plot()`:
+
+```python
+>>> marketdata = current_portfolio.quick_plot()
+```
+
+![quick_plot() Output](quick_plot_image.png)

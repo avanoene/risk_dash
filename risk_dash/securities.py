@@ -107,7 +107,6 @@ class Portfolio(object):
         except KeyError:
             raise Exception('Security not in portfolio')
 
-
     def value(self):
         """
         Value current portfolio with current market prices.
@@ -116,7 +115,7 @@ class Portfolio(object):
         value = 0
         for i in self.port.keys():
             value += self.port[i].valuation(self.port[i].market_data.current_price())
-        return(value)
+        return value
 
     def mark(self):
         """
@@ -131,6 +130,7 @@ class Portfolio(object):
         self.market_change = val
         self.marked_portfolio = port_val
         self.date_marked = self.get_last_shared_date()
+        self.initial_value = sum(port_val[i][0] for i in port_val.keys())
 
     def get_date(self):
         """
@@ -189,7 +189,7 @@ class Portfolio(object):
             self.set_portfolio_marketdata(key)
             return self.market_data
 
-    def plot_cumulative_returns(self, key = 'adj_close'):
+    def quick_plot(self, returns = True, key = 'adj_close'):
         """
 
         :param key:
@@ -201,8 +201,19 @@ class Portfolio(object):
             :,
             market_data.columns.str.contains('port')
         ]
-        market_data = np.log(market_data) - np.log(market_data.shift(1))
-        np.exp(market_data.cumsum()).plot()
+        if returns == True:
+            short_positions = (
+                np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0])
+                - np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0].shift(1))
+            )
+            long_positions = (
+                np.log(market_data.loc[:, market_data.apply(np.max) > 0])
+                - np.log(market_data.loc[:, market_data.apply(np.max) > 0].shift(1))
+            )
+            market_data = long_positions.join(short_positions)
+            np.exp(market_data.cumsum()).plot()
+        else:
+            market_data.plot()
         return market_data
 
 
