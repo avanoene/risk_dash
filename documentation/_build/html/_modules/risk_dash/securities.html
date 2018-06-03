@@ -1,0 +1,464 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>risk_dash.securities &#8212; risk_dash 0.0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for risk_dash.securities</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">market_data</span> <span class="k">as</span> <span class="n">md</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">t</span>
+
+
+<div class="viewcode-block" id="_Security"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security">[docs]</a><span class="k">class</span> <span class="nc">_Security</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">market_data</span><span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">_MarketData</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span>
+
+    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Equity"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity">[docs]</a><span class="k">class</span> <span class="nc">Equity</span><span class="p">(</span><span class="n">_Security</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">market_data</span> <span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">,</span> <span class="n">ordered_price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">date_ordered</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ticker</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span> <span class="o">=</span> <span class="n">ordered_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span> <span class="o">=</span> <span class="n">quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">=</span> <span class="n">ordered_price</span> <span class="o">*</span> <span class="n">quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date_ordered</span> <span class="o">=</span> <span class="n">date_ordered</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;Equity&#39;</span>
+
+    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span> <span class="o">*</span> <span class="n">current_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">marked_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valuation</span><span class="p">(</span><span class="n">current_price</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marked_change</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">Trade</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">securities</span> <span class="o">=</span> <span class="n">securities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trade_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_prices</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">securities</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">i</span><span class="o">.</span><span class="n">valuation</span><span class="p">(</span><span class="n">current_prices</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">()</span>
+        <span class="n">current_prices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">securities</span><span class="p">:</span>
+            <span class="n">current_prices</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;datelab&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;pricelab&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trade_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">current_prices</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Portfolio"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio">[docs]</a><span class="k">class</span> <span class="nc">Portfolio</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Portfolio class handles interactions with the portfolio data and the associated securities in the portfolio.</span>
+
+<span class="sd">    :param securities:</span>
+<span class="sd">    :param data_input:</span>
+<span class="sd">    :param apikey:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">securities</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">securities</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_security</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data_input</span> <span class="ow">and</span> <span class="n">apikey</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">construct_portfolio_csv</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="n">apikey</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">add_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">security</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Security type and name already in portfolio&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">security</span>
+
+    <span class="k">def</span> <span class="nf">remove_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">security</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">security_name</span> <span class="ow">and</span> <span class="n">security_type</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">security_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Must pass in either security or name and type&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Security not in portfolio&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Portfolio.value"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Value current portfolio with current market prices.</span>
+<span class="sd">        :return: value of the portfolio</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">valuation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">current_price</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Portfolio.mark"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.mark">[docs]</a>    <span class="k">def</span> <span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mark portfolio with current market prices, sets marked_portfolio and market_change.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">port_val</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">current_price</span><span class="p">())</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="n">temp</span>
+            <span class="n">port_val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">initial_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">market_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market_change</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">marked_portfolio</span> <span class="o">=</span> <span class="n">port_val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date_marked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_shared_date</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">port_val</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">port_val</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Portfolio.get_date"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grab the security with the most dates.</span>
+<span class="sd">        :return: returns a DatetimeIndex to construct a shared portfolio market_data DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="n">temp</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Portfolio.get_last_shared_date"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_last_shared_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_last_shared_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the last shared date</span>
+<span class="sd">        :return: DateTime object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">temp</span></div>
+
+<div class="viewcode-block" id="Portfolio.set_portfolio_marketdata"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_portfolio_marketdata">[docs]</a>    <span class="k">def</span> <span class="nf">set_portfolio_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Combine individual market data into one pandas DataFrame.</span>
+<span class="sd">        :param key: Common column name for each security</span>
+<span class="sd">        :return: pandas DataFrame containing columns for each security&#39;s common market_data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">marketdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_date</span><span class="p">())</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">marketdata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">marketdata</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="s1">&#39;_port_weighted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">marketdata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">marketdata</span> <span class="o">=</span> <span class="n">marketdata</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">marketdata</span> <span class="o">=</span> <span class="n">marketdata</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+            <span class="n">marketdata</span><span class="p">[</span><span class="s1">&#39;portfolio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">marketdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">marketdata</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;_port_weighted&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">marketdata</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">market_data_key</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">marketdata</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Supply key value in pandas data frame&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.get_portfolio_marketdata"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_portfolio_marketdata">[docs]</a>    <span class="k">def</span> <span class="nf">get_portfolio_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recalc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns self.market_data</span>
+<span class="sd">        :param key: If not set, use key to set market_data</span>
+<span class="sd">        :return: pandas DataFrame self.market_data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">recalc</span> <span class="ow">or</span> <span class="p">(</span><span class="n">key</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data_key</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must set market_data with .set_portfolio_marketdata()&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.calculate_portfolio_returns"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.calculate_portfolio_returns">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_portfolio_returns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates market data returns from flat prices</span>
+<span class="sd">        :param market_data: the market_data variable with a flat price values</span>
+<span class="sd">        :return: the market_data variable with log returns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">short_positions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">market_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">market_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">long_positions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">market_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">market_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">market_data</span> <span class="o">=</span> <span class="n">long_positions</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">short_positions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">market_data</span></div>
+
+<div class="viewcode-block" id="Portfolio.quick_plot"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.quick_plot">[docs]</a>    <span class="k">def</span> <span class="nf">quick_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returns</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;adj_close&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param key:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+            <span class="p">:,</span>
+            <span class="n">market_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">returns</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_portfolio_returns</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">plot</span> <span class="ow">and</span> <span class="n">returns</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">market_data</span><span class="o">.</span><span class="n">cumsum</span><span class="p">())</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">plot</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">returns</span><span class="p">:</span>
+            <span class="n">market_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">market_data</span>
+        <span class="k">return</span> <span class="n">market_data</span></div>
+
+
+<div class="viewcode-block" id="Portfolio.set_weights"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_weights">[docs]</a>    <span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate value weighted portfolio.</span>
+<span class="sd">        :return: dict for each security weight</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">port_val</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span> <span class="p">:</span> <span class="n">security</span><span class="o">.</span><span class="n">quantity</span> <span class="o">*</span> <span class="n">security</span><span class="o">.</span><span class="n">ordered_price</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">security</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="n">total_val</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">port_val</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span> <span class="p">:</span> <span class="n">security_value</span> <span class="o">/</span> <span class="n">total_val</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">security_value</span> <span class="ow">in</span> <span class="n">port_val</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.get_weights"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_weights">[docs]</a>    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns self.weights</span>
+<span class="sd">        :return: dict for each security weight</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_weights</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span></div>
+
+<div class="viewcode-block" id="Portfolio.set_port_variance"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_port_variance">[docs]</a>    <span class="k">def</span> <span class="nf">set_port_variance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confidence_interval</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="o">.</span><span class="mi">025</span><span class="p">),</span> <span class="n">var_horizon</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">lookback_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;percentchange&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calulates parametric Variance by calculating Weight.T * Cov * Weight</span>
+<span class="sd">        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data</span>
+<span class="sd">        :param confidence_interval: float, The critical value to implement parametric VaR</span>
+<span class="sd">        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated</span>
+<span class="sd">        :param lookback_periods: int, how many days/periods backward to condition the underlying distribution</span>
+<span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+<span class="sd">        :return: float portfolio variance, standard deviation ** 2, float parametric value at risk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lookback_periods</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">covar</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">market_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">cov</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">covar</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                <span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="n">lookback_periods</span><span class="p">:],</span>
+                <span class="o">~</span><span class="n">market_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">)</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">cov</span><span class="p">()</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">covar</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">weight_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">])</span>
+        <span class="n">cov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">covar</span><span class="p">)</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">weight_array</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">),</span> <span class="n">weight_array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lookback_periods</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">VaR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span> <span class="o">*</span> <span class="n">var_horizon</span><span class="p">)</span> <span class="o">*</span> <span class="n">confidence_interval</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">VaR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span> <span class="o">*</span> <span class="n">var_horizon</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="o">.</span><span class="mi">025</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">lookback_periods</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov</span> <span class="o">=</span> <span class="n">covar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port_variance</span> <span class="o">=</span> <span class="n">variance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parametric_portfolio_value_at_risk</span> <span class="o">=</span> <span class="n">VaR</span>
+        <span class="k">return</span> <span class="n">variance</span><span class="p">,</span> <span class="n">VaR</span></div>
+
+<div class="viewcode-block" id="Portfolio.get_port_variance"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_port_variance">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_variance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recalc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence_interval</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="o">.</span><span class="mi">025</span><span class="p">),</span> <span class="n">var_horizon</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">lookback_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns portfolio variance</span>
+<span class="sd">        :param recalc:</span>
+<span class="sd">        :param confidence_interval:</span>
+<span class="sd">        :param var_horizon:</span>
+<span class="sd">        :param lookback_periods:</span>
+<span class="sd">        :param key:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">recalc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_port_variance</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">confidence_interval</span><span class="o">=</span><span class="n">confidence_interval</span><span class="p">,</span> <span class="n">var_horizon</span><span class="o">=</span><span class="n">var_horizon</span><span class="p">,</span><span class="n">lookback_periods</span><span class="o">=</span><span class="n">lookback_periods</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_variance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parametric_portfolio_value_at_risk</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Must set port_variance with .set_port_variance()&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.historic_var"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.historic_var">[docs]</a>    <span class="k">def</span> <span class="nf">historic_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;adj_close&#39;</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">var_horizon</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calulate Value at Risk from the historic distrubtion</span>
+<span class="sd">        :param market_data:</span>
+<span class="sd">        :param returns:</span>
+<span class="sd">        :param key:</span>
+<span class="sd">        :param confidence:</span>
+<span class="sd">        :param var_horizon:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">returns</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_portfolio_returns</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">var_horizon</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">var_horizon</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">historic_portfolio_value_at_risk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;portfolio&#39;</span><span class="p">],</span> <span class="n">confidence</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">market_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;portfolio&#39;</span><span class="p">],</span> <span class="n">confidence</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">drawdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;adj_close&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">returns</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_portfolio_returns</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="n">market_data</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="n">market_data</span>
+        <span class="k">return</span> <span class="n">market_data</span>
+
+
+
+<div class="viewcode-block" id="Portfolio.construct_portfolio_csv"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.construct_portfolio_csv">[docs]</a>    <span class="k">def</span> <span class="nf">construct_portfolio_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_input</span><span class="p">,</span> <span class="n">apikey</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Built in portfolio constructor method</span>
+<span class="sd">        :param data_input: either pandas DataFrame or string path to a portfolio matching &#39;./portfolio_example.csv&#39;</span>
+<span class="sd">        :param apikey: ApiKey for the market data object</span>
+<span class="sd">        :return: dict for self.port</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">assets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_input</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">portfolio_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_input</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_input</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+            <span class="n">portfolio_data</span> <span class="o">=</span> <span class="n">data_input</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not parseable&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">portfolio_data</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Equity&#39;</span><span class="p">:</span>
+                <span class="n">tempdata</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">(</span><span class="n">apikey</span><span class="p">,</span> <span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Ticker&#39;</span><span class="p">],</span> <span class="n">days</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+                <span class="n">tempsecurity</span> <span class="o">=</span> <span class="n">Equity</span><span class="p">(</span>
+                    <span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Ticker&#39;</span><span class="p">],</span>
+                    <span class="n">tempdata</span><span class="p">,</span>
+                    <span class="n">ordered_price</span> <span class="o">=</span> <span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Ordered Price&#39;</span><span class="p">],</span>
+                    <span class="n">quantity</span> <span class="o">=</span> <span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Quantity&#39;</span><span class="p">],</span>
+                    <span class="n">date_ordered</span><span class="o">=</span><span class="n">portfolio_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Ordered Date&#39;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tempsecurity</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Type of security not defined!&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="p">{</span><span class="n">asset</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">asset</span><span class="o">.</span><span class="n">type</span> <span class="p">:</span> <span class="n">asset</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">assets</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span></div>
+
+    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alexander van Oene.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

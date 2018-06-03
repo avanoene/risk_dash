@@ -7,7 +7,10 @@
     - [Portfolio Data and creating a Portfolio](#portfolio-data-and-creating-a-portfolio)
     - [Calculating Risk Metrics and Using the Portfolio Class](#calculating-risk-metrics-and-using-the-portfolio-class)
         - [Mark the Portfolio](#mark-the-portfolio)
-        - [Calculating Historic Returns]
+        - [Parametrically Calculating the Value at Risk](#parametrically-calculating-the-value-at-risk)
+        - [Simulating the Portfolio](#simulating-the-portfolio)
+    - [Summary](#summary)
+
 
 ## Overview
 
@@ -322,27 +325,61 @@ This hypothetical portfolio apparently hasn't performed over the month since inc
 
 ![quick_plot() Output](quick_plot_image.png)
 
+#### Parametrically Calculating the Value at Risk
+
 As we can see, this portfolio is pretty volatile, but has almost doubled over the last four years. Let's calculate what the portfolio daily volatility over the period based off the percent change by calling `get_port_volatility` using `percentchange` from the `market_data`:
 ```python
->>> variance, value_at_risk = current_portfolio.get_port_variance(
+>>> variance, value_at_risk = current_portfolio.set_port_variance(
   key = 'percentchange'
 )
 >>> volatility = np.sqrt(variance)
 >>> print(volatility)
-0.087426688807602335
+0.01345831069378136
+>>> mean = np.mean(current_portfolio.market_data['portfolio'])
+>>> print(mean)
+0.0007375242310493472
 ```
 
-We calculated 8.7% daily standard deviation or daily volatility, which seems incredibly high. Even looking at a graph of just the summed portfolio returns:
+We calculated 1.3% daily standard deviation or daily volatility, if the distribution is normally distributed around zero, then we would expect that 95% of the data is contained within approximately 2 standard deviations. We can visually confirm, as well as look to see if there are other distributional aspects we can visually distinguish:
 
 ```python
->>> marketdata['portfolio'].plot(title='Portfolio Daily Returns')
+>>> import matplotlib.pyplot as plt
+>>> marketdata['portfolio'].plot.hist(bins=20,title='Portfolio Historic Returns')
+>>> plt.axvline(temp * 1.96, color='r', linestyle='--') # if centered around zero, then
+>>> plt.axvline(-temp * 1.96, color='r', linestyle='--') #
 ```
 
 ![Portfolio Returns](portfolio_returns.png)
 
-We can visually see that 8.7% doesn't look appropriate as the standard deviation over the time period since there's only one day that the return is over 8.7% around August 2015. If one standard deviation is really 8.7% and the distribution is normally distributed, then we would expect that roughly, on average, 1/3 of the observations would exceed 8.7%. Let's do a little more investigation as to why we would calculate such a high number:
+This distribution looks highly centered around zero, which could signal kurtosis. This seems indicative of equity data, especially for daily returns. Right now, a good place to start thinking about metric parameterization is to assume normality and independence in daily returns. While this assumption might not be very good or might vary between security to security in the portfolio, which we can account for in simulation or purely using historic returns to calculate risk metrics, we can use this distribution assumption to quickly get a Value at Risk metric over a time horizon.
+
+The default time horizon is 10 days at a 95% confidence level for the `set_port_variance` method, so if we look at the returned `value_at_risk`:
 
 ```python
->>>
+>>> print(value_at_risk)
+-0.083413941112170473
+```
+
+This value is simply the standard deviation scaled by time, at the critical value specified:
+
+$$
+VaR_{t, T} = \sigma * \sqrt{T-t} * Z^{*}_{p = \alpha}
+$$
+
+We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, a return over 10 days less than 8.3% should occur 2.5% of the time, on average. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
+
+```python
+>>> dollar_value_at_risk = value_at_risk * (current_portfolio.initial_value + current_portfolio.marked_change)
+>>> print(dollar_value_at_risk)
+-991.20786223592188
+```
+
+Similarly, we could interpret as over the a 10 day period, on average, 2.5% of the time there could be an approximate loss over $991.21 dollars for this portfolio. However, this is relying on the assumption that the portfolio is: a) normally distributed, and b) daily returns are serially independent and identically distributed. One way we can go around this is to look at the cumulative horizon historic distribution
+
+```python
+
 
 ```
+
+
+#### Simulating the Portfolio

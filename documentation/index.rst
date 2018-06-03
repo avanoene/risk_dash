@@ -11,6 +11,8 @@ Welcome to risk_dash's documentation!
    :caption: Contents:
 
    gettingstarted
+   securities
+   market_data
 
 
 Indices and tables

@@ -1,10 +1,13 @@
 from . import market_data as md
 import pandas as pd
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, t
 
 
 class _Security(object):
+    """
+    Template for _Security subclasses
+    """
 
     def __init__(self, name, market_data: md._MarketData, **kwargs):
         self.name = name
@@ -28,6 +31,14 @@ class _Security(object):
 class Equity(_Security):
 
     def __init__(self, ticker, market_data : md.QuandlStockData, ordered_price, quantity, date_ordered):
+        """
+
+        :param ticker:
+        :param market_data:
+        :param ordered_price:
+        :param quantity:
+        :param date_ordered:
+        """
         self.name = ticker
         self.market_data = market_data
         self.ordered_price = ordered_price
@@ -171,23 +182,42 @@ class Portfolio(object):
             marketdata = marketdata.interpolate('linear').bfill()
             marketdata['portfolio'] = marketdata.loc[:,marketdata.columns.str.contains('_port_weighted')].sum(axis=1)
             self.market_data = marketdata
+            self.market_data_key = key
             return(marketdata)
         except ValueError:
             print('Supply key value in pandas data frame')
 
-    def get_portfolio_marketdata(self, key = None):
+    def get_portfolio_marketdata(self, key = None, recalc=False):
         """
         Returns self.market_data
         :param key: If not set, use key to set market_data
         :return: pandas DataFrame self.market_data
         """
-        try:
-            if key:
-                self.set_portfolio_marketdata(key)
-            return self.market_data
-        except:
+        if key or recalc or (key != self.market_data_key):
             self.set_portfolio_marketdata(key)
             return self.market_data
+        else:
+            try:
+                return self.market_data
+            except:
+                raise Exception("Must set market_data with .set_portfolio_marketdata()")
+
+    def calculate_portfolio_returns(self, market_data):
+        """
+        Calculates market data returns from flat prices
+        :param market_data: the market_data variable with a flat price values
+        :return: the market_data variable with log returns
+        """
+        short_positions = (
+            np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0])
+            - np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0].shift(1))
+        )
+        long_positions = (
+            np.log(market_data.loc[:, market_data.apply(np.max) > 0])
+            - np.log(market_data.loc[:, market_data.apply(np.max) > 0].shift(1))
+        )
+        market_data = long_positions.join(short_positions)
+        return market_data
 
     def quick_plot(self, returns = True, key = 'adj_close', plot=True):
         """
@@ -202,18 +232,13 @@ class Portfolio(object):
             market_data.columns.str.contains('port')
         ]
         if returns == True:
-            short_positions = (
-                np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0])
-                - np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0].shift(1))
-            )
-            long_positions = (
-                np.log(market_data.loc[:, market_data.apply(np.max) > 0])
-                - np.log(market_data.loc[:, market_data.apply(np.max) > 0].shift(1))
-            )
-            market_data = long_positions.join(short_positions)
+            market_data = self.calculate_portfolio_returns(market_data)
+        if plot and returns:
             np.exp(market_data.cumsum()).plot()
-        if plot:
+        elif plot and not returns:
             market_data.plot()
+        else:
+            return market_data
         return market_data
 
 
@@ -245,13 +270,18 @@ class Portfolio(object):
             self.set_weights()
             return self.weights
 
-    def set_port_variance(self, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
+    def set_port_variance(self, market_data=None, confidence_interval = norm.ppf(.025), var_horizon = 10, lookback_periods=0, key='percentchange'):
         """
-        Calulates parametric Variance by calculating Weight**-1 * Cov * Weight
-        :param confidence_interval: For value at risk, what distribution score - default 1.96 for normal distribution
-        :return: float portfolio variance
+        Calulates parametric Variance by calculating Weight.T * Cov * Weight
+        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data
+        :param confidence_interval: float, The critical value to implement parametric VaR
+        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated
+        :param lookback_periods: int, how many days/periods backward to condition the underlying distribution
+        :param key: string, corresponds to the market_data column to be calculated
+        :return: float portfolio variance, standard deviation ** 2, float parametric value at risk
         """
-        market_data = self.get_portfolio_marketdata(key)
+        if market_data is None:
+            market_data = self.get_portfolio_marketdata(key)
         if lookback_periods == 0:
             covar = market_data.loc[:, ~market_data.columns.str.contains('port')].cov()
         else:
@@ -264,22 +294,68 @@ class Portfolio(object):
         weight_array = np.array([weights[i] for i in order])
         cov_mat = np.array(covar)
         variance = np.matmul(np.matmul(weight_array.T, cov_mat), weight_array)
-        VaR = np.sqrt(variance * var_horizon) * confidence_interval
+        if lookback_periods == 0:
+            VaR = np.sqrt(variance * var_horizon) * confidence_interval
+        else:
+            VaR = np.sqrt(variance * var_horizon) * t.ppf(.025, df=lookback_periods-1)
         self.cov = covar
         self.port_variance = variance
         self.parametric_portfolio_value_at_risk = VaR
         return variance, VaR
 
-    def get_port_variance(self, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
+    def get_port_variance(self, recalc=False, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
         """
         Returns portfolio variance
+        :param recalc:
+        :param confidence_interval:
+        :param var_horizon:
+        :param lookback_periods:
+        :param key:
         :return:
         """
+        if key or recalc:
+            self.set_port_variance(key=key, confidence_interval=confidence_interval, var_horizon=var_horizon,lookback_periods=lookback_periods)
         try:
-            return(self.port_variance, self.parametric_portfolio_value_at_risk)
+            return self.port_variance, self.parametric_portfolio_value_at_risk
         except:
-            self.set_port_variance(confidence_interval, var_horizon, lookback_periods, key)
-            return (self.port_variance, self.parametric_portfolio_value_at_risk)
+            raise Exception('Must set port_variance with .set_port_variance()')
+
+    def historic_var(self, market_data=None, returns=True, key='adj_close', confidence=2.5, var_horizon=10):
+        """
+        Calulate Value at Risk from the historic distrubtion
+        :param market_data:
+        :param returns:
+        :param key:
+        :param confidence:
+        :param var_horizon:
+        :return:
+        """
+        if market_data is None:
+            market_data = self.get_portfolio_marketdata(key)
+
+        if returns:
+            market_data = self.calculate_portfolio_returns(market_data)
+            market_data = market_data.rolling(var_horizon).sum()
+            market_data = np.exp(market_data) - 1
+        else:
+            market_data = market_data.diff(1)
+            market_data = market_data.rolling(var_horizon).sum()
+
+        self.historic_portfolio_value_at_risk = np.nanpercentile(market_data['portfolio'], confidence)
+        return market_data, np.nanpercentile(market_data['portfolio'], confidence)
+
+    def drawdown(self, market_data=None, returns=True, key='adj_close'):
+        if market_data is None:
+            market_data = self.get_portfolio_marketdata(key)
+        if returns:
+            market_data = self.calculate_portfolio_returns(market_data)
+            market_data = market_data.cumsum().cummax() - market_data.cumsum()
+            market_data = np.exp(market_data)
+        else:
+            market_data = market_data.cummax() - market_data
+        return market_data
+
+
 
     def construct_portfolio_csv(self, data_input, apikey):
         """
