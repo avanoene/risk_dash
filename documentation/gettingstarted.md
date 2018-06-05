@@ -388,6 +388,8 @@ This is calculated by doing a cumulative sum of returns over each horizon time p
 
 This method is fairly simple, however it is based on the assumption that the previous distribution of outcomes is a good representation of the future distribution.
 
-The final way to simulate the portfolio distribution and then calculate the value at risk.
+Another way we've implemented to calculate the value at risk is to simulate the portfolio distribution.
 
 #### Simulating the Portfolio
+
+[TODO]
