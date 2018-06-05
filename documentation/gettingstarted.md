@@ -374,12 +374,20 @@ We can interpret this Value at Risk as being the lower bound of the 95% confiden
 -991.20786223592188
 ```
 
-Similarly, we could interpret as over the a 10 day period, on average, 2.5% of the time there could be an approximate loss over $991.21 dollars for this portfolio. However, this is relying on the assumption that the portfolio is: a) normally distributed, and b) daily returns are serially independent and identically distributed. One way we can go around this is to look at the cumulative horizon historic distribution
+Similarly, we could interpret as over the a 10 day period, on average, 2.5% of the time there could be an approximate loss over $991.21 dollars for this portfolio. However, this is relying on the assumption that the portfolio is: a) normally distributed, and b) daily returns are serially independent and identically distributed. One way we can go around this is to look at the historic distribution
 
 ```python
-
-
+>>> historic_distribution, historic_var = current_portfolio.historic_var()
+>>> print(historic_var)
+-0.073051970330112487
 ```
 
+This is calculated by doing a cumulative sum of returns over each horizon time period, then taking the appropriate percentile of the distribution to get a VaR based on historic prices. This is is smaller than the parametric VaR due to the fact that the distribution looks more right skewed as shown below
+
+![Historic 10D VaR](historic_10_return.png)
+
+This method is fairly simple, however it is based on the assumption that the previous distribution of outcomes is a good representation of the future distribution.
+
+The final way to simulate the portfolio distribution and then calculate the value at risk.
 
 #### Simulating the Portfolio

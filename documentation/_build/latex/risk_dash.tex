@@ -56,7 +56,7 @@
 
 
 \title{risk\_dash Documentation}
-\date{Jun 03, 2018}
+\date{Jun 04, 2018}
 \release{0.0.2}
 \author{Alexander van Oene}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -203,7 +203,7 @@ Portfolio/security constructors to handle the above data
 To visualize these constructors, the below chart shows how the data will
 sit:
 
-\sphinxincludegraphics{{cbf3d94243da296ec3347cf846f31097392405d0}.png}
+\sphinxincludegraphics{{fe47ff43184fa7cc86dc7e380324d362fc9fa59b}.png}
 
 To do so, we’ll need subclasses for the {\hyperref[\detokenize{gettingstarted:security}]{\emph{\_Security}}} and
 \sphinxhref{buildingclasses.html}{\_MarketData} classes to model specific types
@@ -745,7 +745,37 @@ just multiply this percent change by the current portfolio market value.
 
 Similarly, we could interpret as over the a 10 day period, on average,
 2.5\% of the time there could be an approximate loss over \$991.21 dollars
-for this portfolio.
+for this portfolio. However, this is relying on the assumption that the
+portfolio is: a) normally distributed, and b) daily returns are serially
+independent and identically distributed. One way we can go around this
+is to look at the historic distribution
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{historic\PYGZus{}distribution}\PYG{p}{,} \PYG{n}{historic\PYGZus{}var} \PYG{o}{=} \PYG{n}{current\PYGZus{}portfolio}\PYG{o}{.}\PYG{n}{historic\PYGZus{}var}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{historic\PYGZus{}var}\PYG{p}{)}
+\PYG{g+go}{\PYGZhy{}0.073051970330112487}
+\end{sphinxVerbatim}
+
+This is calculated by doing a cumulative sum of returns over each
+horizon time period, then taking the appropriate percentile of the
+distribution to get a VaR based on historic prices. This is is smaller
+than the parametric VaR due to the fact that the distribution looks more
+right skewed as shown below
+
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\noindent\sphinxincludegraphics{{historic_10_return}.png}
+\caption{Historic 10D VaR}\label{\detokenize{gettingstarted:id3}}\end{figure}
+
+This method is fairly simple, however it is based on the assumption that
+the previous distribution of outcomes is a good representation of the
+future distribution.
+
+The final way to simulate the portfolio distribution and then calculate
+the value at risk.
 
 
 \subsubsection{Simulating the Portfolio}
@@ -756,6 +786,8 @@ for this portfolio.
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities._Security}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{risk\_dash.securities.}}\sphinxbfcode{\sphinxupquote{\_Security}}}{\emph{name}, \emph{market\_data: risk\_dash.market\_data.\_MarketData}, \emph{**kwargs}}{}
+Template for \_Security subclasses
+
 \end{fulllineitems}
 
 \index{Equity (class in risk\_dash.securities)}
@@ -788,8 +820,14 @@ The Portfolio class handles interactions with the portfolio data and the associa
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.calculate_portfolio_returns}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{calculate\_portfolio\_returns}}}{\emph{market\_data}}{}
 Calculates market data returns from flat prices
-:param market\_data: the market\_data variable with a flat price values
-:return: the market\_data variable with log returns
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{market\_data}} \textendash{} the market\_data variable with a flat price values
+
+\item[{Returns}] \leavevmode
+the market\_data variable with log returns
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -798,9 +836,45 @@ Calculates market data returns from flat prices
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.construct_portfolio_csv}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{construct\_portfolio\_csv}}}{\emph{data\_input}, \emph{apikey}}{}
 Built in portfolio constructor method
-:param data\_input: either pandas DataFrame or string path to a portfolio matching ‘./portfolio\_example.csv’
-:param apikey: ApiKey for the market data object
-:return: dict for self.port
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{data\_input}} \textendash{} either pandas DataFrame or string path to a portfolio matching ‘./portfolio\_example.csv’
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{apikey}} \textendash{} ApiKey for the market data object
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+dict for self.port
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{drawdown() (risk\_dash.securities.Portfolio method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.drawdown}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{drawdown}}}{\emph{market\_data=None}, \emph{returns=True}, \emph{key='adj\_close'}}{}
+Calculate Draw Down, the previous peak to current trough, through the historic market data
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{market\_data}} \textendash{} DataFrame, the portfolio level market\_data. Use if made external changes to the market\_data
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{returns}} \textendash{} Bool, True if calculate DD based on continuous returns, False if on level prices
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} string, corresponds to the market\_data column to be calculated
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+DataFrame representing the Draw Down for the portfolio and components
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -809,7 +883,11 @@ Built in portfolio constructor method
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.get_date}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_date}}}{}{}
 Grab the security with the most dates.
-:return: returns a DatetimeIndex to construct a shared portfolio market\_data DataFrame
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+returns a DatetimeIndex to construct a shared portfolio market\_data DataFrame
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -818,7 +896,11 @@ Grab the security with the most dates.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.get_last_shared_date}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_last\_shared\_date}}}{}{}
 Return the last shared date
-:return: DateTime object
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+DateTime object
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -827,12 +909,29 @@ Return the last shared date
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.get_port_variance}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_port\_variance}}}{\emph{recalc=False}, \emph{confidence\_interval=0.39881763041638185}, \emph{var\_horizon=10}, \emph{lookback\_periods=0}, \emph{key=None}}{}
 Returns portfolio variance
-:param recalc:
-:param confidence\_interval:
-:param var\_horizon:
-:param lookback\_periods:
-:param key:
-:return:
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{recalc}} \textendash{} bool, If True recalculate variance
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{confidence\_interval}} \textendash{} float, The critical value to implement parametric VaR
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{var\_horizon}} \textendash{} int, how many days/periods forward the parametric VaR should be calculated
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{lookback\_periods}} \textendash{} int, how many days/periods backward to condition the underlying distribution
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} string, corresponds to the market\_data column to be calculated
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+tuple: (float Var(Portfolio), float Parametric Portfolio V@R)
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -841,8 +940,14 @@ Returns portfolio variance
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.get_portfolio_marketdata}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_portfolio\_marketdata}}}{\emph{key=None}, \emph{recalc=False}}{}
 Returns self.market\_data
-:param key: If not set, use key to set market\_data
-:return: pandas DataFrame self.market\_data
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} If not set, use key to set market\_data
+
+\item[{Returns}] \leavevmode
+pandas DataFrame self.market\_data
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -851,7 +956,11 @@ Returns self.market\_data
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.get_weights}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_weights}}}{}{}
 Returns self.weights
-:return: dict for each security weight
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+dict for each security weight
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -860,12 +969,29 @@ Returns self.weights
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.historic_var}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{historic\_var}}}{\emph{market\_data=None}, \emph{returns=True}, \emph{key='adj\_close'}, \emph{confidence=2.5}, \emph{var\_horizon=10}}{}
 Calulate Value at Risk from the historic distrubtion
-:param market\_data:
-:param returns:
-:param key:
-:param confidence:
-:param var\_horizon:
-:return:
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{market\_data}} \textendash{} DataFrame, the portfolio level market\_data. Use if made external changes to the market\_data
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{returns}} \textendash{} Bool, True if calculate DD based on continuous returns, False if on level prices
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} string, corresponds to the market\_data column to be calculated
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{confidence}} \textendash{} float, percentile in percentage to pass into np.percentile
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{var\_horizon}} \textendash{} int, how many days/periods forward the parametric VaR should be calculated
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+tuple, (DataFrame, market\_data, float, Historic VaR)
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -880,12 +1006,23 @@ Mark portfolio with current market prices, sets marked\_portfolio and market\_ch
 \index{quick\_plot() (risk\_dash.securities.Portfolio method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.quick_plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{quick\_plot}}}{\emph{returns=True}, \emph{key='adj\_close'}, \emph{plot=True}}{}~\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} 
+\phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.quick_plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{quick\_plot}}}{\emph{returns=True}, \emph{key='adj\_close'}, \emph{plot=True}}{}
+Quickly plot using matplotlib and pandas.plot()
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{returns}} \textendash{} Bool, True if calculate DD based on continuous returns, False if on level prices
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} string, corresponds to the market\_data column to be calculated
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{plot}} \textendash{} Bool, if True, plot the data frame, if flase just return the market\_data DataFrame
+
+\end{itemize}
 
 \item[{Returns}] \leavevmode
-
+DataFrame market\_data
 
 \end{description}\end{quote}
 
@@ -896,12 +1033,29 @@ Mark portfolio with current market prices, sets marked\_portfolio and market\_ch
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.set_port_variance}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_port\_variance}}}{\emph{market\_data=None}, \emph{confidence\_interval=-1.9599639845400545}, \emph{var\_horizon=10}, \emph{lookback\_periods=0}, \emph{key='percentchange'}}{}
 Calulates parametric Variance by calculating Weight.T * Cov * Weight
-:param market\_data: DataFrame, the portfolio level market\_data. Use if made external changes to the market\_data
-:param confidence\_interval: float, The critical value to implement parametric VaR
-:param var\_horizon: int, how many days/periods forward the parametric VaR should be calculated
-:param lookback\_periods: int, how many days/periods backward to condition the underlying distribution
-:param key: string, corresponds to the market\_data column to be calculated
-:return: float portfolio variance, standard deviation ** 2, float parametric value at risk
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{market\_data}} \textendash{} DataFrame, the portfolio level market\_data. Use if made external changes to the market\_data
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{confidence\_interval}} \textendash{} float, The critical value to implement parametric VaR
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{var\_horizon}} \textendash{} int, how many days/periods forward the parametric VaR should be calculated
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{lookback\_periods}} \textendash{} int, how many days/periods backward to condition the underlying distribution
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} string, corresponds to the market\_data column to be calculated
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+float portfolio variance, standard deviation ** 2, float parametric value at risk
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -910,8 +1064,14 @@ Calulates parametric Variance by calculating Weight.T * Cov * Weight
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.set_portfolio_marketdata}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_portfolio\_marketdata}}}{\emph{key}}{}
 Combine individual market data into one pandas DataFrame.
-:param key: Common column name for each security
-:return: pandas DataFrame containing columns for each security’s common market\_data
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{key}} \textendash{} Common column name for each security
+
+\item[{Returns}] \leavevmode
+pandas DataFrame containing columns for each security’s common market\_data
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -920,7 +1080,11 @@ Combine individual market data into one pandas DataFrame.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.set_weights}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_weights}}}{}{}
 Calculate value weighted portfolio.
-:return: dict for each security weight
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+dict for each security weight
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -929,7 +1093,11 @@ Calculate value weighted portfolio.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.value}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{value}}}{}{}
 Value current portfolio with current market prices.
-:return: value of the portfolio
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+value of the portfolio
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -942,13 +1110,99 @@ Value current portfolio with current market prices.
 \label{\detokenize{market_data:module-risk_dash.market_data}}\label{\detokenize{market_data:risk-dash-market-data}}\label{\detokenize{market_data:market-data}}\label{\detokenize{market_data::doc}}\index{risk\_dash.market\_data (module)}\index{\_MarketData (class in risk\_dash.market\_data)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{market_data:risk_dash.market_data._MarketData}}\pysigline{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{risk\_dash.market\_data.}}\sphinxbfcode{\sphinxupquote{\_MarketData}}}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data._MarketData}}\pysigline{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{risk\_dash.market\_data.}}\sphinxbfcode{\sphinxupquote{\_MarketData}}}~\index{current\_price() (risk\_dash.market\_data.\_MarketData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data._MarketData.current_price}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{current\_price}}}{}{}
+This should return the current market price, the price at the last available time period
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+float the market price
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{gather() (risk\_dash.market\_data.\_MarketData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data._MarketData.gather}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{gather}}}{}{}
+This should gather data from the source and store it into memory or dictate how to interact with the source
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+a pandas DataFrame, market\_data or other data type to interact with
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
 \end{fulllineitems}
 
 \index{QuandlStockData (class in risk\_dash.market\_data)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{risk\_dash.market\_data.}}\sphinxbfcode{\sphinxupquote{QuandlStockData}}}{\emph{apikey}, \emph{ticker}, \emph{days=80}}{}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{risk\_dash.market\_data.}}\sphinxbfcode{\sphinxupquote{QuandlStockData}}}{\emph{apikey}, \emph{ticker}, \emph{days=80}}{}~\index{current\_price() (risk\_dash.market\_data.QuandlStockData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData.current_price}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{current\_price}}}{}{}
+Returns the latest available market price
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+float, latest available market price
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{gather() (risk\_dash.market\_data.QuandlStockData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData.gather}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{gather}}}{}{}
+Gathers the data from the Quandl api and returns a pandas DataFrame
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+pandas DataFrame
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{set\_expected() (risk\_dash.market\_data.QuandlStockData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData.set_expected}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_expected}}}{\emph{days}}{}
+Calculate exponentially and simply weighted rolling averages
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{days}} \textendash{} int, look back days to compute rolling averages
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{set\_price\_changes() (risk\_dash.market\_data.QuandlStockData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData.set_price_changes}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_price\_changes}}}{}{}
+Set daily price changes and logged percent changes
+
+\end{fulllineitems}
+
+\index{set\_volatility() (risk\_dash.market\_data.QuandlStockData method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{market_data:risk_dash.market_data.QuandlStockData.set_volatility}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_volatility}}}{\emph{days}}{}
+Calculate exponentially and simply weighted rolling standard deviations
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{days}} \textendash{} int, look back days to compute rolling std deviation
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
 \end{fulllineitems}
 
 

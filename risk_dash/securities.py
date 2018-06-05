@@ -121,7 +121,9 @@ class Portfolio(object):
     def value(self):
         """
         Value current portfolio with current market prices.
+
         :return: value of the portfolio
+
         """
         value = 0
         for i in self.port.keys():
@@ -146,7 +148,9 @@ class Portfolio(object):
     def get_date(self):
         """
         Grab the security with the most dates.
+
         :return: returns a DatetimeIndex to construct a shared portfolio market_data DataFrame
+
         """
         temp = [len(self.port[i].get_marketdata().market_data.index) for i in self.port.keys()]
         temp = max(temp)
@@ -158,7 +162,9 @@ class Portfolio(object):
     def get_last_shared_date(self):
         """
         Return the last shared date
+
         :return: DateTime object
+
         """
         temp = min(
             self.port[i].get_marketdata().market_data.index[-1]
@@ -169,8 +175,11 @@ class Portfolio(object):
     def set_portfolio_marketdata(self, key):
         """
         Combine individual market data into one pandas DataFrame.
+
         :param key: Common column name for each security
+
         :return: pandas DataFrame containing columns for each security's common market_data
+
         """
         try:
             marketdata = pd.DataFrame(index = self.get_date())
@@ -190,8 +199,11 @@ class Portfolio(object):
     def get_portfolio_marketdata(self, key = None, recalc=False):
         """
         Returns self.market_data
+
         :param key: If not set, use key to set market_data
+
         :return: pandas DataFrame self.market_data
+
         """
         if key or recalc or (key != self.market_data_key):
             self.set_portfolio_marketdata(key)
@@ -205,8 +217,11 @@ class Portfolio(object):
     def calculate_portfolio_returns(self, market_data):
         """
         Calculates market data returns from flat prices
+
         :param market_data: the market_data variable with a flat price values
+
         :return: the market_data variable with log returns
+
         """
         short_positions = (
             np.log(-1 * market_data.loc[:, market_data.apply(np.max) < 0])
@@ -221,9 +236,14 @@ class Portfolio(object):
 
     def quick_plot(self, returns = True, key = 'adj_close', plot=True):
         """
+        Quickly plot using matplotlib and pandas.plot()
 
-        :param key:
-        :return:
+        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices
+        :param key: string, corresponds to the market_data column to be calculated
+        :param plot: Bool, if True, plot the data frame, if flase just return the market_data DataFrame
+
+        :return: DataFrame market_data
+
         """
 
         market_data = self.get_portfolio_marketdata(key)
@@ -245,7 +265,9 @@ class Portfolio(object):
     def set_weights(self):
         """
         Calculate value weighted portfolio.
+
         :return: dict for each security weight
+
         """
         port_val = {
             name : security.quantity * security.ordered_price
@@ -262,7 +284,9 @@ class Portfolio(object):
     def get_weights(self):
         """
         Returns self.weights
+
         :return: dict for each security weight
+
         """
         try:
             return self.weights
@@ -273,12 +297,15 @@ class Portfolio(object):
     def set_port_variance(self, market_data=None, confidence_interval = norm.ppf(.025), var_horizon = 10, lookback_periods=0, key='percentchange'):
         """
         Calulates parametric Variance by calculating Weight.T * Cov * Weight
+
         :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data
         :param confidence_interval: float, The critical value to implement parametric VaR
         :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated
         :param lookback_periods: int, how many days/periods backward to condition the underlying distribution
         :param key: string, corresponds to the market_data column to be calculated
+
         :return: float portfolio variance, standard deviation ** 2, float parametric value at risk
+
         """
         if market_data is None:
             market_data = self.get_portfolio_marketdata(key)
@@ -306,12 +333,15 @@ class Portfolio(object):
     def get_port_variance(self, recalc=False, confidence_interval = norm.pdf(.025), var_horizon = 10, lookback_periods=0, key=None):
         """
         Returns portfolio variance
-        :param recalc:
-        :param confidence_interval:
-        :param var_horizon:
-        :param lookback_periods:
-        :param key:
-        :return:
+
+        :param recalc: bool, If True recalculate variance
+        :param confidence_interval: float, The critical value to implement parametric VaR
+        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated
+        :param lookback_periods: int, how many days/periods backward to condition the underlying distribution
+        :param key: string, corresponds to the market_data column to be calculated
+
+        :return: tuple: (float Var(Portfolio), float Parametric Portfolio V@R)
+
         """
         if key or recalc:
             self.set_port_variance(key=key, confidence_interval=confidence_interval, var_horizon=var_horizon,lookback_periods=lookback_periods)
@@ -323,12 +353,15 @@ class Portfolio(object):
     def historic_var(self, market_data=None, returns=True, key='adj_close', confidence=2.5, var_horizon=10):
         """
         Calulate Value at Risk from the historic distrubtion
-        :param market_data:
-        :param returns:
-        :param key:
-        :param confidence:
-        :param var_horizon:
-        :return:
+
+        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data
+        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices
+        :param key: string, corresponds to the market_data column to be calculated
+        :param confidence: float, percentile in percentage to pass into np.percentile
+        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated
+
+        :return: tuple, (DataFrame, market_data, float, Historic VaR)
+
         """
         if market_data is None:
             market_data = self.get_portfolio_marketdata(key)
@@ -345,6 +378,16 @@ class Portfolio(object):
         return market_data, np.nanpercentile(market_data['portfolio'], confidence)
 
     def drawdown(self, market_data=None, returns=True, key='adj_close'):
+        """
+        Calculate Draw Down, the previous peak to current trough, through the historic market data
+
+        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data
+        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices
+        :param key: string, corresponds to the market_data column to be calculated
+
+        :return: DataFrame representing the Draw Down for the portfolio and components
+
+        """
         if market_data is None:
             market_data = self.get_portfolio_marketdata(key)
         if returns:
@@ -360,9 +403,12 @@ class Portfolio(object):
     def construct_portfolio_csv(self, data_input, apikey):
         """
         Built in portfolio constructor method
+
         :param data_input: either pandas DataFrame or string path to a portfolio matching './portfolio_example.csv'
         :param apikey: ApiKey for the market data object
+
         :return: dict for self.port
+
         """
         assets = []
 

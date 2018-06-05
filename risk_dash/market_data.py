@@ -16,14 +16,18 @@ class _MarketData(object):
     def gather(self):
         """
         This should gather data from the source and store it into memory or dictate how to interact with the source
+
         :return: a pandas DataFrame, market_data or other data type to interact with
+
         """
         pass
 
     def current_price(self):
         """
         This should return the current market price, the price at the last available time period
+
         :return: float the market price
+
         """
         pass
 
@@ -32,9 +36,11 @@ class QuandlStockData(_MarketData):
     def __init__(self, apikey, ticker, days=80):
         """
         _MarketData class for Quandl's WIKI/EOD price data base (https://www.quandl.com/databases/WIKIP)
+
         :param apikey: string, a valid Quandl apikey
         :param ticker: string, ticker symbol to query
         :param days: int, how many days back to use for rolling metrics
+
         """
         self.apikey = apikey
         self.ticker = ticker
@@ -48,7 +54,9 @@ class QuandlStockData(_MarketData):
     def gather(self):
         """
         Gathers the data from the Quandl api and returns a pandas DataFrame
+
         :return: pandas DataFrame
+
         """
         quandl.ApiConfig.api_key = self.apikey
         # this would be where I would construct it's own api call, using quandl's get_table method instead
@@ -73,7 +81,9 @@ class QuandlStockData(_MarketData):
     def set_volatility(self, days):
         """
         Calculate exponentially and simply weighted rolling standard deviations
+
         :param days: int, look back days to compute rolling std deviation
+
         """
         self.set_price_changes()
         self.market_data['exp_volatility'] = self.market_data['percentchange'].ewm(span=days,min_periods=days).std()
@@ -84,7 +94,9 @@ class QuandlStockData(_MarketData):
     def set_expected(self, days):
         """
         Calculate exponentially and simply weighted rolling averages
+
         :param days: int, look back days to compute rolling averages
+
         """
         self.market_data['exp_average_dailyincrease'] = self.market_data['percentchange'].ewm(span=days, min_periods=days).mean()
         self.market_data['sw_average_dailyincrease'] = self.market_data['percentchange'].rolling(days).mean()
@@ -94,7 +106,9 @@ class QuandlStockData(_MarketData):
     def current_price(self):
         """
         Returns the latest available market price
+
         :return: float, latest available market price
+
         """
         return(self.market_data.loc[self.market_data['date']==self.maxdate, 'adj_close'].values[0])
 

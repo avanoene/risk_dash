@@ -41,17 +41,40 @@
 <div class="viewcode-block" id="_MarketData"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data._MarketData">[docs]</a><span class="k">class</span> <span class="nc">_MarketData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Template for _MarketData subclasses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gather</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+<div class="viewcode-block" id="_MarketData.gather"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data._MarketData.gather">[docs]</a>    <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This should gather data from the source and store it into memory or dictate how to interact with the source</span>
 
-    <span class="k">def</span> <span class="nf">current_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">        :return: a pandas DataFrame, market_data or other data type to interact with</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="_MarketData.current_price"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data._MarketData.current_price">[docs]</a>    <span class="k">def</span> <span class="nf">current_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This should return the current market price, the price at the last available time period</span>
+
+<span class="sd">        :return: float the market price</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
 
 <div class="viewcode-block" id="QuandlStockData"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData">[docs]</a><span class="k">class</span> <span class="nc">QuandlStockData</span><span class="p">(</span><span class="n">_MarketData</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _MarketData class for Quandl&#39;s WIKI/EOD price data base (https://www.quandl.com/databases/WIKIP)</span>
+
+<span class="sd">        :param apikey: string, a valid Quandl apikey</span>
+<span class="sd">        :param ticker: string, ticker symbol to query</span>
+<span class="sd">        :param days: int, how many days back to use for rolling metrics</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ticker</span> <span class="o">=</span> <span class="n">ticker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gather</span><span class="p">()</span>
@@ -61,7 +84,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_expected</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="QuandlStockData.gather"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData.gather">[docs]</a>    <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the data from the Quandl api and returns a pandas DataFrame</span>
+
+<span class="sd">        :return: pandas DataFrame</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">quandl</span><span class="o">.</span><span class="n">ApiConfig</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
         <span class="c1"># this would be where I would construct it&#39;s own api call, using quandl&#39;s get_table method instead</span>
         <span class="c1">#base = quandl.ApiConfig.api_base</span>
@@ -72,28 +101,49 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">quandl</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s1">&#39;WIKI/PRICES&#39;</span><span class="p">,</span>
                                 <span class="n">ticker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ticker</span><span class="p">,</span>
                                 <span class="n">date</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gte&#39;</span><span class="p">:(</span><span class="n">date</span> <span class="o">-</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">years</span><span class="o">=</span><span class="mi">5</span><span class="p">))})</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">set_price_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="QuandlStockData.set_price_changes"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData.set_price_changes">[docs]</a>    <span class="k">def</span> <span class="nf">set_price_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set daily price changes and logged percent changes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;pricechange&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;adj_close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;adj_close&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;adj_close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;adj_close&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;adj_close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">set_volatility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">):</span>
+<div class="viewcode-block" id="QuandlStockData.set_volatility"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData.set_volatility">[docs]</a>    <span class="k">def</span> <span class="nf">set_volatility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate exponentially and simply weighted rolling standard deviations</span>
+
+<span class="sd">        :param days: int, look back days to compute rolling std deviation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_price_changes</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;exp_volatility&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ewm</span><span class="p">(</span><span class="n">span</span><span class="o">=</span><span class="n">days</span><span class="p">,</span><span class="n">min_periods</span><span class="o">=</span><span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;sw_volatility&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentexvol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;exp_volatility&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currentswvol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;sw_volatility&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentswvol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;sw_volatility&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">set_expected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">):</span>
+<div class="viewcode-block" id="QuandlStockData.set_expected"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData.set_expected">[docs]</a>    <span class="k">def</span> <span class="nf">set_expected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate exponentially and simply weighted rolling averages</span>
+
+<span class="sd">        :param days: int, look back days to compute rolling averages</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;exp_average_dailyincrease&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ewm</span><span class="p">(</span><span class="n">span</span><span class="o">=</span><span class="n">days</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;sw_average_dailyincrease&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;percentchange&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentexmean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;exp_average_dailyincrease&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currentswmean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;sw_average_dailyincrease&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentswmean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;sw_average_dailyincrease&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">current_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;adj_close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+<div class="viewcode-block" id="QuandlStockData.current_price"><a class="viewcode-back" href="../../market_data.html#risk_dash.market_data.QuandlStockData.current_price">[docs]</a>    <span class="k">def</span> <span class="nf">current_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the latest available market price</span>
+
+<span class="sd">        :return: float, latest available market price</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">maxdate</span><span class="p">,</span> <span class="s1">&#39;adj_close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div></div>
 
 
 

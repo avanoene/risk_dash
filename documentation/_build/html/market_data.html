@@ -36,12 +36,102 @@
 <dl class="class">
 <dt id="risk_dash.market_data._MarketData">
 <em class="property">class </em><code class="descclassname">risk_dash.market_data.</code><code class="descname">_MarketData</code><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="method">
+<dt id="risk_dash.market_data._MarketData.current_price">
+<code class="descname">current_price</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.current_price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.current_price" title="Permalink to this definition">¶</a></dt>
+<dd><p>This should return the current market price, the price at the last available time period</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float the market price</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="risk_dash.market_data._MarketData.gather">
+<code class="descname">gather</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.gather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.gather" title="Permalink to this definition">¶</a></dt>
+<dd><p>This should gather data from the source and store it into memory or dictate how to interact with the source</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a pandas DataFrame, market_data or other data type to interact with</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="risk_dash.market_data.QuandlStockData">
 <em class="property">class </em><code class="descclassname">risk_dash.market_data.</code><code class="descname">QuandlStockData</code><span class="sig-paren">(</span><em>apikey</em>, <em>ticker</em>, <em>days=80</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="method">
+<dt id="risk_dash.market_data.QuandlStockData.current_price">
+<code class="descname">current_price</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.current_price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.current_price" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the latest available market price</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float, latest available market price</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="risk_dash.market_data.QuandlStockData.gather">
+<code class="descname">gather</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.gather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.gather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the data from the Quandl api and returns a pandas DataFrame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="risk_dash.market_data.QuandlStockData.set_expected">
+<code class="descname">set_expected</code><span class="sig-paren">(</span><em>days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_expected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_expected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate exponentially and simply weighted rolling averages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>days</strong> – int, look back days to compute rolling averages</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="risk_dash.market_data.QuandlStockData.set_price_changes">
+<code class="descname">set_price_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_price_changes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_price_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set daily price changes and logged percent changes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="risk_dash.market_data.QuandlStockData.set_volatility">
+<code class="descname">set_volatility</code><span class="sig-paren">(</span><em>days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_volatility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_volatility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate exponentially and simply weighted rolling standard deviations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>days</strong> – int, look back days to compute rolling std deviation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 

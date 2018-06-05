@@ -38,6 +38,9 @@
 
 
 <div class="viewcode-block" id="_Security"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security">[docs]</a><span class="k">class</span> <span class="nc">_Security</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Template for _Security subclasses</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">market_data</span><span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">_MarketData</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -61,6 +64,14 @@
 <div class="viewcode-block" id="Equity"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity">[docs]</a><span class="k">class</span> <span class="nc">Equity</span><span class="p">(</span><span class="n">_Security</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">market_data</span> <span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">,</span> <span class="n">ordered_price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">date_ordered</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param ticker:</span>
+<span class="sd">        :param market_data:</span>
+<span class="sd">        :param ordered_price:</span>
+<span class="sd">        :param quantity:</span>
+<span class="sd">        :param date_ordered:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ticker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span> <span class="o">=</span> <span class="n">ordered_price</span>
@@ -143,7 +154,9 @@
 <div class="viewcode-block" id="Portfolio.value"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Value current portfolio with current market prices.</span>
+
 <span class="sd">        :return: value of the portfolio</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -168,7 +181,9 @@
 <div class="viewcode-block" id="Portfolio.get_date"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Grab the security with the most dates.</span>
+
 <span class="sd">        :return: returns a DatetimeIndex to construct a shared portfolio market_data DataFrame</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
@@ -180,7 +195,9 @@
 <div class="viewcode-block" id="Portfolio.get_last_shared_date"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_last_shared_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_last_shared_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the last shared date</span>
+
 <span class="sd">        :return: DateTime object</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_marketdata</span><span class="p">()</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -191,8 +208,11 @@
 <div class="viewcode-block" id="Portfolio.set_portfolio_marketdata"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_portfolio_marketdata">[docs]</a>    <span class="k">def</span> <span class="nf">set_portfolio_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine individual market data into one pandas DataFrame.</span>
+
 <span class="sd">        :param key: Common column name for each security</span>
+
 <span class="sd">        :return: pandas DataFrame containing columns for each security&#39;s common market_data</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">marketdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_date</span><span class="p">())</span>
@@ -212,8 +232,11 @@
 <div class="viewcode-block" id="Portfolio.get_portfolio_marketdata"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_portfolio_marketdata">[docs]</a>    <span class="k">def</span> <span class="nf">get_portfolio_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recalc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns self.market_data</span>
+
 <span class="sd">        :param key: If not set, use key to set market_data</span>
+
 <span class="sd">        :return: pandas DataFrame self.market_data</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">recalc</span> <span class="ow">or</span> <span class="p">(</span><span class="n">key</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_data_key</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -227,8 +250,11 @@
 <div class="viewcode-block" id="Portfolio.calculate_portfolio_returns"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.calculate_portfolio_returns">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_portfolio_returns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates market data returns from flat prices</span>
+
 <span class="sd">        :param market_data: the market_data variable with a flat price values</span>
+
 <span class="sd">        :return: the market_data variable with log returns</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">short_positions</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">market_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">market_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span>
@@ -243,9 +269,14 @@
 
 <div class="viewcode-block" id="Portfolio.quick_plot"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.quick_plot">[docs]</a>    <span class="k">def</span> <span class="nf">quick_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returns</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;adj_close&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quickly plot using matplotlib and pandas.plot()</span>
 
-<span class="sd">        :param key:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices</span>
+<span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+<span class="sd">        :param plot: Bool, if True, plot the data frame, if flase just return the market_data DataFrame</span>
+
+<span class="sd">        :return: DataFrame market_data</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -267,7 +298,9 @@
 <div class="viewcode-block" id="Portfolio.set_weights"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_weights">[docs]</a>    <span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate value weighted portfolio.</span>
+
 <span class="sd">        :return: dict for each security weight</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port_val</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">name</span> <span class="p">:</span> <span class="n">security</span><span class="o">.</span><span class="n">quantity</span> <span class="o">*</span> <span class="n">security</span><span class="o">.</span><span class="n">ordered_price</span>
@@ -284,7 +317,9 @@
 <div class="viewcode-block" id="Portfolio.get_weights"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_weights">[docs]</a>    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns self.weights</span>
+
 <span class="sd">        :return: dict for each security weight</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
@@ -295,12 +330,15 @@
 <div class="viewcode-block" id="Portfolio.set_port_variance"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.set_port_variance">[docs]</a>    <span class="k">def</span> <span class="nf">set_port_variance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confidence_interval</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="o">.</span><span class="mi">025</span><span class="p">),</span> <span class="n">var_horizon</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">lookback_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;percentchange&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calulates parametric Variance by calculating Weight.T * Cov * Weight</span>
+
 <span class="sd">        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data</span>
 <span class="sd">        :param confidence_interval: float, The critical value to implement parametric VaR</span>
 <span class="sd">        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated</span>
 <span class="sd">        :param lookback_periods: int, how many days/periods backward to condition the underlying distribution</span>
 <span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+
 <span class="sd">        :return: float portfolio variance, standard deviation ** 2, float parametric value at risk</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -328,12 +366,15 @@
 <div class="viewcode-block" id="Portfolio.get_port_variance"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.get_port_variance">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_variance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recalc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence_interval</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="o">.</span><span class="mi">025</span><span class="p">),</span> <span class="n">var_horizon</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">lookback_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns portfolio variance</span>
-<span class="sd">        :param recalc:</span>
-<span class="sd">        :param confidence_interval:</span>
-<span class="sd">        :param var_horizon:</span>
-<span class="sd">        :param lookback_periods:</span>
-<span class="sd">        :param key:</span>
-<span class="sd">        :return:</span>
+
+<span class="sd">        :param recalc: bool, If True recalculate variance</span>
+<span class="sd">        :param confidence_interval: float, The critical value to implement parametric VaR</span>
+<span class="sd">        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated</span>
+<span class="sd">        :param lookback_periods: int, how many days/periods backward to condition the underlying distribution</span>
+<span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+
+<span class="sd">        :return: tuple: (float Var(Portfolio), float Parametric Portfolio V@R)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">recalc</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_port_variance</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">confidence_interval</span><span class="o">=</span><span class="n">confidence_interval</span><span class="p">,</span> <span class="n">var_horizon</span><span class="o">=</span><span class="n">var_horizon</span><span class="p">,</span><span class="n">lookback_periods</span><span class="o">=</span><span class="n">lookback_periods</span><span class="p">)</span>
@@ -345,12 +386,15 @@
 <div class="viewcode-block" id="Portfolio.historic_var"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.historic_var">[docs]</a>    <span class="k">def</span> <span class="nf">historic_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;adj_close&#39;</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">var_horizon</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calulate Value at Risk from the historic distrubtion</span>
-<span class="sd">        :param market_data:</span>
-<span class="sd">        :param returns:</span>
-<span class="sd">        :param key:</span>
-<span class="sd">        :param confidence:</span>
-<span class="sd">        :param var_horizon:</span>
-<span class="sd">        :return:</span>
+
+<span class="sd">        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data</span>
+<span class="sd">        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices</span>
+<span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+<span class="sd">        :param confidence: float, percentile in percentage to pass into np.percentile</span>
+<span class="sd">        :param var_horizon: int, how many days/periods forward the parametric VaR should be calculated</span>
+
+<span class="sd">        :return: tuple, (DataFrame, market_data, float, Historic VaR)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -366,7 +410,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">historic_portfolio_value_at_risk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;portfolio&#39;</span><span class="p">],</span> <span class="n">confidence</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">market_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">market_data</span><span class="p">[</span><span class="s1">&#39;portfolio&#39;</span><span class="p">],</span> <span class="n">confidence</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">drawdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;adj_close&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Portfolio.drawdown"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.drawdown">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">market_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;adj_close&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate Draw Down, the previous peak to current trough, through the historic market data</span>
+
+<span class="sd">        :param market_data: DataFrame, the portfolio level market_data. Use if made external changes to the market_data</span>
+<span class="sd">        :param returns: Bool, True if calculate DD based on continuous returns, False if on level prices</span>
+<span class="sd">        :param key: string, corresponds to the market_data column to be calculated</span>
+
+<span class="sd">        :return: DataFrame representing the Draw Down for the portfolio and components</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">market_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">market_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio_marketdata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">returns</span><span class="p">:</span>
@@ -375,16 +429,19 @@
             <span class="n">market_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">market_data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="n">market_data</span>
-        <span class="k">return</span> <span class="n">market_data</span>
+        <span class="k">return</span> <span class="n">market_data</span></div>
 
 
 
 <div class="viewcode-block" id="Portfolio.construct_portfolio_csv"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.construct_portfolio_csv">[docs]</a>    <span class="k">def</span> <span class="nf">construct_portfolio_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_input</span><span class="p">,</span> <span class="n">apikey</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Built in portfolio constructor method</span>
+
 <span class="sd">        :param data_input: either pandas DataFrame or string path to a portfolio matching &#39;./portfolio_example.csv&#39;</span>
 <span class="sd">        :param apikey: ApiKey for the market data object</span>
+
 <span class="sd">        :return: dict for self.port</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">assets</span> <span class="o">=</span> <span class="p">[]</span>
 
