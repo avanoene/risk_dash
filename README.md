@@ -1,16 +1,22 @@
 # risk_dash
 
-[risk_dash](https://github.com/avanoene/risk_dash) is a framework to help simplify the data flow for a portfolio of assets and handle market risk metrics at the asset and portfolio level. If you clone the source [repository](https://github.com/avanoene/risk_dash), included is a [Dash](https://plot.ly/dash/) application to be an example of some of the uses for the package.
+[risk_dash][6] is a framework to help simplify the data flow for a portfolio of assets and handle market risk metrics at the asset and portfolio level. If you clone the source [repository](https://github.com/avanoene/risk_dash), included is a [Dash](https://plot.ly/dash/) application to be an example of some of the uses for the package.
 
 ## Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl's WIKI EOD Stock Prices found in the example application.
 
-Thesis Proposal: First create a framework package, risk_dash, to handle a portfolio of assets, then create a risk application to calculate and display common risk factors and metrics to present common uses for the framework, including: Value at Risk, Expected Portfolio Return and Volatility, Current Return, Systematic risk (Fama - French / CAPM)
+### Abstract
+
+While there are many Python packages that provide ways to do data analysis, in fact the package utilizes [pandas][1], [numpy][2], and [scipy][3] heavily, there are few that apply and handle common tasks that analysts face in quantifying market risk. [pyfolio][5] is one of those packages, however it forces you to utilize their infrastructure package [Zipline](http://www.zipline.io/) where as [risk_dash][6] aims to provide a framework to formalize the data flow while being totally customizable for the analyst. [risk_dash][6] is comprised of classes and methods to handle the data flow and calculation of market risk metrics at the asset and portfolio level. In use, this package should ease the developer's work in building a comprehensive risk analytics application and specifying the underlying risk distribution. This package does not aim to generate trade ideas, but quantify the market risks portfolios of securities face. Included is an example of an application that utilizes this framework focusing on an equity portfolio.
+
+### Thesis Steps
+
+First create a framework package, risk_dash, to handle a portfolio of assets, then create a risk application to calculate and display common risk factors and metrics to present common uses for the framework, including: Value at Risk, Expected Portfolio Return and Volatility, Current Return, Systematic risk (Fama - French / CAPM)
 
 To accomplish this task, I am planning on using current research and python packages. I am planning on using [Dash by Plotly](https://plot.ly/dash/) to create the front end user interface and deploying the underlying Flask app on either [DigitalOcean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
 
 The object model is housed in `~/risk_dash/` where as the application pages are in `~/pages/` and are managed by `/dashapp.py`
 
-While risk_dash only needs a few dependencies,[pandas](https://pandas.pydata.org/), [numpy](http://www.numpy.org/), [scipy](https://www.scipy.org/),[quandl](https://www.quandl.com/tools/python), and [requests](http://docs.python-requests.org/en/master/), the included application uses the dependencies listed in [requirements.txt](https://github.com/avanoene/risk_dash/requirements.txt) which can be installed by:
+While risk_dash only needs a few dependencies,[pandas][1], [numpy][2], [scipy][3],[quandl][4], and [requests](http://docs.python-requests.org/en/master/), the included application uses the dependencies listed in [requirements.txt](https://github.com/avanoene/risk_dash/requirements.txt) which can be installed by:
 
 ```pip install -r requirements.txt```
 
@@ -125,3 +131,10 @@ The Portfolio object as a collection of Security objects and potentially other P
 ## License
 
 This project is licensed under the the MIT License - see the LICENSE.md file for details
+
+[1]: https://pandas.pydata.org/
+[2]: http://www.numpy.org/
+[3]: https://www.scipy.org/
+[4]: https://www.quandl.com/tools/python
+[5]: https://github.com/quantopian/pyfolio
+[6]: https://github.com/avanoene/risk_dash

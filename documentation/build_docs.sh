@@ -11,7 +11,7 @@ ex -sc '2i| ' -cx gettingstarted.rst
 
 sed -i.bu 's/    Note:/.. note::/g' gettingstarted.rst
 
-pandoc gettingstarted.md dashapp_documentation.md securities.md links.md -F mermaid-filter -o total_documentation.pdf
+pandoc gettingstarted.md dashapp_documentation.md links.md -F mermaid-filter -o total_documentation.pdf
 
 make html
 
