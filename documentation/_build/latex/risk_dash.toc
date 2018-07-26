@@ -9,7 +9,7 @@
 \contentsline {subsubsection}{Mark the Portfolio}{8}{subsubsection*.4}
 \contentsline {subsubsection}{Parametrically Calculating the Value at Risk}{8}{subsubsection*.5}
 \contentsline {subsubsection}{Simulating the Portfolio}{11}{subsubsection*.6}
-\contentsline {chapter}{\numberline {2}risk\_dash.securities}{13}{chapter.2}
-\contentsline {chapter}{\numberline {3}risk\_dash.market\_data}{17}{chapter.3}
-\contentsline {chapter}{\numberline {4}Indices and tables}{19}{chapter.4}
-\contentsline {chapter}{Python Module Index}{21}{section*.34}
+\contentsline {chapter}{\numberline {2}risk\_dash.securities}{15}{chapter.2}
+\contentsline {chapter}{\numberline {3}risk\_dash.market\_data}{19}{chapter.3}
+\contentsline {chapter}{\numberline {4}Indices and tables}{21}{chapter.4}
+\contentsline {chapter}{Python Module Index}{23}{section*.34}

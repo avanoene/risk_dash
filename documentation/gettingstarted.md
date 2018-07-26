@@ -366,7 +366,7 @@ $$
 VaR_{t, T} = \sigma * \sqrt{T-t} * Z^{*}_{p = \alpha}
 $$
 
-We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, a return over 10 days less than 8.3% should occur 2.5% of the time, on average. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
+We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, a loss over 10 days less than 8.3% should occur 2.5% of the time, on average. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
 
 ```python
 >>> dollar_value_at_risk = value_at_risk * (current_portfolio.initial_value + current_portfolio.marked_change)
@@ -392,4 +392,45 @@ Another way we've implemented to calculate the value at risk is to simulate the 
 
 #### Simulating the Portfolio
 
-[TODO]
+When simulating portfolio returns, one's objective is to correctly specify the portfolio distribution. I consider two major approaches, "bottom-up" and "top-down".
+
+The "bottom-up" approach would include simulating the underlying securities first and then valuing the portfolio through the simulated distributions. The major strength of this method is the ability to easily value the effect of derivative securities on the portfolio. Since one would simulate the derivative's underlier, you could easily then apply the associated value function through the simulated distribution to get the security's profit and loss distribution. Another benefit to this methodology is the analyst has the freedom to change the simulation process at a security level. General Brownian motion might be a good assumption for long/short equity positions, but maybe not as good when simulating yield curves for bonds. Another strength would be the ability to change portfolio weights of securities post simulation, if you simulate a base unit of the security you could then scale the weights accordingly to easily reweigh the portfolio. The biggest challenge to this methodology is to ensure that each simulation value represents the same market environment, meaning that each simulation pull represents the same environment state. While you can potentially do a convolution of the different simulations to get a representative joint distribution of the portfolio, you must ensure that one is capturing the covariance between the securities. For example, equities and bonds have historically had negative correlation to each other, thus a portfolio containing both would potentially have a lower variance than each security separate. To capture that in a simulation one would have to simulate directly from the variance-covariance matrix or do a convolution to combine separate simulations together. While both are possible, and in practice it is probably a preferred methodology, however it's not within the scope of this project.
+
+The "top-down" approach would include aggregating the portfolio a priori and then simulating that distribution. Since the portfolio is made of the member securities, thus the aggregated distribution represents all covariance. While this method gets a little be trickier to handle with derivative securities, since you would need historic market prices per contract and potentially roll adjust through the time period, for securities like equities the assumption seems arguable. The benefit of this method would be having to deal with one simulation and verifying if it represents the underlying distribution vs having several different simulations and verifying if they accurately represent the covariance of constituent securities. The drawback is having less flexibility in the modeling of individual securities within the portfolio. Another drawback is to change the weighting or portfolio members, one must recombine and simulate the new portfolio, which could be computationally intensive depending on the methodology.
+
+Either way, to implement simulation, the _Simulation and _RandomGen class that handle the calculation and generation respectfully. For example, to implement a naive return model, the included NaiveMonteCarlo class represents the following generation function for a single observation:
+
+$$
+R_{t} = \phi
+$$
+
+Where $\phi$ representing a pull from an imposed distribution. As such, we need to specify that imposed distribution, thus we include the NormalDistribution _RandomGen class to generate a pull. This class is just a wrapper to for numpy.random.normal with the mean and standard deviation specified in the initialization.
+
+Since the aim is to specify the portfolio distribution X days into the future, we want to simulate a cumulative return path through time. Under the assumption that each day is independent, the individual simulation path is then:
+
+$$
+P = \sum_{t=1}^{X} R_{t} = \sum_{t=1}^{X} \phi
+$$
+
+Now to fully specify the distribution via a Monte Carlo process, we will generate $Y$ paths to represent the underlying $X$ day distribution. To get the mean of the distribution at each $t$ step from 1 to $X$:
+
+$$
+E(R_{t}) = \frac{1}{Y} \sum_{i=1}^{Y} P_{t, i}
+$$
+
+To get the variance:
+
+$$
+Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) = \frac{1}{Y^{2}} \sum_{i=1}^{Y}\left(P_{t,i} - \bar{P_{t}} \right)
+$$
+
+Implemented in the package by the following code, we want to first construct the distribution generator object, the _RandomGen object, then construct a _Simulation object to handle the simulation. Let's do both in using `amd_market_data` to supply the parameters:
+
+```
+>>> from risk_dash import simgen as sg
+>>> generator = sg.NormalDistribution(
+    location = amd_market_data.currentexmean,
+    scale = amd_market_data.currentexvol
+  )
+
+```

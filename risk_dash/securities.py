@@ -439,5 +439,5 @@ class Portfolio(object):
         self.port = {asset.name + ' ' + asset.type : asset for asset in assets}
         return self.port
 
-    def simulate(self, SimulationGenerator):
-        pass
+    def simulate(self, SimulationGenerator, ):
+        distribution = SimulationGenerator.generate()
