@@ -183,7 +183,7 @@ The Equity subclass is already implemented in the package, we can create an inst
   ordered_price = 179.98,
   quantity = 50,
   date_ordered = datetime(2018,3,9)
-)s
+)
 >>> aapl_stock.valuation(180.98) # $1 increase in value
 50.0
 >>> aapl_stock.mark_to_market(180.98) # Same $1 increase
@@ -512,14 +512,8 @@ array([-0.00050452, -0.00082389, -0.00105195, -0.00135753, -0.0019303 ])
 array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])
 ```
 
-The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially `E(R_{t}) = t \cdot E(R_{t=1})` and `S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})`. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function.
-
-In practice, we would want to pass the instance directly to the `simulate` method of the `_Security` class.
-
-```python
->>> aapl_stock.simulate(simulation_generator)
-
-
-```
+The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially $E(R_{t}) = t \cdot E(R_{t=1})$ and $S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})$. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function. To simulate the portfolio from the top down approach, we would then just use the portfolio mean and variance to then simulate the portfolio.
 
 ### Summary
+
+While this is just the first introduction to the package, there are many expandable directions to go. The aim for the package is to help formalize the development process by providing clear template classes and use cases. The next steps are to write `_Security` classes that match the portfolio that the analyst is trying to model and `_MarketData` classes that match the specific data store for the application.

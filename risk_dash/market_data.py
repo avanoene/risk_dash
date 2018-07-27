@@ -31,6 +31,16 @@ class _MarketData(object):
         """
         pass
 
+    def set_price_changes(self):
+        pass
+
+    def set_volatility(self, days):
+        pass
+
+    def set_expected(self, days):
+        pass
+
+
 class QuandlStockData(_MarketData):
 
     def __init__(self, apikey, ticker, days=80):

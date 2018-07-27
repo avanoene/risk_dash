@@ -240,7 +240,7 @@ class Portfolio(object):
         market_data = long_positions.join(short_positions)
         return market_data
 
-    def quick_plot(self, returns = True, key = 'adj_close', plot=True):
+    def quick_plot(self, returns = True, key = 'adj_close', plot=True, figsize = (5,8)):
         """
         Quickly plot using matplotlib and pandas.plot()
 
@@ -260,9 +260,9 @@ class Portfolio(object):
         if returns == True:
             market_data = self.calculate_portfolio_returns(market_data)
         if plot and returns:
-            np.exp(market_data.cumsum()).plot()
+            np.exp(market_data.cumsum()).plot(figsize=figsize)
         elif plot and not returns:
-            market_data.plot()
+            market_data.plot(figsize=figsize)
         else:
             return market_data
         return market_data
@@ -398,7 +398,7 @@ class Portfolio(object):
             market_data = self.get_portfolio_marketdata(key)
         if returns:
             market_data = self.calculate_portfolio_returns(market_data)
-            market_data = market_data.cumsum().cummax() - market_data.cumsum()
+            market_data = market_data.cumsum() - market_data.cumsum().cummax()
             market_data = np.exp(market_data)
         else:
             market_data = market_data.cummax() - market_data

@@ -46,7 +46,13 @@ Class</a><ul>
 <li><a class="reference external" href="#mark-the-portfolio">Mark the Portfolio</a></li>
 <li><a class="reference external" href="#parametrically-calculating-the-value-at-risk">Parametrically Calculating the Value at
 Risk</a></li>
-<li><a class="reference external" href="#simulating-the-portfolio">Simulating the Portfolio</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#simulating-the-portfolio">Simulating the Portfolio</a><ul>
+<li><a class="reference external" href="#simulating-a-unit-resolution-distribution">Simulating a Unit Resolution
+Distribution</a></li>
+<li><a class="reference external" href="#simulating-a-path-distribution">Simulating a Path
+Distribution</a></li>
 </ul>
 </li>
 <li><a class="reference external" href="#summary">Summary</a></li>
@@ -125,22 +131,22 @@ the portfolio constructed, we will specify and calculate parameters to
 simulate or look at historic distributions. We’ll then create a subclass
 of <a class="reference external" href="#simulation">_Simulation</a> and <a class="reference external" href="#randomgen">_RandomGen</a></p>
 <div class="section" id="security-data-security-objects-and-creating-security-subclasses">
-<h3>Security data, _Security objects, and creating Security Subclasses<a class="headerlink" href="#security-data-security-objects-and-creating-security-subclasses" title="Permalink to this headline">¶</a></h3>
-<p>The core of the package is in the _Security and Portfolio objects.
-Portfolio objects are naturally a collection of Securities, however we
-want to specify the type of securities that are in the portfolio. Since
-we’re focusing on a long/short equity portfolio we want to create an
-Equity subclass.</p>
-<p>Subclasses of _Security classes must have the following methods:</p>
+<h3>Security data, <code class="docutils literal notranslate"><span class="pre">_Security</span></code> objects, and creating Security Subclasses<a class="headerlink" href="#security-data-security-objects-and-creating-security-subclasses" title="Permalink to this headline">¶</a></h3>
+<p>The core of the package is in the <code class="docutils literal notranslate"><span class="pre">_Security</span></code> and <code class="docutils literal notranslate"><span class="pre">Portfolio</span></code>
+objects. <code class="docutils literal notranslate"><span class="pre">Portfolio</span></code> objects are naturally a collection of Securities,
+however we want to specify the type of securities that are in the
+portfolio. Since we’re focusing on a long/short equity portfolio we want
+to create an Equity subclass.</p>
+<p>Subclasses of <code class="docutils literal notranslate"><span class="pre">_Security</span></code> classes must have the following methods:</p>
 <ul class="simple">
 <li>valuation(current_price)</li>
 <li>mark_to_market(current_price)</li>
 <li>get_marketdata()</li>
 </ul>
-<p>In addition, we want to pass them the associated _MarketData object to
-represent the security’s historic pricing data. To build the Equity
-subclass, we first want to inherit any methods from the _Security
-class:</p>
+<p>In addition, we want to pass them the associated <code class="docutils literal notranslate"><span class="pre">_MarketData</span></code> object
+to represent the security’s historic pricing data. To build the
+<code class="docutils literal notranslate"><span class="pre">Equity</span></code> subclass, we first want to inherit any methods from the
+<code class="docutils literal notranslate"><span class="pre">_Security</span></code> class:</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Equity</span><span class="p">(</span><span class="n">_Security</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -403,11 +409,11 @@ created earlier:</p>
 <p>If we want to add a security to this portfolio, we can call the
 <code class="docutils literal notranslate"><span class="pre">add_security</span></code> method, to remove a security we call the
 <code class="docutils literal notranslate"><span class="pre">remove_security</span></code> method:</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amd_market_data</span> <span class="o">=</span> <span class="n">sec</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">(</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amd_market_data</span> <span class="o">=</span> <span class="n">QuandlStockData</span><span class="p">(</span>
 <span class="go">  ticker=&#39;AMD&#39;,</span>
 <span class="go">  apikey=apikey</span>
 <span class="go">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amd_stock</span> <span class="o">=</span> <span class="n">sec</span><span class="o">.</span><span class="n">Equity</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">amd_stock</span> <span class="o">=</span> <span class="n">Equity</span><span class="p">(</span>
 <span class="go">  ticker = &#39;AAPL&#39;,</span>
 <span class="go">  market_data = amd_market_data,</span>
 <span class="go">  ordered_price = 11.70,</span>
@@ -540,10 +546,10 @@ at Risk metric over a time horizon.</p>
 <p>This value is simply the standard deviation scaled by time, at the
 critical value specified:</p>
 <div class="math notranslate nohighlight">
-\[VaR_{t, T} = \sigma * \sqrt{T-t} * Z^{*}_{p = \alpha}\]</div>
+\[VaR_{t, T} = \sigma \cdot \sqrt{T-t} \cdot Z^{*}_{p = \alpha}\]</div>
 <p>We can interpret this Value at Risk as being the lower bound of the 95%
 confidence interval for the 10 day distribution. For this portfolio, a
-return over 10 days less than 8.3% should occur 2.5% of the time, on
+loss over 10 days less than 8.3% should occur 2.5% of the time, on
 average. To get the dollar value of the 10 Day Value at Risk, we would
 just multiply this percent change by the current portfolio market value.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dollar_value_at_risk</span> <span class="o">=</span> <span class="n">value_at_risk</span> <span class="o">*</span> <span class="p">(</span><span class="n">current_portfolio</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">+</span> <span class="n">current_portfolio</span><span class="o">.</span><span class="n">marked_change</span><span class="p">)</span>
@@ -577,8 +583,9 @@ future distribution.</p>
 <p>Another way we’ve implemented to calculate the value at risk is to
 simulate the portfolio distribution.</p>
 </div>
+</div>
 <div class="section" id="simulating-the-portfolio">
-<h4>Simulating the Portfolio<a class="headerlink" href="#simulating-the-portfolio" title="Permalink to this headline">¶</a></h4>
+<h3>Simulating the Portfolio<a class="headerlink" href="#simulating-the-portfolio" title="Permalink to this headline">¶</a></h3>
 <p>When simulating portfolio returns, one’s objective is to correctly
 specify the portfolio distribution. I consider two major approaches,
 “bottom-up” and “top-down”.</p>
@@ -624,17 +631,17 @@ modeling of individual securities within the portfolio. Another drawback
 is to change the weighting or portfolio members, one must recombine and
 simulate the new portfolio, which could be computationally intensive
 depending on the methodology.</p>
-<p>Either way, to implement simulation, the _Simulation and _RandomGen
-class that handle the calculation and generation respectfully. For
-example, to implement a naive return model, the included NaiveMonteCarlo
-class represents the following generation function for a single
-observation:</p>
+<p>Either way, to implement simulation, the <code class="docutils literal notranslate"><span class="pre">_Simulation</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_RandomGen</span></code> class that handle the calculation and generation
+respectfully. For example, to implement a naive return model, the
+included <code class="docutils literal notranslate"><span class="pre">NaiveMonteCarlo</span></code> class represents the following generation
+function for a single observation:</p>
 <div class="math notranslate nohighlight">
 \[R_{t} = \phi\]</div>
 <p>Where <span class="math">\phi</span> representing a pull from an imposed distribution. As
 such, we need to specify that imposed distribution, thus we include the
-NormalDistribution _RandomGen class to generate a pull. This class is
-just a wrapper to for numpy.random.normal with the mean and standard
+<code class="docutils literal notranslate"><span class="pre">NormalDistribution</span> <span class="pre">_RandomGen</span></code> class to generate a pull. This class
+is just a wrapper to for numpy.random.normal with the mean and standard
 deviation specified in the initialization.</p>
 <p>Since the aim is to specify the portfolio distribution X days into the
 future, we want to simulate a cumulative return path through time. Under
@@ -643,15 +650,150 @@ path is then:</p>
 <div class="math notranslate nohighlight">
 \[P = \sum_{t=1}^{X} R_{t} = \sum_{t=1}^{X} \phi\]</div>
 <p>Now to fully specify the distribution via a Monte Carlo process, we will
-generate Y paths to represent the underlying X day distribution. To get
-the mean fo the distribution:</p>
+generate <span class="math">Y</span> paths to represent the underlying <span class="math">X</span> day
+distribution. To get the mean of the distribution at each <span class="math">t</span> step
+from 1 to <span class="math">X</span>:</p>
 <div class="math notranslate nohighlight">
-\[E(R) = \frac{1}{Y} \sum_{i=1}^{Y} P_{i}\]</div>
+\[E(R_{t}) = \frac{1}{Y} \sum_{i=1}^{Y} P_{t, i} + E((R_{t-1}))\]</div>
 <p>To get the variance:</p>
 <div class="math notranslate nohighlight">
-\[Var(R) = E\left(\left(R - E(R)\right)^{2}\right)\]</div>
-<p>Implemented in the package, we then</p>
+\[Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) + Var(R_{t}) = \frac{1}{Y^{2}} \sum_{i=1}^{Y}\left(P_{t,i} - \bar{P_{t}} \right)\]</div>
+<p>Since each return is assumed independently and identically distributed,
+the above condenses to:</p>
+<div class="math notranslate nohighlight">
+\[Var(R_{t}) = t \cdot Var(R_{t})\]</div>
+<p>Since we can now switch out the distribution of <span class="math">\phi</span> to
+represent the portfolio or constituent securities, this generation
+function is agnostic of which approach explained above is taken. It’s
+for that reason the design choice was made to make the <code class="docutils literal notranslate"><span class="pre">_RandomGen</span></code>
+and <code class="docutils literal notranslate"><span class="pre">_Simulation</span></code> classes seperate instead of building methods
+directly into the <code class="docutils literal notranslate"><span class="pre">Portfolio</span></code> or <code class="docutils literal notranslate"><span class="pre">_Security</span></code> class.</p>
+<div class="section" id="simulating-a-unit-resolution-distribution">
+<h4>Simulating a Unit Resolution Distribution<a class="headerlink" href="#simulating-a-unit-resolution-distribution" title="Permalink to this headline">¶</a></h4>
+<p>First let’s simulate a unit resolution distribution. By default, the
+resolution is one day, but depending on the market data resolution you
+could simulate to match. Since the default is one day, let’s simulate a
+one day distribution and then simulate a X day forward path distribution
+using <code class="docutils literal notranslate"><span class="pre">aapl_stock</span></code>:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">risk_dash.simgen</span> <span class="k">import</span> <span class="n">NormalDistribution</span><span class="p">,</span> <span class="n">NaiveMonteCarlo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">log_return_generator</span> <span class="o">=</span> <span class="n">NormalDistribution</span><span class="p">(</span>
+<span class="go">    location = aapl_stock.market_data.currentexmean,</span>
+<span class="go">    scale = aapl_stock.market_data.currentexvol</span>
+<span class="go">  )</span>
+</pre></div>
 </div>
+<p>Since we’re just simulating one day, we can directly use the generator
+object simulate a one day return distribution. With our new
+<code class="docutils literal notranslate"><span class="pre">log_return_generator</span></code> instance, we are assuming a normally
+distributed return series. By default, using <code class="docutils literal notranslate"><span class="pre">currentexmean</span></code> will
+center the distribution around the closest 80 day exponentially weighted
+mean of daily AAPL returns. Similarly, using <code class="docutils literal notranslate"><span class="pre">currentexvol</span></code> will set
+the standard deviation to the closest 80 day exponentially weighted
+standard deviation of historic daily AAPL returns. To simulate one pull
+now from a normal distribution, we have an observation that represents a
+log return of AAPL.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">log_return_generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([-0.00948158])</span>
+</pre></div>
+</div>
+<p>One observation isn’t really helpful for us, we now want to simulate an
+arbitrarily large amount of observations to converge to the underlying
+distribution. In this case, let’s simulate 5000 observations:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">one_day_simluation</span> <span class="o">=</span> <span class="n">log_return_generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">one_day_simulation</span><span class="p">)</span>
+<span class="go">5000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">one_day_simluation</span><span class="p">)</span>
+<span class="go">-0.00036139846164594291</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aapl_stock</span><span class="o">.</span><span class="n">market_data</span><span class="o">.</span><span class="n">currentexmean</span>
+<span class="go">-0.00040076765463907944</span>
+<span class="go">&gt;&gt;&gt;np.std(one_day_simulation)</span>
+<span class="go">0.016497493178538599</span>
+<span class="go">&gt;&gt;&gt;aapl_stock.market_data.currentexvol</span>
+<span class="go">0.016485817752205818</span>
+</pre></div>
+</div>
+<p>To parameterize the sampling distribution of the distribution, we can
+simulate an arbitrarily large amount of simulations to converge to the
+sampling distribution:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">multiple_one_day_simulations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">log_return_generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">5000</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">multiple_one_day_simulations</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span> <span class="c1"># sampling distribution mean of the simulation mean</span>
+<span class="go">-0.00039625427660093282</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">multiple_one_day_simulations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="go">0.00023461080665209953</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">multiple_one_day_simulations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="go">0.016484835778989758</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">multiple_one_day_simulations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="go">0.00016629650698145025</span>
+</pre></div>
+</div>
+<p>With the mean and standard deviation of the sampling distribution we can
+construct confidence intervals to see if our calculated mean and
+variance is contained. This would imply we have specified the imposed
+distribution based on our calculation of <code class="docutils literal notranslate"><span class="pre">currentexvol</span></code> and
+<code class="docutils literal notranslate"><span class="pre">currentexmean</span></code>. The calculation for a 95% confidence level is:</p>
+<div class="math notranslate nohighlight">
+\[\bar{X} \pm Z^{*}_{p=\alpha} \frac{s}{\sqrt{n}}\]</div>
+<p>So for this case, for a 95% confidence level, <span class="math">1-\alpha</span>, our
+confidence interval for the simulation mean is (-0.0004027, -0.0003897)
+and for the simulation standard deviation is (0.0164802, 0.0164894). Our
+calculated historic values, -0.0004007 and 0.0164858, both fall within
+those confidence intervals so at the 95% confidence level we can
+determine this simulation represents a normally distributed one day
+return series.</p>
+</div>
+<div class="section" id="simulating-a-path-distribution">
+<h4>Simulating a Path Distribution<a class="headerlink" href="#simulating-a-path-distribution" title="Permalink to this headline">¶</a></h4>
+<p>To simulate a forward return path of independent returns, we now want to
+create a <code class="docutils literal notranslate"><span class="pre">NaiveMonteCarlo</span></code> object to simulate <span class="math">Y</span> forward
+resolution paths.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">simulation_generator</span> <span class="o">=</span> <span class="n">NaiveMonteCarlo</span><span class="p">(</span><span class="n">log_return_generator</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">NaiveMonteCarlo</span></code> accepts any <code class="docutils literal notranslate"><span class="pre">_RandomGen</span></code> object, so we could
+potentially pass a <code class="docutils literal notranslate"><span class="pre">_RandomGen</span></code> object that might more accurately
+represent our underlying data. For example, if we thought that AAPL was
+distributed with a Cauchy distribution to capture fatter tails, we could
+pass in a <code class="docutils literal notranslate"><span class="pre">_RandomGen</span></code> object that represented the distribution. Now
+we’ll maintain the assumption that the log returns are normally
+distributed and use the <code class="docutils literal notranslate"><span class="pre">generator</span></code> instance we created earlier.</p>
+<p>To simulate 5000 paths for a 5 day forward distribution, we would then
+call the <code class="docutils literal notranslate"><span class="pre">simulate</span></code> method passing the arguments <code class="docutils literal notranslate"><span class="pre">periods_forward=5</span></code>
+and <code class="docutils literal notranslate"><span class="pre">number_of_simulations=5000</span></code>. This will set the
+<code class="docutils literal notranslate"><span class="pre">simulation_mean</span></code>, <code class="docutils literal notranslate"><span class="pre">simulation_std</span></code>, and <code class="docutils literal notranslate"><span class="pre">simulated_distribution</span></code>
+attributes and return the simulated distribution.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path_simulation</span> <span class="o">=</span> <span class="n">simulation_generator</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">periods_forward</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_simulation</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(5000,5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulation_generator</span><span class="o">.</span><span class="n">simulation_mean</span>
+<span class="go">array([-0.00050452, -0.00082389, -0.00105195, -0.00135753, -0.0019303 ])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulation_generator</span><span class="o">.</span><span class="n">simulation_std</span>
+<span class="go">array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])</span>
+</pre></div>
+</div>
+<p>The simulation distribution now is 5000 individual 5 day paths,
+represented as a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array of shape (5000,5). The
+<code class="docutils literal notranslate"><span class="pre">simulation_mean</span></code> and <code class="docutils literal notranslate"><span class="pre">simulation_std</span></code> are then calculated across
+the column axis, giving us the simulated generation through time. Since
+this method is fairly naive, essentially the cumulative sum of
+independent random normals, it makes sense that the <code class="docutils literal notranslate"><span class="pre">simulation_mean</span></code>
+vector is essentially <code class="docutils literal notranslate"><span class="pre">E(R_{t})</span> <span class="pre">=</span> <span class="pre">t</span> <span class="pre">\cdot</span> <span class="pre">E(R_{t=1})</span></code> and
+<code class="docutils literal notranslate"><span class="pre">S.D.(R_{t})</span> <span class="pre">=</span> <span class="pre">\sqrt{t}</span> <span class="pre">*</span> <span class="pre">S.D.(R_{t=1})</span></code>. If we wanted to implement a
+more standard approach of simulating returns, we could then create a
+<code class="docutils literal notranslate"><span class="pre">_Simulation</span></code> class that would represent the value function. To
+simulate the portfolio from the top down approach, we would then just
+use the portfolio mean and variance to then simulate the portfolio.</p>
+</div>
+</div>
+<div class="section" id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>While this is just the first introduction to the package, there are many
+expandable directions to go. The aim for the package is to help
+formalize the development process by providing clear template classes
+and use cases. The next steps are to write <code class="docutils literal notranslate"><span class="pre">_Security</span></code> classes that
+match the portfolio that the analyst is trying to model and
+<code class="docutils literal notranslate"><span class="pre">_MarketData</span></code> classes that match the specific data store for the
+application.</p>
 </div>
 </div>
 </div>

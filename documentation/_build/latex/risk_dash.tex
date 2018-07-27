@@ -56,7 +56,7 @@
 
 
 \title{risk\_dash Documentation}
-\date{Jul 26, 2018}
+\date{Jul 27, 2018}
 \release{0.0.2}
 \author{Alexander van Oene}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -98,8 +98,18 @@ Class}}}
 {\hyperref[\detokenize{gettingstarted:parametrically-calculating-the-value-at-risk}]{\emph{Parametrically Calculating the Value at
 Risk}}}
 
+\end{itemize}
+
 \item {} 
 {\hyperref[\detokenize{gettingstarted:simulating-the-portfolio}]{\emph{Simulating the Portfolio}}}
+\begin{itemize}
+\item {} 
+{\hyperref[\detokenize{gettingstarted:simulating-a-unit-resolution-distribution}]{\emph{Simulating a Unit Resolution
+Distribution}}}
+
+\item {} 
+{\hyperref[\detokenize{gettingstarted:simulating-a-path-distribution}]{\emph{Simulating a Path
+Distribution}}}
 
 \end{itemize}
 
@@ -213,15 +223,15 @@ simulate or look at historic distributions. We’ll then create a subclass
 of {\hyperref[\detokenize{gettingstarted:simulation}]{\emph{\_Simulation}}} and {\hyperref[\detokenize{gettingstarted:randomgen}]{\emph{\_RandomGen}}}
 
 
-\subsection{Security data, \_Security objects, and creating Security Subclasses}
+\subsection{Security data, \sphinxstyleliteralintitle{\sphinxupquote{\_Security}} objects, and creating Security Subclasses}
 \label{\detokenize{gettingstarted:security-data-security-objects-and-creating-security-subclasses}}
-The core of the package is in the \_Security and Portfolio objects.
-Portfolio objects are naturally a collection of Securities, however we
-want to specify the type of securities that are in the portfolio. Since
-we’re focusing on a long/short equity portfolio we want to create an
-Equity subclass.
+The core of the package is in the \sphinxcode{\sphinxupquote{\_Security}} and \sphinxcode{\sphinxupquote{Portfolio}}
+objects. \sphinxcode{\sphinxupquote{Portfolio}} objects are naturally a collection of Securities,
+however we want to specify the type of securities that are in the
+portfolio. Since we’re focusing on a long/short equity portfolio we want
+to create an Equity subclass.
 
-Subclasses of \_Security classes must have the following methods:
+Subclasses of \sphinxcode{\sphinxupquote{\_Security}} classes must have the following methods:
 \begin{itemize}
 \item {} 
 valuation(current\_price)
@@ -234,10 +244,10 @@ get\_marketdata()
 
 \end{itemize}
 
-In addition, we want to pass them the associated \_MarketData object to
-represent the security’s historic pricing data. To build the Equity
-subclass, we first want to inherit any methods from the \_Security
-class:
+In addition, we want to pass them the associated \sphinxcode{\sphinxupquote{\_MarketData}} object
+to represent the security’s historic pricing data. To build the
+\sphinxcode{\sphinxupquote{Equity}} subclass, we first want to inherit any methods from the
+\sphinxcode{\sphinxupquote{\_Security}} class:
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -564,11 +574,11 @@ If we want to add a security to this portfolio, we can call the
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{amd\PYGZus{}market\PYGZus{}data} \PYG{o}{=} \PYG{n}{sec}\PYG{o}{.}\PYG{n}{QuandlStockData}\PYG{p}{(}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{amd\PYGZus{}market\PYGZus{}data} \PYG{o}{=} \PYG{n}{QuandlStockData}\PYG{p}{(}
 \PYG{g+go}{  ticker=\PYGZsq{}AMD\PYGZsq{},}
 \PYG{g+go}{  apikey=apikey}
 \PYG{g+go}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{amd\PYGZus{}stock} \PYG{o}{=} \PYG{n}{sec}\PYG{o}{.}\PYG{n}{Equity}\PYG{p}{(}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{amd\PYGZus{}stock} \PYG{o}{=} \PYG{n}{Equity}\PYG{p}{(}
 \PYG{g+go}{  ticker = \PYGZsq{}AAPL\PYGZsq{},}
 \PYG{g+go}{  market\PYGZus{}data = amd\PYGZus{}market\PYGZus{}data,}
 \PYG{g+go}{  ordered\PYGZus{}price = 11.70,}
@@ -728,11 +738,11 @@ The default time horizon is 10 days at a 95\% confidence level for the
 This value is simply the standard deviation scaled by time, at the
 critical value specified:
 \begin{equation*}
-\begin{split}VaR_{t, T} = \sigma * \sqrt{T-t} * Z^{*}_{p = \alpha}\end{split}
+\begin{split}VaR_{t, T} = \sigma \cdot \sqrt{T-t} \cdot Z^{*}_{p = \alpha}\end{split}
 \end{equation*}
 We can interpret this Value at Risk as being the lower bound of the 95\%
 confidence interval for the 10 day distribution. For this portfolio, a
-return over 10 days less than 8.3\% should occur 2.5\% of the time, on
+loss over 10 days less than 8.3\% should occur 2.5\% of the time, on
 average. To get the dollar value of the 10 Day Value at Risk, we would
 just multiply this percent change by the current portfolio market value.
 
@@ -778,7 +788,7 @@ Another way we’ve implemented to calculate the value at risk is to
 simulate the portfolio distribution.
 
 
-\subsubsection{Simulating the Portfolio}
+\subsection{Simulating the Portfolio}
 \label{\detokenize{gettingstarted:simulating-the-portfolio}}
 When simulating portfolio returns, one’s objective is to correctly
 specify the portfolio distribution. I consider two major approaches,
@@ -828,18 +838,18 @@ is to change the weighting or portfolio members, one must recombine and
 simulate the new portfolio, which could be computationally intensive
 depending on the methodology.
 
-Either way, to implement simulation, the \_Simulation and \_RandomGen
-class that handle the calculation and generation respectfully. For
-example, to implement a naive return model, the included NaiveMonteCarlo
-class represents the following generation function for a single
-observation:
+Either way, to implement simulation, the \sphinxcode{\sphinxupquote{\_Simulation}} and
+\sphinxcode{\sphinxupquote{\_RandomGen}} class that handle the calculation and generation
+respectfully. For example, to implement a naive return model, the
+included \sphinxcode{\sphinxupquote{NaiveMonteCarlo}} class represents the following generation
+function for a single observation:
 \begin{equation*}
 \begin{split}R_{t} = \phi\end{split}
 \end{equation*}
 Where \phi representing a pull from an imposed distribution. As
 such, we need to specify that imposed distribution, thus we include the
-NormalDistribution \_RandomGen class to generate a pull. This class is
-just a wrapper to for numpy.random.normal with the mean and standard
+\sphinxcode{\sphinxupquote{NormalDistribution \_RandomGen}} class to generate a pull. This class
+is just a wrapper to for numpy.random.normal with the mean and standard
 deviation specified in the initialization.
 
 Since the aim is to specify the portfolio distribution X days into the
@@ -850,16 +860,176 @@ path is then:
 \begin{split}P = \sum_{t=1}^{X} R_{t} = \sum_{t=1}^{X} \phi\end{split}
 \end{equation*}
 Now to fully specify the distribution via a Monte Carlo process, we will
-generate Y paths to represent the underlying X day distribution. To get
-the mean fo the distribution:
+generate Y paths to represent the underlying X day
+distribution. To get the mean of the distribution at each t step
+from 1 to X:
 \begin{equation*}
-\begin{split}E(R) = \frac{1}{Y} \sum_{i=1}^{Y} P_{i}\end{split}
+\begin{split}E(R_{t}) = \frac{1}{Y} \sum_{i=1}^{Y} P_{t, i} + E((R_{t-1}))\end{split}
 \end{equation*}
 To get the variance:
 \begin{equation*}
-\begin{split}Var(R) = E\left(\left(R - E(R)\right)^{2}\right)\end{split}
+\begin{split}Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) + Var(R_{t}) = \frac{1}{Y^{2}} \sum_{i=1}^{Y}\left(P_{t,i} - \bar{P_{t}} \right)\end{split}
 \end{equation*}
-Implemented in the package, we then
+Since each return is assumed independently and identically distributed,
+the above condenses to:
+\begin{equation*}
+\begin{split}Var(R_{t}) = t \cdot Var(R_{t})\end{split}
+\end{equation*}
+Since we can now switch out the distribution of \phi to
+represent the portfolio or constituent securities, this generation
+function is agnostic of which approach explained above is taken. It’s
+for that reason the design choice was made to make the \sphinxcode{\sphinxupquote{\_RandomGen}}
+and \sphinxcode{\sphinxupquote{\_Simulation}} classes seperate instead of building methods
+directly into the \sphinxcode{\sphinxupquote{Portfolio}} or \sphinxcode{\sphinxupquote{\_Security}} class.
+
+
+\subsubsection{Simulating a Unit Resolution Distribution}
+\label{\detokenize{gettingstarted:simulating-a-unit-resolution-distribution}}
+First let’s simulate a unit resolution distribution. By default, the
+resolution is one day, but depending on the market data resolution you
+could simulate to match. Since the default is one day, let’s simulate a
+one day distribution and then simulate a X day forward path distribution
+using \sphinxcode{\sphinxupquote{aapl\_stock}}:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{risk\PYGZus{}dash}\PYG{n+nn}{.}\PYG{n+nn}{simgen} \PYG{k}{import} \PYG{n}{NormalDistribution}\PYG{p}{,} \PYG{n}{NaiveMonteCarlo}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{log\PYGZus{}return\PYGZus{}generator} \PYG{o}{=} \PYG{n}{NormalDistribution}\PYG{p}{(}
+\PYG{g+go}{    location = aapl\PYGZus{}stock.market\PYGZus{}data.currentexmean,}
+\PYG{g+go}{    scale = aapl\PYGZus{}stock.market\PYGZus{}data.currentexvol}
+\PYG{g+go}{  )}
+\end{sphinxVerbatim}
+
+Since we’re just simulating one day, we can directly use the generator
+object simulate a one day return distribution. With our new
+\sphinxcode{\sphinxupquote{log\_return\_generator}} instance, we are assuming a normally
+distributed return series. By default, using \sphinxcode{\sphinxupquote{currentexmean}} will
+center the distribution around the closest 80 day exponentially weighted
+mean of daily AAPL returns. Similarly, using \sphinxcode{\sphinxupquote{currentexvol}} will set
+the standard deviation to the closest 80 day exponentially weighted
+standard deviation of historic daily AAPL returns. To simulate one pull
+now from a normal distribution, we have an observation that represents a
+log return of AAPL.
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{log\PYGZus{}return\PYGZus{}generator}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{g+go}{array([\PYGZhy{}0.00948158])}
+\end{sphinxVerbatim}
+
+One observation isn’t really helpful for us, we now want to simulate an
+arbitrarily large amount of observations to converge to the underlying
+distribution. In this case, let’s simulate 5000 observations:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{one\PYGZus{}day\PYGZus{}simluation} \PYG{o}{=} \PYG{n}{log\PYGZus{}return\PYGZus{}generator}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{l+m+mi}{5000}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{one\PYGZus{}day\PYGZus{}simulation}\PYG{p}{)}
+\PYG{g+go}{5000}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{one\PYGZus{}day\PYGZus{}simluation}\PYG{p}{)}
+\PYG{g+go}{\PYGZhy{}0.00036139846164594291}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{aapl\PYGZus{}stock}\PYG{o}{.}\PYG{n}{market\PYGZus{}data}\PYG{o}{.}\PYG{n}{currentexmean}
+\PYG{g+go}{\PYGZhy{}0.00040076765463907944}
+\PYG{g+go}{\PYGZgt{}\PYGZgt{}\PYGZgt{}np.std(one\PYGZus{}day\PYGZus{}simulation)}
+\PYG{g+go}{0.016497493178538599}
+\PYG{g+go}{\PYGZgt{}\PYGZgt{}\PYGZgt{}aapl\PYGZus{}stock.market\PYGZus{}data.currentexvol}
+\PYG{g+go}{0.016485817752205818}
+\end{sphinxVerbatim}
+
+To parameterize the sampling distribution of the distribution, we can
+simulate an arbitrarily large amount of simulations to converge to the
+sampling distribution:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{multiple\PYGZus{}one\PYGZus{}day\PYGZus{}simulations} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{n}{log\PYGZus{}return\PYGZus{}generator}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{l+m+mi}{5000}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{l+m+mi}{5000}\PYG{p}{]}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{multiple\PYGZus{}one\PYGZus{}day\PYGZus{}simulations}\PYG{p}{,} \PYG{n}{axis} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} sampling distribution mean of the simulation mean}
+\PYG{g+go}{\PYGZhy{}0.00039625427660093282}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{np}\PYG{o}{.}\PYG{n}{std}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{multiple\PYGZus{}one\PYGZus{}day\PYGZus{}simulations}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{)}
+\PYG{g+go}{0.00023461080665209953}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{std}\PYG{p}{(}\PYG{n}{multiple\PYGZus{}one\PYGZus{}day\PYGZus{}simulations}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{)}
+\PYG{g+go}{0.016484835778989758}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{np}\PYG{o}{.}\PYG{n}{std}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{std}\PYG{p}{(}\PYG{n}{multiple\PYGZus{}one\PYGZus{}day\PYGZus{}simulations}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{)}
+\PYG{g+go}{0.00016629650698145025}
+\end{sphinxVerbatim}
+
+With the mean and standard deviation of the sampling distribution we can
+construct confidence intervals to see if our calculated mean and
+variance is contained. This would imply we have specified the imposed
+distribution based on our calculation of \sphinxcode{\sphinxupquote{currentexvol}} and
+\sphinxcode{\sphinxupquote{currentexmean}}. The calculation for a 95\% confidence level is:
+\begin{equation*}
+\begin{split}\bar{X} \pm Z^{*}_{p=\alpha} \frac{s}{\sqrt{n}}\end{split}
+\end{equation*}
+So for this case, for a 95\% confidence level, 1-\alpha, our
+confidence interval for the simulation mean is (-0.0004027, -0.0003897)
+and for the simulation standard deviation is (0.0164802, 0.0164894). Our
+calculated historic values, -0.0004007 and 0.0164858, both fall within
+those confidence intervals so at the 95\% confidence level we can
+determine this simulation represents a normally distributed one day
+return series.
+
+
+\subsubsection{Simulating a Path Distribution}
+\label{\detokenize{gettingstarted:simulating-a-path-distribution}}
+To simulate a forward return path of independent returns, we now want to
+create a \sphinxcode{\sphinxupquote{NaiveMonteCarlo}} object to simulate Y forward
+resolution paths.
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{simulation\PYGZus{}generator} \PYG{o}{=} \PYG{n}{NaiveMonteCarlo}\PYG{p}{(}\PYG{n}{log\PYGZus{}return\PYGZus{}generator}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+The \sphinxcode{\sphinxupquote{NaiveMonteCarlo}} accepts any \sphinxcode{\sphinxupquote{\_RandomGen}} object, so we could
+potentially pass a \sphinxcode{\sphinxupquote{\_RandomGen}} object that might more accurately
+represent our underlying data. For example, if we thought that AAPL was
+distributed with a Cauchy distribution to capture fatter tails, we could
+pass in a \sphinxcode{\sphinxupquote{\_RandomGen}} object that represented the distribution. Now
+we’ll maintain the assumption that the log returns are normally
+distributed and use the \sphinxcode{\sphinxupquote{generator}} instance we created earlier.
+
+To simulate 5000 paths for a 5 day forward distribution, we would then
+call the \sphinxcode{\sphinxupquote{simulate}} method passing the arguments \sphinxcode{\sphinxupquote{periods\_forward=5}}
+and \sphinxcode{\sphinxupquote{number\_of\_simulations=5000}}. This will set the
+\sphinxcode{\sphinxupquote{simulation\_mean}}, \sphinxcode{\sphinxupquote{simulation\_std}}, and \sphinxcode{\sphinxupquote{simulated\_distribution}}
+attributes and return the simulated distribution.
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{path\PYGZus{}simulation} \PYG{o}{=} \PYG{n}{simulation\PYGZus{}generator}\PYG{o}{.}\PYG{n}{simulate}\PYG{p}{(}\PYG{n}{periods\PYGZus{}forward}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{number\PYGZus{}of\PYGZus{}simulations}\PYG{o}{=}\PYG{l+m+mi}{5000}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{path\PYGZus{}simulation}\PYG{o}{.}\PYG{n}{shape}
+\PYG{g+go}{(5000,5)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{simulation\PYGZus{}generator}\PYG{o}{.}\PYG{n}{simulation\PYGZus{}mean}
+\PYG{g+go}{array([\PYGZhy{}0.00050452, \PYGZhy{}0.00082389, \PYGZhy{}0.00105195, \PYGZhy{}0.00135753, \PYGZhy{}0.0019303 ])}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{simulation\PYGZus{}generator}\PYG{o}{.}\PYG{n}{simulation\PYGZus{}std}
+\PYG{g+go}{array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])}
+\end{sphinxVerbatim}
+
+The simulation distribution now is 5000 individual 5 day paths,
+represented as a \sphinxcode{\sphinxupquote{numpy}} array of shape (5000,5). The
+\sphinxcode{\sphinxupquote{simulation\_mean}} and \sphinxcode{\sphinxupquote{simulation\_std}} are then calculated across
+the column axis, giving us the simulated generation through time. Since
+this method is fairly naive, essentially the cumulative sum of
+independent random normals, it makes sense that the \sphinxcode{\sphinxupquote{simulation\_mean}}
+vector is essentially \sphinxcode{\sphinxupquote{E(R\_\{t\}) = t \textbackslash{}cdot E(R\_\{t=1\})}} and
+\sphinxcode{\sphinxupquote{S.D.(R\_\{t\}) = \textbackslash{}sqrt\{t\} * S.D.(R\_\{t=1\})}}. If we wanted to implement a
+more standard approach of simulating returns, we could then create a
+\sphinxcode{\sphinxupquote{\_Simulation}} class that would represent the value function. To
+simulate the portfolio from the top down approach, we would then just
+use the portfolio mean and variance to then simulate the portfolio.
+
+
+\subsection{Summary}
+\label{\detokenize{gettingstarted:summary}}
+While this is just the first introduction to the package, there are many
+expandable directions to go. The aim for the package is to help
+formalize the development process by providing clear template classes
+and use cases. The next steps are to write \sphinxcode{\sphinxupquote{\_Security}} classes that
+match the portfolio that the analyst is trying to model and
+\sphinxcode{\sphinxupquote{\_MarketData}} classes that match the specific data store for the
+application.
 
 
 \chapter{risk\_dash.securities}
@@ -1087,7 +1257,7 @@ Mark portfolio with current market prices, sets marked\_portfolio and market\_ch
 \index{quick\_plot() (risk\_dash.securities.Portfolio method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.quick_plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{quick\_plot}}}{\emph{returns=True}, \emph{key='adj\_close'}, \emph{plot=True}}{}
+\phantomsection\label{\detokenize{securities:risk_dash.securities.Portfolio.quick_plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{quick\_plot}}}{\emph{returns=True}, \emph{key='adj\_close'}, \emph{plot=True}, \emph{figsize=(5}, \emph{8)}}{}
 Quickly plot using matplotlib and pandas.plot()
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}

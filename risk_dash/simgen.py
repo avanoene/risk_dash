@@ -79,13 +79,18 @@ class HistoricFilteredSimulation(_Simulation):
     def fit(self, market_data):
         arma_model = ARMA(market_data, (1, 1))
         arma_res = arma_model.fit(method='mle', disp=0, start_ar_lags=10)
-        garch_model = ARMA(arma_res.resid, (1, 1))
+        garch_model = ARMA(np.square(arma_res.resid), (1, 1))
         garch_res = garch_model.fit(method='mle', disp=0, start_ar_lags=10)
         garch_parameters = garch_res.params
-        standardized = np.square(np.array([arma_res.resid[0]]))
-        for residual in arma_res.resid[1:]:
-            fit = garch_parameters[0] + garch_parameters[1] * np.square(residual) + garch_parameters[2] * standardized[-1]
-            standardized = np.append(standardized, fit)
+        standardized = np.square(np.array([arma_res.resid]))
+
+        return garch_parameters, garch_res, arma_res.resid, market_data
+
+    def simulate(self, periods_forward, number_of_simulations, market_data):
+        garch_values, model, residuals = self.fit(market_data)
+
+
+
 
 
 
