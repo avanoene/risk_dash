@@ -24,7 +24,7 @@ class _Security(object):
     def get_marketdata(self):
         return(self.market_data)
 
-    def simulate(self, SimulationGenerator):
+    def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
         pass
 
 
@@ -55,7 +55,13 @@ class Equity(_Security):
         self.market_value = self.quantity * current_price
         self.marked_change = self.valuation(current_price)
         return(self.marked_change)
+    def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
+        self.all_sims = SimulationGenerator.simulate(periods_forward, number_of_simulations)
+        self.simulation_mean = SimulationGenerator.simulation_mean
+        self.simulation_std = SimulationGenerator.simulation_std
+        self.simulated_distribution = SimulationGenerator.simulated_distribution
 
+        return self.simulation_mean, self.simulation_std
 
 class Trade(object):
 
@@ -439,5 +445,11 @@ class Portfolio(object):
         self.port = {asset.name + ' ' + asset.type : asset for asset in assets}
         return self.port
 
-    def simulate(self, SimulationGenerator, ):
-        distribution = SimulationGenerator.generate()
+    def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
+        self.all_sims = SimulationGenerator.simulate(periods_forward, number_of_simulations)
+        self.simulation_mean = SimulationGenerator.simulation_mean
+        self.simulation_std = SimulationGenerator.simulation_std
+        self.simulated_distribution = SimulationGenerator.simulated_distribution
+
+        return self.simulation_mean, self.simulation_std
+

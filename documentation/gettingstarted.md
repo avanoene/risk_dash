@@ -70,17 +70,17 @@ C --- E[Fundamental Data Store - not implemented]
 
 To do so, we'll need subclasses for the [_Security][3] and [_MarketData][2] classes to model specific types of securities. Currently supported is the Equity subclass. Once we have the portfolio constructed, we will specify and calculate parameters to simulate or look at historic distributions. We'll then create a subclass of [_Simulation][4] and [_RandomGen][5]
 
-### Security data, _Security objects, and creating Security Subclasses
+### Security data, `_Security` objects, and creating Security Subclasses
 
-The core of the package is in the _Security and Portfolio objects. Portfolio objects are naturally a collection of Securities, however we want to specify the type of securities that are in the portfolio. Since we're focusing on a long/short equity portfolio we want to create an Equity subclass.
+The core of the package is in the `_Security` and `Portfolio` objects. `Portfolio` objects are naturally a collection of Securities, however we want to specify the type of securities that are in the portfolio. Since we're focusing on a long/short equity portfolio we want to create an Equity subclass.
 
-Subclasses of _Security classes must have the following methods:
+Subclasses of `_Security` classes must have the following methods:
 
 * valuation(current_price)
 * mark_to_market(current_price)
 * get_marketdata()
 
-In addition, we want to pass them the associated _MarketData object to represent the security's historic pricing data. To build the Equity subclass, we first want to inherit any methods from the _Security class:
+In addition, we want to pass them the associated `_MarketData` object to represent the security's historic pricing data. To build the `Equity` subclass, we first want to inherit any methods from the `_Security` class:
 
 ```python
 class Equity(_Security):
@@ -183,7 +183,7 @@ The Equity subclass is already implemented in the package, we can create an inst
   ordered_price = 179.98,
   quantity = 50,
   date_ordered = datetime(2018,3,9)
-)
+)s
 >>> aapl_stock.valuation(180.98) # $1 increase in value
 50.0
 >>> aapl_stock.mark_to_market(180.98) # Same $1 increase
@@ -448,14 +448,14 @@ First let's simulate a unit resolution distribution. By default, the resolution 
 Since we're just simulating one day, we can directly use the generator object simulate a one day return distribution. With our new `log_return_generator` instance, we are assuming a normally distributed return series. By default, using `currentexmean` will center the distribution around the closest 80 day exponentially weighted mean of daily AAPL returns. Similarly, using `currentexvol` will set the standard deviation to the closest 80 day exponentially weighted standard deviation of historic daily AAPL returns. To simulate one pull now from a normal distribution, we have an observation that represents a log return of AAPL.
 
 ```python
->>> generator.generate(1)
+>>> log_return_generator.generate(1)
 array([-0.00948158])
 ```
 One observation isn't really helpful for us, we now want to simulate an arbitrarily large amount of observations to converge to the underlying distribution. In this case, let's simulate 5000 observations:
 
 ```python
 >>> import numpy as np
->>> one_day_simluation = generator.generate(5000)
+>>> one_day_simluation = log_return_generator.generate(5000)
 >>> len(one_day_simulation)
 5000
 >>> np.mean(one_day_simluation)
@@ -471,7 +471,7 @@ One observation isn't really helpful for us, we now want to simulate an arbitrar
 To parameterize the sampling distribution of the distribution, we can simulate an arbitrarily large amount of simulations to converge to the sampling distribution:
 
 ```python
->>> multiple_one_day_simulations = np.array([generator.generate(5000) for i in 5000])
+>>> multiple_one_day_simulations = np.array([log_return_generator.generate(5000) for i in 5000])
 >>> np.mean(np.mean(multiple_one_day_simulations, axis = 0)) # sampling distribution mean of the simulation mean
 -0.00039625427660093282
 >>> np.std(np.mean(multiple_one_day_simulations, axis=0))
@@ -495,7 +495,7 @@ So for this case, for a 95% confidence level, $1-\alpha$, our confidence interva
 To simulate a forward return path of independent returns, we now want to create a `NaiveMonteCarlo` object to simulate $Y$ forward resolution paths.
 
 ```python
->>> simulation_generator = NaiveMonteCarlo(generator)
+>>> simulation_generator = NaiveMonteCarlo(log_return_generator)
 ```
 
 The `NaiveMonteCarlo` accepts any `_RandomGen` object, so we could potentially pass a `_RandomGen` object that might more accurately represent our underlying data. For example, if we thought that AAPL was distributed with a Cauchy distribution to capture fatter tails, we could pass in a `_RandomGen` object that represented the distribution. Now we'll maintain the assumption that the log returns are normally distributed and use the `generator` instance we created earlier.
@@ -512,71 +512,14 @@ array([-0.00050452, -0.00082389, -0.00105195, -0.00135753, -0.0019303 ])
 array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])
 ```
 
-The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially `E(R_{t}) = t \cdot E(R_{t=1})` and `S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})`. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function. Let's write a class for Cox, Ross, and Rubinstein binomial model with an associated binomial generator.
+The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially `E(R_{t}) = t \cdot E(R_{t=1})` and `S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})`. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function.
+
+In practice, we would want to pass the instance directly to the `simulate` method of the `_Security` class.
 
 ```python
-class BinomialDistribtion(_RandomGen):
+>>> aapl_stock.simulate(simulation_generator)
 
-    def __init__(self, location, scale, probability=None):
-        self.scale = scale
-        self.location = location
-        if probability:
-            self.probability = probability
-        else:
-            up = np.exp(scale)
-            down = 1/up
-            self.probability = (np.exp(location) - down) / (up - down)
-
-    def generate(self, n, obs):
-        return np.random.binomial(n, self.probability, obs)
-
-class CRRBinomialTree(_Simulation):
-
-    def simulate(self, vol, periods_forward, number_of_simulations, resolution=None):
-        if resolution:
-            up = np.exp(vol * np.sqrt(resolution))
-            down = 1 / up
-            self.Generator.probability = (np.exp(self.Generator.location/resolution) - down) / (up - down)
-        else:
-            up = np.exp(vol)
-            down = 1/up
-
-        simulations = np.array([
-            self.Generator.generate(1, number_of_simulations)
-            for n in range(periods_forward)
-            ])
-        probabilities = np.array([
-            row * self.Generator.probability + (1 - row)*(1 - self.Generator.probability)
-            for row in simulations
-        ])
-        simulations = simulations.cumsum(axis = 0)
-        probabilities = probabilities.cumprod(axis = 0)
-        simulations = np.array([
-            np.power(up, simulations[n]) * np.power(down, ((n+1) - simulations[n]))
-            for n in range(periods_forward)
-        ])
-        simulations = np.log(simulations.T)
-        simulations = simulations * probabilities.T
-        self.simulation_mean = simulations.mean(axis=0)
-        self.simulation_std = simulations.std(axis=0)
-        self.simulated_distribution = simulations[:, -1]
-
-        return simulations
 
 ```
 
-Since we have defined the `simulate` method, we can now simulate the portfolio using CCR instead by making an instance of the classes.
-
-```python
->>> binomial_generator = BinomialDistribtion(
-    aapl_stock.market_data.currentexmean,
-    aapl_stock.market_data.currentexvol
-    ) # leave probability blank to calculate probability
->>> ccr_simulation = CCRBinomialTree(binomial_generator)
->>> ccr_path_simulation = ccr_simulation.simulate(
-    aapl_stock.market_data.currentexvol,
-    periods_forward=5,
-    number_of_simulations=5000,
-    resolution = 1)
->>> ccr_path_simulation
-```
+### Summary
