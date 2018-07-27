@@ -8,7 +8,9 @@
     - [Calculating Risk Metrics and Using the Portfolio Class](#calculating-risk-metrics-and-using-the-portfolio-class)
         - [Mark the Portfolio](#mark-the-portfolio)
         - [Parametrically Calculating the Value at Risk](#parametrically-calculating-the-value-at-risk)
-        - [Simulating the Portfolio](#simulating-the-portfolio)
+    - [Simulating the Portfolio](#simulating-the-portfolio)
+        - [Simulating a Unit Resolution Distribution](#simulating-a-unit-resolution-distribution)
+        - [Simulating a Path Distribution](#simulating-a-path-distribution)
     - [Summary](#summary)
 
 
@@ -259,11 +261,11 @@ The `Portfolio` class handles interactions with the portfolio data and the assoc
 If we want to add a security to this portfolio, we can call the `add_security` method, to remove a security we call the `remove_security` method:
 
 ```python
->>> amd_market_data = sec.QuandlStockData(
+>>> amd_market_data = QuandlStockData(
   ticker='AMD',
   apikey=apikey
 )
->>> amd_stock = sec.Equity(
+>>> amd_stock = Equity(
   ticker = 'AAPL',
   market_data = amd_market_data,
   ordered_price = 11.70,
@@ -363,7 +365,7 @@ The default time horizon is 10 days at a 95% confidence level for the `set_port_
 This value is simply the standard deviation scaled by time, at the critical value specified:
 
 $$
-VaR_{t, T} = \sigma * \sqrt{T-t} * Z^{*}_{p = \alpha}
+VaR_{t, T} = \sigma \cdot \sqrt{T-t} \cdot Z^{*}_{p = \alpha}
 $$
 
 We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, a loss over 10 days less than 8.3% should occur 2.5% of the time, on average. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
@@ -390,7 +392,7 @@ This method is fairly simple, however it is based on the assumption that the pre
 
 Another way we've implemented to calculate the value at risk is to simulate the portfolio distribution.
 
-#### Simulating the Portfolio
+### Simulating the Portfolio
 
 When simulating portfolio returns, one's objective is to correctly specify the portfolio distribution. I consider two major approaches, "bottom-up" and "top-down".
 
@@ -398,13 +400,13 @@ The "bottom-up" approach would include simulating the underlying securities firs
 
 The "top-down" approach would include aggregating the portfolio a priori and then simulating that distribution. Since the portfolio is made of the member securities, thus the aggregated distribution represents all covariance. While this method gets a little be trickier to handle with derivative securities, since you would need historic market prices per contract and potentially roll adjust through the time period, for securities like equities the assumption seems arguable. The benefit of this method would be having to deal with one simulation and verifying if it represents the underlying distribution vs having several different simulations and verifying if they accurately represent the covariance of constituent securities. The drawback is having less flexibility in the modeling of individual securities within the portfolio. Another drawback is to change the weighting or portfolio members, one must recombine and simulate the new portfolio, which could be computationally intensive depending on the methodology.
 
-Either way, to implement simulation, the _Simulation and _RandomGen class that handle the calculation and generation respectfully. For example, to implement a naive return model, the included NaiveMonteCarlo class represents the following generation function for a single observation:
+Either way, to implement simulation, the `_Simulation` and `_RandomGen` class that handle the calculation and generation respectfully. For example, to implement a naive return model, the included `NaiveMonteCarlo` class represents the following generation function for a single observation:
 
 $$
 R_{t} = \phi
 $$
 
-Where $\phi$ representing a pull from an imposed distribution. As such, we need to specify that imposed distribution, thus we include the NormalDistribution _RandomGen class to generate a pull. This class is just a wrapper to for numpy.random.normal with the mean and standard deviation specified in the initialization.
+Where $\phi$ representing a pull from an imposed distribution. As such, we need to specify that imposed distribution, thus we include the `NormalDistribution _RandomGen` class to generate a pull. This class is just a wrapper to for numpy.random.normal with the mean and standard deviation specified in the initialization.
 
 Since the aim is to specify the portfolio distribution X days into the future, we want to simulate a cumulative return path through time. Under the assumption that each day is independent, the individual simulation path is then:
 
@@ -415,22 +417,166 @@ $$
 Now to fully specify the distribution via a Monte Carlo process, we will generate $Y$ paths to represent the underlying $X$ day distribution. To get the mean of the distribution at each $t$ step from 1 to $X$:
 
 $$
-E(R_{t}) = \frac{1}{Y} \sum_{i=1}^{Y} P_{t, i}
+E(R_{t}) = \frac{1}{Y} \sum_{i=1}^{Y} P_{t, i} + E((R_{t-1}))
 $$
 
 To get the variance:
 
 $$
-Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) = \frac{1}{Y^{2}} \sum_{i=1}^{Y}\left(P_{t,i} - \bar{P_{t}} \right)
+Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) + Var(R_{t}) = \frac{1}{Y^{2}} \sum_{i=1}^{Y}\left(P_{t,i} - \bar{P_{t}} \right)
 $$
 
-Implemented in the package by the following code, we want to first construct the distribution generator object, the _RandomGen object, then construct a _Simulation object to handle the simulation. Let's do both in using `amd_market_data` to supply the parameters:
+Since each return is assumed independently and identically distributed, the above condenses to:
+$$
+Var(R_{t}) = t \cdot Var(R_{t})
+$$
+
+Since we can now switch out the distribution of $\phi$ to represent the portfolio or constituent securities, this generation function is agnostic of which approach explained above is taken. It's for that reason the design choice was made to make the `_RandomGen` and `_Simulation` classes seperate instead of building methods directly into the `Portfolio` or `_Security` class.
+
+#### Simulating a Unit Resolution Distribution
+
+First let's simulate a unit resolution distribution. By default, the resolution is one day, but depending on the market data resolution you could simulate to match. Since the default is one day, let's simulate a one day distribution and then simulate a X day forward path distribution using `aapl_stock`:
+
+```python
+>>> from risk_dash.simgen import NormalDistribution, NaiveMonteCarlo
+>>> log_return_generator = NormalDistribution(
+    location = aapl_stock.market_data.currentexmean,
+    scale = aapl_stock.market_data.currentexvol
+  )
+```
+
+Since we're just simulating one day, we can directly use the generator object simulate a one day return distribution. With our new `log_return_generator` instance, we are assuming a normally distributed return series. By default, using `currentexmean` will center the distribution around the closest 80 day exponentially weighted mean of daily AAPL returns. Similarly, using `currentexvol` will set the standard deviation to the closest 80 day exponentially weighted standard deviation of historic daily AAPL returns. To simulate one pull now from a normal distribution, we have an observation that represents a log return of AAPL.
+
+```python
+>>> generator.generate(1)
+array([-0.00948158])
+```
+One observation isn't really helpful for us, we now want to simulate an arbitrarily large amount of observations to converge to the underlying distribution. In this case, let's simulate 5000 observations:
+
+```python
+>>> import numpy as np
+>>> one_day_simluation = generator.generate(5000)
+>>> len(one_day_simulation)
+5000
+>>> np.mean(one_day_simluation)
+-0.00036139846164594291
+>>> aapl_stock.market_data.currentexmean
+-0.00040076765463907944
+>>>np.std(one_day_simulation)
+0.016497493178538599
+>>>aapl_stock.market_data.currentexvol
+0.016485817752205818
+```
+
+To parameterize the sampling distribution of the distribution, we can simulate an arbitrarily large amount of simulations to converge to the sampling distribution:
+
+```python
+>>> multiple_one_day_simulations = np.array([generator.generate(5000) for i in 5000])
+>>> np.mean(np.mean(multiple_one_day_simulations, axis = 0)) # sampling distribution mean of the simulation mean
+-0.00039625427660093282
+>>> np.std(np.mean(multiple_one_day_simulations, axis=0))
+0.00023461080665209953
+>>> np.mean(np.std(multiple_one_day_simulations, axis=0))
+0.016484835778989758
+>>> np.std(np.std(multiple_one_day_simulations, axis=0))
+0.00016629650698145025
+```
+
+With the mean and standard deviation of the sampling distribution we can construct confidence intervals to see if our calculated mean and variance is contained. This would imply we have specified the imposed distribution based on our calculation of `currentexvol` and `currentexmean`. The calculation for a 95% confidence level is:
+
+$$
+\bar{X} \pm Z^{*}_{p=\alpha} \frac{s}{\sqrt{n}}
+$$
+
+So for this case, for a 95% confidence level, $1-\alpha$, our confidence interval for the simulation mean is (-0.0004027, -0.0003897) and for the simulation standard deviation is (0.0164802, 0.0164894). Our calculated historic values, -0.0004007 and 0.0164858, both fall within those confidence intervals so at the 95% confidence level we can determine this simulation represents a normally distributed one day return series.
+
+#### Simulating a Path Distribution
+
+To simulate a forward return path of independent returns, we now want to create a `NaiveMonteCarlo` object to simulate $Y$ forward resolution paths.
+
+```python
+>>> simulation_generator = NaiveMonteCarlo(generator)
+```
+
+The `NaiveMonteCarlo` accepts any `_RandomGen` object, so we could potentially pass a `_RandomGen` object that might more accurately represent our underlying data. For example, if we thought that AAPL was distributed with a Cauchy distribution to capture fatter tails, we could pass in a `_RandomGen` object that represented the distribution. Now we'll maintain the assumption that the log returns are normally distributed and use the `generator` instance we created earlier.
+
+To simulate 5000 paths for a 5 day forward distribution, we would then call the `simulate` method passing the arguments `periods_forward=5` and `number_of_simulations=5000`. This will set the `simulation_mean`, `simulation_std`, and `simulated_distribution` attributes and return the simulated distribution.
+
+```python
+>>> path_simulation = simulation_generator.simulate(periods_forward=5, number_of_simulations=5000)
+>>> path_simulation.shape
+(5000,5)
+>>> simulation_generator.simulation_mean
+array([-0.00050452, -0.00082389, -0.00105195, -0.00135753, -0.0019303 ])
+>>> simulation_generator.simulation_std
+array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])
+```
+
+The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially `E(R_{t}) = t \cdot E(R_{t=1})` and `S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})`. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function. Let's write a class for Cox, Ross, and Rubinstein binomial model with an associated binomial generator.
+
+```python
+class BinomialDistribtion(_RandomGen):
+
+    def __init__(self, location, scale, probability=None):
+        self.scale = scale
+        self.location = location
+        if probability:
+            self.probability = probability
+        else:
+            up = np.exp(scale)
+            down = 1/up
+            self.probability = (np.exp(location) - down) / (up - down)
+
+    def generate(self, n, obs):
+        return np.random.binomial(n, self.probability, obs)
+
+class CRRBinomialTree(_Simulation):
+
+    def simulate(self, vol, periods_forward, number_of_simulations, resolution=None):
+        if resolution:
+            up = np.exp(vol * np.sqrt(resolution))
+            down = 1 / up
+            self.Generator.probability = (np.exp(self.Generator.location/resolution) - down) / (up - down)
+        else:
+            up = np.exp(vol)
+            down = 1/up
+
+        simulations = np.array([
+            self.Generator.generate(1, number_of_simulations)
+            for n in range(periods_forward)
+            ])
+        probabilities = np.array([
+            row * self.Generator.probability + (1 - row)*(1 - self.Generator.probability)
+            for row in simulations
+        ])
+        simulations = simulations.cumsum(axis = 0)
+        probabilities = probabilities.cumprod(axis = 0)
+        simulations = np.array([
+            np.power(up, simulations[n]) * np.power(down, ((n+1) - simulations[n]))
+            for n in range(periods_forward)
+        ])
+        simulations = np.log(simulations.T)
+        simulations = simulations * probabilities.T
+        self.simulation_mean = simulations.mean(axis=0)
+        self.simulation_std = simulations.std(axis=0)
+        self.simulated_distribution = simulations[:, -1]
+
+        return simulations
 
 ```
->>> from risk_dash import simgen as sg
->>> generator = sg.NormalDistribution(
-    location = amd_market_data.currentexmean,
-    scale = amd_market_data.currentexvol
-  )
 
+Since we have defined the `simulate` method, we can now simulate the portfolio using CCR instead by making an instance of the classes.
+
+```python
+>>> binomial_generator = BinomialDistribtion(
+    aapl_stock.market_data.currentexmean,
+    aapl_stock.market_data.currentexvol
+    ) # leave probability blank to calculate probability
+>>> ccr_simulation = CCRBinomialTree(binomial_generator)
+>>> ccr_path_simulation = ccr_simulation.simulate(
+    aapl_stock.market_data.currentexvol,
+    periods_forward=5,
+    number_of_simulations=5000,
+    resolution = 1)
+>>> ccr_path_simulation
 ```
