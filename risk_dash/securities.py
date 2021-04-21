@@ -16,29 +16,53 @@ class _Security(object):
         self.market_data = market_data
 
     def valuation(self, price):
-        pass
+        """
+        Function to return the value of _Security at a given price
+
+        :param price: float, the price to value the _Security
+
+        :return: float, the value of the _Security given price
+        """
+        raise NotImplementedError
 
     def mark_to_market(self, current_price):
-        pass
+        """
+        Function to value current _Security with current prices, marking the value to current prices
+
+        :param current_price: float, represents the current price for the _Security
+
+        :return: float, the value of the _Security at current market price
+        """
+        raise NotImplementedError
 
     def get_marketdata(self):
+        """
+        Helper function to return market_data attribute
+
+        :return: self.market_data
+        """
         return(self.market_data)
 
     def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
-        pass
+        """
+        Function to run simulation on a _Security based level
+        """
+        raise NotImplementedError
 
 
 class Equity(_Security):
+    """
+    The Equity class represents an equity position in a publically traded company 
+
+    :param ticker:
+    :param market_data:
+    :param ordered_price:
+    :param quantity:
+    :param date_ordered:
+    """
 
     def __init__(self, ticker, market_data : md.QuandlStockData, ordered_price, quantity, date_ordered):
-        """
 
-        :param ticker:
-        :param market_data:
-        :param ordered_price:
-        :param quantity:
-        :param date_ordered:
-        """
         self.name = ticker
         self.market_data = market_data
         self.ordered_price = ordered_price
@@ -48,14 +72,34 @@ class Equity(_Security):
         self.type = 'Equity'
 
     def valuation(self, price):
+        """
+        Returns value of the Equity given price input. Equity value is linear depending on a buy or sell, multiplied by the quantity of the position
+
+        :param price: float, represents a given price
+
+        :return: the value of the Equity at a given price
+        """
+
         value = (price - self.ordered_price) * self.quantity
         return(value)
 
     def mark_to_market(self, current_price):
+        """
+        Returns the current value of the Equity given current price
+
+        :param current_price: float, represents the current price of the Equity Security
+
+        :return: the value of the Equity at current market prices
+        """
         self.market_value = self.quantity * current_price
         self.marked_change = self.valuation(current_price)
         return(self.marked_change)
+
     def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
+        """
+        Function to run simulation at the Equity based level
+        """
+
         self.all_sims = SimulationGenerator.simulate(periods_forward, number_of_simulations)
         self.simulation_mean = SimulationGenerator.simulation_mean
         self.simulation_std = SimulationGenerator.simulation_std
@@ -88,22 +132,28 @@ class Portfolio(object):
     """
     The Portfolio class handles interactions with the portfolio data and the associated securities in the portfolio.
 
-    :param securities:
-    :param data_input:
-    :param apikey:
+    :param securities: list of _Security objects or None, if None, the object will try to create the port attribute using other data, if a list it will use the list of _Security objects
+    :param data_input: pandas.DataFrame, str, or None. If None and securities is None, no port attribute will be made and be an empty portfolio. Either pandas DataFrame or string path to a portfolio matching './portfolio_example.csv'
+    :param apikey: str, ApiKey for the market data object
 
     """
 
     def __init__(self, securities=None, data_input=None, apikey=None):
-        if securities:
+        self.port = None
+        if securities is not None:
             for asset in securities:
                 self.add_security(asset)
-        elif data_input and apikey:
+        elif data_input is not None and apikey is not None:
             self.construct_portfolio_csv(data_input, apikey)
         else:
             self.port = None
 
     def add_security(self, security, overwrite=True):
+        """
+        Helper function to add _Security object to port attribute
+
+        :param security: _Security, _Security object to add to port dictionary
+        """
         if self.port is not None:
             if (security.name + ' ' + security.type not in self.port.keys()) or overwrite:
                 self.port[security.name + ' ' + security.type] = security
@@ -114,10 +164,17 @@ class Portfolio(object):
             self.port[security.name + ' ' + security.type] = security
 
     def remove_security(self, security=None, security_name=None, security_type=None):
+        """
+        Helper function to remove _Security object from port attribute, either pass the object or name type string pair to remove from port dictionary
+
+        :param security: _Security, _Security object to remove
+        :param security_name: str, Name of the security for .port key, to match _Security.name
+        :param security_type: str, String to match _Security.type of the _Security object to be removed
+        """
         try:
-            if security:
+            if security is not None:
                 self.port.pop(security.name + ' ' + security.type)
-            elif security_name and security_type:
+            elif security_name is not None and security_type is not None:
                 self.port.pop(security_name + ' ' + security_type)
             else:
                 raise Exception('Must pass in either security or name and type')
@@ -446,6 +503,10 @@ class Portfolio(object):
         return self.port
 
     def simulate(self, SimulationGenerator, periods_forward, number_of_simulations):
+        """
+        Primary function to simulate the entire portfolio
+        """
+
         self.all_sims = SimulationGenerator.simulate(periods_forward, number_of_simulations)
         self.simulation_mean = SimulationGenerator.simulation_mean
         self.simulation_std = SimulationGenerator.simulation_std

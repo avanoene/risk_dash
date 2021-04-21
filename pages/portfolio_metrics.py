@@ -2,7 +2,7 @@ import json
 
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_table_experiments as dt
+import dash_table as dt
 from dash.dependencies import Input, Output
 from app import app
 
@@ -97,7 +97,7 @@ layout = html.Div(
         html.Div(
             html.Div(
                 dt.DataTable(
-                    rows=[{} for i in range(10)],
+                    data=[{} for i in range(10)],
                     columns = ['Type','Ticker', 'Ordered Date', 'Ordered Price', 'Quantity'],
                     id='portfolio'
                 ),
@@ -124,17 +124,17 @@ layout = html.Div(
     ]
 )
 
-@app.callback(Output('portfolio', 'rows'),
+@app.callback(Output('portfolio', 'data'),
               [Input('input-data', 'contents'),
                Input('input-data', 'filename')])
 def output_upload(contents, filename):
     if contents is not None:
         df = parse_content(contents, filename)
-        rows = df.to_dict('records')
-        return(rows)
+        data = df.to_dict('records')
+        return(data)
 
 @app.callback(Output('mtm', 'children'),
-              [Input('portfolio', 'rows')])
+              [Input('portfolio', 'data')])
 def displayport(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)
@@ -173,7 +173,7 @@ def displayport(contents):
         return(tbl)
 
 @app.callback(Output('portfolio_weights', 'figure'),
-              [Input('portfolio', 'rows')])
+              [Input('portfolio', 'data')])
 def create_vis(contents):
     if contents is not None and contents != [{}]:
         df = pd.DataFrame.from_dict(contents)

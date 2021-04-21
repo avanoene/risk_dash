@@ -6,11 +6,12 @@ import numpy as np
 
 
 class _MarketData(object):
-
+    """
+    Template for _MarketData subclasses
+    """
+    
     def __init__(self):
-        """
-        Template for _MarketData subclasses
-        """
+
         self.market_data = self.gather()
 
     def gather(self):
@@ -20,7 +21,7 @@ class _MarketData(object):
         :return: a pandas DataFrame, market_data or other data type to interact with
 
         """
-        pass
+        raise NotImplementedError
 
     def current_price(self):
         """
@@ -29,33 +30,34 @@ class _MarketData(object):
         :return: float the market price
 
         """
-        pass
+        raise NotImplementedError
 
     def set_price_changes(self):
-        pass
+        raise NotImplementedError
 
     def set_volatility(self, days):
-        pass
+        raise NotImplementedError
 
     def set_expected(self, days):
-        pass
+        raise NotImplementedError
 
 
 class QuandlStockData(_MarketData):
+    """
+    _MarketData class for Quandl's WIKI/EOD price data base (https://www.quandl.com/databases/WIKIP)
+
+    :param apikey: string, a valid Quandl apikey
+    :param ticker: string, ticker symbol to query
+    :param days: int, how many days back to use for rolling metrics
+    """
 
     def __init__(self, apikey, ticker, days=80):
-        """
-        _MarketData class for Quandl's WIKI/EOD price data base (https://www.quandl.com/databases/WIKIP)
 
-        :param apikey: string, a valid Quandl apikey
-        :param ticker: string, ticker symbol to query
-        :param days: int, how many days back to use for rolling metrics
-
-        """
         self.apikey = apikey
         self.ticker = ticker
         self.market_data = self.gather()
         self.market_data.index = self.market_data['date']
+        self.market_data = self.market_data.sort_index()
         self.maxdate = max(self.market_data['date'])
         self.set_volatility(days)
         self.set_expected(days)

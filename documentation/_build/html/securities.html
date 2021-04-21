@@ -1,23 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>risk_dash.securities &#8212; risk_dash 0.0.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="risk_dash.market_data" href="market_data.html" />
-    <link rel="prev" title="risk_dash" href="gettingstarted.html" />
+    <link rel="prev" title="risk_dash Dash application documentation" href="dashapp_documentation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,297 +28,373 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-risk_dash.securities">
 <span id="risk-dash-securities"></span><span id="securities"></span><h1>risk_dash.securities<a class="headerlink" href="#module-risk_dash.securities" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="risk_dash.securities._Security">
-<em class="property">class </em><code class="descclassname">risk_dash.securities.</code><code class="descname">_Security</code><span class="sig-paren">(</span><em>name</em>, <em>market_data: risk_dash.market_data._MarketData</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities._Security" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.securities.</span></code><code class="sig-name descname"><span class="pre">_Security</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">market_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="market_data.html#risk_dash.market_data._MarketData" title="risk_dash.market_data._MarketData"><span class="pre">risk_dash.market_data._MarketData</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities._Security" title="Permalink to this definition">¶</a></dt>
 <dd><p>Template for _Security subclasses</p>
+<dl class="py method">
+<dt id="risk_dash.securities._Security.get_marketdata">
+<code class="sig-name descname"><span class="pre">get_marketdata</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security.get_marketdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities._Security.get_marketdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to return market_data attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.market_data</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py method">
+<dt id="risk_dash.securities._Security.mark_to_market">
+<code class="sig-name descname"><span class="pre">mark_to_market</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_price</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security.mark_to_market"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities._Security.mark_to_market" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to value current _Security with current prices, marking the value to current prices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>current_price</strong> – float, represents the current price for the _Security</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>float, the value of the _Security at current market price</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="risk_dash.securities._Security.simulate">
+<code class="sig-name descname"><span class="pre">simulate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SimulationGenerator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_forward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_simulations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities._Security.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run simulation on a _Security based level</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="risk_dash.securities._Security.valuation">
+<code class="sig-name descname"><span class="pre">valuation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#_Security.valuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities._Security.valuation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to return the value of _Security at a given price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>price</strong> – float, the price to value the _Security</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>float, the value of the _Security given price</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="risk_dash.securities.Equity">
-<em class="property">class </em><code class="descclassname">risk_dash.securities.</code><code class="descname">Equity</code><span class="sig-paren">(</span><em>ticker</em>, <em>market_data: risk_dash.market_data.QuandlStockData</em>, <em>ordered_price</em>, <em>quantity</em>, <em>date_ordered</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Equity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Equity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.securities.</span></code><code class="sig-name descname"><span class="pre">Equity</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">market_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="market_data.html#risk_dash.market_data.QuandlStockData" title="risk_dash.market_data.QuandlStockData"><span class="pre">risk_dash.market_data.QuandlStockData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_price</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_ordered</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Equity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Equity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Equity class represents an equity position in a publically traded company</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ticker</strong> – </p></li>
+<li><p><strong>market_data</strong> – </p></li>
+<li><p><strong>ordered_price</strong> – </p></li>
+<li><p><strong>quantity</strong> – </p></li>
+<li><p><strong>date_ordered</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="risk_dash.securities.Equity.mark_to_market">
+<code class="sig-name descname"><span class="pre">mark_to_market</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_price</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Equity.mark_to_market"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Equity.mark_to_market" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current value of the Equity given current price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>current_price</strong> – float, represents the current price of the Equity Security</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the value of the Equity at current market prices</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="class">
+<dl class="py method">
+<dt id="risk_dash.securities.Equity.simulate">
+<code class="sig-name descname"><span class="pre">simulate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SimulationGenerator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_forward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_simulations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Equity.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Equity.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run simulation at the Equity based level</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="risk_dash.securities.Equity.valuation">
+<code class="sig-name descname"><span class="pre">valuation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Equity.valuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Equity.valuation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value of the Equity given price input. Equity value is linear depending on a buy or sell, multiplied by the quantity of the position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>price</strong> – float, represents a given price</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the value of the Equity at a given price</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="risk_dash.securities.Portfolio">
-<em class="property">class </em><code class="descclassname">risk_dash.securities.</code><code class="descname">Portfolio</code><span class="sig-paren">(</span><em>securities=None</em>, <em>data_input=None</em>, <em>apikey=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.securities.</span></code><code class="sig-name descname"><span class="pre">Portfolio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">securities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Portfolio class handles interactions with the portfolio data and the associated securities in the portfolio.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>securities</strong> – </li>
-<li><strong>data_input</strong> – </li>
-<li><strong>apikey</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>securities</strong> – list of _Security objects or None, if None, the object will try to create the port attribute using other data, if a list it will use the list of _Security objects</p></li>
+<li><p><strong>data_input</strong> – pandas.DataFrame, str, or None. If None and securities is None, no port attribute will be made and be an empty portfolio. Either pandas DataFrame or string path to a portfolio matching ‘./portfolio_example.csv’</p></li>
+<li><p><strong>apikey</strong> – str, ApiKey for the market data object</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
+<dt id="risk_dash.securities.Portfolio.add_security">
+<code class="sig-name descname"><span class="pre">add_security</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">security</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.add_security"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.add_security" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to add _Security object to port attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>security</strong> – _Security, _Security object to add to port dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.calculate_portfolio_returns">
-<code class="descname">calculate_portfolio_returns</code><span class="sig-paren">(</span><em>market_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.calculate_portfolio_returns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.calculate_portfolio_returns" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">calculate_portfolio_returns</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">market_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.calculate_portfolio_returns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.calculate_portfolio_returns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates market data returns from flat prices</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>market_data</strong> – the market_data variable with a flat price values</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the market_data variable with log returns</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>market_data</strong> – the market_data variable with a flat price values</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the market_data variable with log returns</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.construct_portfolio_csv">
-<code class="descname">construct_portfolio_csv</code><span class="sig-paren">(</span><em>data_input</em>, <em>apikey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.construct_portfolio_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.construct_portfolio_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">construct_portfolio_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.construct_portfolio_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.construct_portfolio_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in portfolio constructor method</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_input</strong> – either pandas DataFrame or string path to a portfolio matching ‘./portfolio_example.csv’</li>
-<li><strong>apikey</strong> – ApiKey for the market data object</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_input</strong> – either pandas DataFrame or string path to a portfolio matching ‘./portfolio_example.csv’</p></li>
+<li><p><strong>apikey</strong> – ApiKey for the market data object</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dict for self.port</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict for self.port</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.drawdown">
-<code class="descname">drawdown</code><span class="sig-paren">(</span><em>market_data=None</em>, <em>returns=True</em>, <em>key='adj_close'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.drawdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.drawdown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">drawdown</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">market_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adj_close'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.drawdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.drawdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate Draw Down, the previous peak to current trough, through the historic market data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</li>
-<li><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</li>
-<li><strong>key</strong> – string, corresponds to the market_data column to be calculated</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</p></li>
+<li><p><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</p></li>
+<li><p><strong>key</strong> – string, corresponds to the market_data column to be calculated</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">DataFrame representing the Draw Down for the portfolio and components</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame representing the Draw Down for the portfolio and components</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.get_date">
-<code class="descname">get_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_date" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_date</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grab the security with the most dates.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">returns a DatetimeIndex to construct a shared portfolio market_data DataFrame</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>returns a DatetimeIndex to construct a shared portfolio market_data DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.get_last_shared_date">
-<code class="descname">get_last_shared_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_last_shared_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_last_shared_date" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_last_shared_date</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_last_shared_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_last_shared_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the last shared date</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">DateTime object</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DateTime object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.get_port_variance">
-<code class="descname">get_port_variance</code><span class="sig-paren">(</span><em>recalc=False</em>, <em>confidence_interval=0.39881763041638185</em>, <em>var_horizon=10</em>, <em>lookback_periods=0</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_port_variance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_port_variance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_port_variance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recalc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.39881763041638185</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookback_periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_port_variance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_port_variance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns portfolio variance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recalc</strong> – bool, If True recalculate variance</li>
-<li><strong>confidence_interval</strong> – float, The critical value to implement parametric VaR</li>
-<li><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</li>
-<li><strong>lookback_periods</strong> – int, how many days/periods backward to condition the underlying distribution</li>
-<li><strong>key</strong> – string, corresponds to the market_data column to be calculated</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recalc</strong> – bool, If True recalculate variance</p></li>
+<li><p><strong>confidence_interval</strong> – float, The critical value to implement parametric VaR</p></li>
+<li><p><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</p></li>
+<li><p><strong>lookback_periods</strong> – int, how many days/periods backward to condition the underlying distribution</p></li>
+<li><p><strong>key</strong> – string, corresponds to the market_data column to be calculated</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tuple: (float Var(Portfolio), float Parametric Portfolio V&#64;R)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple: (float Var(Portfolio), float Parametric Portfolio V&#64;R)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.get_portfolio_marketdata">
-<code class="descname">get_portfolio_marketdata</code><span class="sig-paren">(</span><em>key=None</em>, <em>recalc=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_portfolio_marketdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_portfolio_marketdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_portfolio_marketdata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_portfolio_marketdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_portfolio_marketdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns self.market_data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> – If not set, use key to set market_data</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame self.market_data</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – If not set, use key to set market_data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas DataFrame self.market_data</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.get_weights">
-<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_weights</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.get_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns self.weights</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict for each security weight</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dict for each security weight</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.historic_var">
-<code class="descname">historic_var</code><span class="sig-paren">(</span><em>market_data=None</em>, <em>returns=True</em>, <em>key='adj_close'</em>, <em>confidence=2.5</em>, <em>var_horizon=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.historic_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.historic_var" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">historic_var</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">market_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adj_close'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.historic_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.historic_var" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calulate Value at Risk from the historic distrubtion</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</li>
-<li><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</li>
-<li><strong>key</strong> – string, corresponds to the market_data column to be calculated</li>
-<li><strong>confidence</strong> – float, percentile in percentage to pass into np.percentile</li>
-<li><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</p></li>
+<li><p><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</p></li>
+<li><p><strong>key</strong> – string, corresponds to the market_data column to be calculated</p></li>
+<li><p><strong>confidence</strong> – float, percentile in percentage to pass into np.percentile</p></li>
+<li><p><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tuple, (DataFrame, market_data, float, Historic VaR)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple, (DataFrame, market_data, float, Historic VaR)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.mark">
-<code class="descname">mark</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.mark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.mark" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">mark</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.mark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark portfolio with current market prices, sets marked_portfolio and market_change.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.quick_plot">
-<code class="descname">quick_plot</code><span class="sig-paren">(</span><em>returns=True</em>, <em>key='adj_close'</em>, <em>plot=True</em>, <em>figsize=(5</em>, <em>8)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.quick_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.quick_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">quick_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adj_close'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5,</span> <span class="pre">8)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.quick_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.quick_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quickly plot using matplotlib and pandas.plot()</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</li>
-<li><strong>key</strong> – string, corresponds to the market_data column to be calculated</li>
-<li><strong>plot</strong> – Bool, if True, plot the data frame, if flase just return the market_data DataFrame</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> – Bool, True if calculate DD based on continuous returns, False if on level prices</p></li>
+<li><p><strong>key</strong> – string, corresponds to the market_data column to be calculated</p></li>
+<li><p><strong>plot</strong> – Bool, if True, plot the data frame, if flase just return the market_data DataFrame</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">DataFrame market_data</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame market_data</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="risk_dash.securities.Portfolio.remove_security">
+<code class="sig-name descname"><span class="pre">remove_security</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">security</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">security_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">security_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.remove_security"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.remove_security" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to remove _Security object from port attribute, either pass the object or name type string pair to remove from port dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>security</strong> – _Security, _Security object to remove</p></li>
+<li><p><strong>security_name</strong> – str, Name of the security for .port key, to match _Security.name</p></li>
+<li><p><strong>security_type</strong> – str, String to match _Security.type of the _Security object to be removed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.set_port_variance">
-<code class="descname">set_port_variance</code><span class="sig-paren">(</span><em>market_data=None</em>, <em>confidence_interval=-1.9599639845400545</em>, <em>var_horizon=10</em>, <em>lookback_periods=0</em>, <em>key='percentchange'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_port_variance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_port_variance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_port_variance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">market_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1.9599639845400545</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookback_periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'percentchange'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_port_variance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_port_variance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calulates parametric Variance by calculating Weight.T * Cov * Weight</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</li>
-<li><strong>confidence_interval</strong> – float, The critical value to implement parametric VaR</li>
-<li><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</li>
-<li><strong>lookback_periods</strong> – int, how many days/periods backward to condition the underlying distribution</li>
-<li><strong>key</strong> – string, corresponds to the market_data column to be calculated</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>market_data</strong> – DataFrame, the portfolio level market_data. Use if made external changes to the market_data</p></li>
+<li><p><strong>confidence_interval</strong> – float, The critical value to implement parametric VaR</p></li>
+<li><p><strong>var_horizon</strong> – int, how many days/periods forward the parametric VaR should be calculated</p></li>
+<li><p><strong>lookback_periods</strong> – int, how many days/periods backward to condition the underlying distribution</p></li>
+<li><p><strong>key</strong> – string, corresponds to the market_data column to be calculated</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">float portfolio variance, standard deviation ** 2, float parametric value at risk</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>float portfolio variance, standard deviation ** 2, float parametric value at risk</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.set_portfolio_marketdata">
-<code class="descname">set_portfolio_marketdata</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_portfolio_marketdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_portfolio_marketdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_portfolio_marketdata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_portfolio_marketdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_portfolio_marketdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine individual market data into one pandas DataFrame.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> – Common column name for each security</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame containing columns for each security’s common market_data</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – Common column name for each security</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas DataFrame containing columns for each security’s common market_data</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.set_weights">
-<code class="descname">set_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_weights</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.set_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate value weighted portfolio.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict for each security weight</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dict for each security weight</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="risk_dash.securities.Portfolio.simulate">
+<code class="sig-name descname"><span class="pre">simulate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SimulationGenerator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_forward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_simulations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primary function to simulate the entire portfolio</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="risk_dash.securities.Portfolio.value">
-<code class="descname">value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/securities.html#Portfolio.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.securities.Portfolio.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Value current portfolio with current market prices.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">value of the portfolio</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>value of the portfolio</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -329,6 +403,7 @@
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -336,23 +411,21 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="gettingstarted.html" title="previous chapter">risk_dash</a></li>
+      <li>Previous: <a href="dashapp_documentation.html" title="previous chapter">risk_dash Dash application documentation</a></li>
       <li>Next: <a href="market_data.html" title="next chapter">risk_dash.market_data</a></li>
   </ul></li>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -361,8 +434,8 @@
       &copy;2018, Alexander van Oene.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/securities.rst.txt"

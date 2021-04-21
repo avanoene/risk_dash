@@ -2,6 +2,7 @@ import json
 
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 import numpy as np
 import pandas as pd
 from pandas.tseries.offsets import BDay
@@ -23,28 +24,27 @@ time_options =['5D',
 '10Y'
 ]
 
-layout = html.Div([
+layout = dbc.Container([
     html.H2('Individual Equity Analysis'),
-    html.Div(
+    dbc.Row(
         [
             html.H5('Enter ticker symbol and hit Run to run simulation'),
             html.Label('Ticker'),
             dcc.Input(id='stock', value='AAPL', type='text'),
             html.Button(id='submit', n_clicks=0, children='Run')
         ],
-        className='row'
     ),
     html.Div(id='querydata', style={'display':'none'}),
     html.Div(id='simdata', style={'display':'none'}),
-    html.Div(
+    dbc.Row(
         [
-            dcc.Graph(id='equityline')
+            dbc.Col(dcc.Graph(id='equityline', config=dict( autosizeable=True)), lg=12)
         ],
-        className='row'
+        align='center'
     ),
-    html.Div(
+    dbc.Row(
         [
-            html.Div(
+            dbc.Col(
                 [
                     html.H5('Number of Simulations'),
                     dcc.Input(
@@ -54,9 +54,9 @@ layout = html.Div([
                         value=1000
                     )
                 ],
-                className='col-md-2'
+                md=2
             ),
-            html.Div(
+            dbc.Col(
                 [
                     html.H5('Lookback Period for Volatility Parameterization'),
                     dcc.RadioItems(
@@ -70,9 +70,9 @@ layout = html.Div([
                         labelStyle={'display': 'inline-block'}
                     )
                 ],
-                className = 'col-md-2'
+                md=2
             ),
-            html.Div(
+            dbc.Col(
                 [
                     html.H5('Number of Days Forward'),
                     dcc.Input(
@@ -82,25 +82,24 @@ layout = html.Div([
                         value = 10
                     )
                 ],
-                className = 'col-md-2'
+                md=2
             )
         ],
-        className='row'
+        align='center'
     ),
-    html.Div([
-        html.Div(
+    dbc.Row([
+        dbc.Col(
             dcc.Graph(id='montecarlo'),
-            className='col-md-6'
+            md=6
         ),
-        html.Div(
+        dbc.Col(
             id='metrics_table',
-            className='col-md-6'
+            md=6
         )
         ],
-        className='row'
     )
     ],
-    className='container-fluid'
+    fluid=True
 )
 
 @app.callback(
@@ -268,7 +267,7 @@ def chart(data, stock):
         Input('periods_forward', 'value')
     ]
 )
-def montecarlohistigram(simdata, forward):
+def monte_carlo_histogram(simdata, forward):
     simdata = json.loads(simdata)
     tempdata = pd.DataFrame(json.loads(simdata['data']))
     fig_data = [

@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>risk_dash &#8212; risk_dash 0.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="risk_dash Overview and Getting Started" href="gettingstarted.html" />
+    <link rel="prev" title="Documentation for risk_dash" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="risk-dash">
+<h1>risk_dash<a class="headerlink" href="#risk-dash" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/avanoene/risk_dash">risk_dash</a> is a framework to
+help simplify the data flow for a portfolio of assets and handle market
+risk metrics at the asset and portfolio level. If you clone the source
+<a class="reference external" href="https://github.com/avanoene/risk_dash">repository</a>, included is a
+<a class="reference external" href="https://plot.ly/dash/">Dash</a> application to be an example of some of
+the uses for the package.</p>
+<div class="section" id="disclaimer-due-to-data-issues-only-up-to-march-28th-eod-is-available-from-quandls-wiki-eod-stock-prices-found-in-the-example-application">
+<h2>Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl’s WIKI EOD Stock Prices found in the example application.<a class="headerlink" href="#disclaimer-due-to-data-issues-only-up-to-march-28th-eod-is-available-from-quandls-wiki-eod-stock-prices-found-in-the-example-application" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="abstract">
+<h3>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h3>
+<p>While there are many Python packages that provide ways to do data
+analysis, in fact the package utilizes
+<a class="reference external" href="https://pandas.pydata.org/">pandas</a>,
+<a class="reference external" href="http://www.numpy.org/">numpy</a>, and
+<a class="reference external" href="https://www.scipy.org/">scipy</a> heavily, there are few that apply and
+handle common tasks that analysts face in quantifying market risk.
+<a class="reference external" href="https://github.com/quantopian/pyfolio">pyfolio</a> is one of those
+packages, however it forces you to utilize their infrastructure package
+<a class="reference external" href="http://www.zipline.io/">Zipline</a> where as
+<a class="reference external" href="https://github.com/avanoene/risk_dash">risk_dash</a> aims to provide a
+framework to formalize the data flow while being totally customizable
+for the analyst. <a class="reference external" href="https://github.com/avanoene/risk_dash">risk_dash</a>
+is comprised of classes and methods to handle the data flow and
+calculation of market risk metrics at the asset and portfolio level. In
+use, this package should ease the developer’s work in building a
+comprehensive risk analytics application and specifying the underlying
+risk distribution. This package does not aim to generate trade ideas,
+but quantify the market risks portfolios of securities face. Included is
+an example of an application that utilizes this framework focusing on an
+equity portfolio.</p>
+</div>
+<div class="section" id="thesis-steps">
+<h3>Thesis Steps<a class="headerlink" href="#thesis-steps" title="Permalink to this headline">¶</a></h3>
+<p>First create a framework package, risk_dash, to handle a portfolio of
+assets, then create a risk application to calculate and display common
+risk factors and metrics to present common uses for the framework,
+including: Value at Risk, Expected Portfolio Return and Volatility,
+Current Return, Systematic risk (Fama - French / CAPM)</p>
+<p>To accomplish this task, I am planning on using current research and
+python packages. I am planning on using <a class="reference external" href="https://plot.ly/dash/">Dash by
+Plotly</a> to create the front end user interface
+and deploying the underlying Flask app on either
+<a class="reference external" href="https://www.digitalocean.com/">DigitalOcean</a> or
+<a class="reference external" href="https://www.heroku.com/">Heroku</a></p>
+<p>The object model is housed in <code class="docutils literal notranslate"><span class="pre">~/risk_dash/</span></code> where as the application
+pages are in <code class="docutils literal notranslate"><span class="pre">~/pages/</span></code> and are managed by <code class="docutils literal notranslate"><span class="pre">/dashapp.py</span></code></p>
+<p>While risk_dash only needs a few
+dependencies,<a class="reference external" href="https://pandas.pydata.org/">pandas</a>,
+<a class="reference external" href="http://www.numpy.org/">numpy</a>,
+<a class="reference external" href="https://www.scipy.org/">scipy</a>,<a class="reference external" href="https://www.quandl.com/tools/python">quandl</a>,
+and <a class="reference external" href="http://docs.python-requests.org/en/master/">requests</a>, the
+included application uses the dependencies listed in
+<a class="reference external" href="https://github.com/avanoene/risk_dash/requirements.txt">requirements.txt</a>
+which can be installed by:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
+<p>It is highly recommended that you should use a virtual environment when
+running the package, for details check the <a class="reference external" href="https://docs.python.org/3/tutorial/venv.html">Python
+documentation</a></p>
+</div>
+</div>
+<div class="section" id="getting-started-locally-running-the-dash-app">
+<h2>Getting Started - Locally Running the Dash App<a class="headerlink" href="#getting-started-locally-running-the-dash-app" title="Permalink to this headline">¶</a></h2>
+<p>First add file <code class="docutils literal notranslate"><span class="pre">apiconfig.py</span></code> to the directory at the same level as
+<code class="docutils literal notranslate"><span class="pre">dashapp.py</span></code>. That file should contain all of the api information to
+source the market data. I’m using <a class="reference external" href="https://www.quandl.com/">Quandl</a>
+so my <code class="docutils literal notranslate"><span class="pre">apiconfig.py</span></code> file is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="n">quandl_apikey</span> <span class="o">=</span> <span class="s1">&#39;quandl-api-key&#39;</span> <span class="c1"># replace with valid key</span>
+</pre></div>
+</div>
+<p>To use a different market data source, first write a specific
+<code class="docutils literal notranslate"><span class="pre">MarketData</span></code> class in <code class="docutils literal notranslate"><span class="pre">market_data.py</span></code></p>
+<p>To run the server locally using the underlying Flask Server, run the
+following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dashapp</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>If you wanted to use <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code> to run the server, you would just run
+<code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">dashapp:server</span></code> from the command line.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Hosted documentation is coming soon. Below is a high level overview of
+the project:</p>
+<div class="section" id="object-model">
+<h3>Object Model<a class="headerlink" href="#object-model" title="Permalink to this headline">¶</a></h3>
+<p>The framework seeks to address a solution to the data pipeline, since
+the scale is manageable within memory at the moment, that pipeline
+includes:</p>
+<ul class="simple">
+<li><p>Gathering required data from source systems, i.e. market data,
+portfolio data, security data</p></li>
+<li><p>Managing that data, potentially storing as scale increases</p></li>
+<li><p>Manipulating to create new data</p></li>
+<li><p>Returning or storing results</p></li>
+</ul>
+<p>To handle that pipeline, the current model is:</p>
+<ul class="simple">
+<li><p>Portfolio</p>
+<ul>
+<li><p>Security</p></li>
+</ul>
+</li>
+<li><p>SimulationGenerator</p></li>
+<li><p>MarketData</p></li>
+<li><p>FundamentalData (Not implemented)</p></li>
+</ul>
+<p>MarketData objects should be the source of the data for a particular
+Security (or underlier if a derivative security), attributes: - Prices -
+Source engine (where the data comes from) - Common metrics (first
+integrated series ‘daily price change’, shape, dispersion)</p>
+<p>SimulationGenerator objects should dictate how any simulation should be
+conducted, attributes: - Transformation methods - Number of observations
+- Lookback period, if necessary</p>
+<p>Security objects could be any asset, those assets have: - Identification
+data: Ticker, CUSIP, Exchange - Security specific data: expiry,
+valuation functions - Market data: Closing prices, YTM - Risk Attributes</p>
+<p>The Portfolio object as a collection of Security objects and potentially
+other Portfolio objects, since we could have different hierarchal
+structures within the book - This then should house the VCV and common
+historic market data</p>
+</div>
+<div class="section" id="file-structure">
+<h3>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">app</span><span class="o">.</span><span class="n">py</span>
+<span class="o">-</span><span class="n">dashapp</span><span class="o">.</span><span class="n">py</span>
+<span class="o">-</span><span class="n">pages</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">portfolio_metrics</span><span class="o">.</span><span class="n">py</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">single_ticker</span><span class="o">.</span><span class="n">py</span>
+<span class="o">-</span><span class="n">objects</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">securities</span><span class="o">.</span><span class="n">py</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">simgen</span><span class="o">.</span><span class="n">py</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">market_data</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="current-app-features">
+<h3>Current App Features<a class="headerlink" href="#current-app-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Query an individual stock</p>
+<ul>
+<li><p>See the past 5 YR candlestick chart</p></li>
+<li><p>See a Monte Carlo simulated vs Historic price distribution</p></li>
+<li><p>View distribution stats</p>
+<ul>
+<li><p>Value at Risk for individual stock</p></li>
+<li><p>Annualized vol</p></li>
+<li><p>Annualized Expected Return</p></li>
+<li><p>Simply Weighted/ Exponentially Weighted</p></li>
+</ul>
+</li>
+<li><p>Variable lookback period</p></li>
+<li><p>Variable sample size</p></li>
+</ul>
+</li>
+<li><p>User upload stock portfolio</p>
+<ul>
+<li><p>Mark at current price</p></li>
+<li><p>Calculate portfolio weights</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="future-app-package-features">
+<h3>Future App/Package Features<a class="headerlink" href="#future-app-package-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Expected Return / Variance / Distribution</p></li>
+<li><p>Beta to selected market</p>
+<ul>
+<li><p>S&amp;P 500</p></li>
+<li><p>Russel 5000</p></li>
+<li><p>Selected ETF</p></li>
+</ul>
+</li>
+<li><p>User selection of MonteCarlo Method</p></li>
+<li><p>Option Pricing for individual stock</p></li>
+<li><p>Forward looking PDF for Portfolio returns</p>
+<ul>
+<li><p>Bayesian modeling</p></li>
+<li><p>ARIMA</p></li>
+</ul>
+</li>
+<li><p>Backtesting tool - common trading strategies</p>
+<ul>
+<li><p>“Buy and Hold”</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This project is licensed under the the MIT License - see the LICENSE.md
+file for details</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Documentation for risk_dash</a></li>
+      <li>Next: <a href="gettingstarted.html" title="next chapter">risk_dash Overview and Getting Started</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alexander van Oene.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/readme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

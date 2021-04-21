@@ -1,18 +1,42 @@
-\select@language {english}
-\contentsline {chapter}{\numberline {1}risk\_dash}{1}{chapter.1}
-\contentsline {section}{\numberline {1.1}Overview}{1}{section.1.1}
-\contentsline {section}{\numberline {1.2}Installation}{1}{section.1.2}
-\contentsline {section}{\numberline {1.3}Getting Started}{2}{section.1.3}
-\contentsline {subsection}{\numberline {1.3.1}Security data, \sphinxstyleliteralintitle {\sphinxupquote {\_Security}} objects, and creating Security Subclasses}{3}{subsection.1.3.1}
-\contentsline {subsection}{\numberline {1.3.2}Portfolio Data and creating a Portfolio}{6}{subsection.1.3.2}
-\contentsline {subsection}{\numberline {1.3.3}Calculating Risk Metrics and Using the Portfolio class}{8}{subsection.1.3.3}
-\contentsline {subsubsection}{Mark the Portfolio}{8}{subsubsection*.4}
-\contentsline {subsubsection}{Parametrically Calculating the Value at Risk}{8}{subsubsection*.5}
-\contentsline {subsection}{\numberline {1.3.4}Simulating the Portfolio}{11}{subsection.1.3.4}
-\contentsline {subsubsection}{Simulating a Unit Resolution Distribution}{13}{subsubsection*.6}
-\contentsline {subsubsection}{Simulating a Path Distribution}{14}{subsubsection*.7}
-\contentsline {subsection}{\numberline {1.3.5}Summary}{15}{subsection.1.3.5}
-\contentsline {chapter}{\numberline {2}risk\_dash.securities}{17}{chapter.2}
-\contentsline {chapter}{\numberline {3}risk\_dash.market\_data}{21}{chapter.3}
-\contentsline {chapter}{\numberline {4}Indices and tables}{23}{chapter.4}
-\contentsline {chapter}{Python Module Index}{25}{section*.35}
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}risk\_dash}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Disclaimer: Due to data issues, only up to March 28th EOD is available from Quandl’s WIKI EOD Stock Prices found in the example application.}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Abstract}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Thesis Steps}{1}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Getting Started \sphinxhyphen {} Locally Running the Dash App}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Documentation}{2}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Object Model}{2}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}File Structure}{3}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Current App Features}{3}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Future App/Package Features}{3}{subsection.1.3.4}%
+\contentsline {section}{\numberline {1.4}License}{4}{section.1.4}%
+\contentsline {chapter}{\numberline {2}risk\_dash Overview and Getting Started}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Overview}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Installation}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Getting Started}{6}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Security data, Security objects, and creating Security Subclasses}{8}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Portfolio Data and creating a Portfolio}{10}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Calculating Risk Metrics and Using the Portfolio class}{12}{subsection.2.3.3}%
+\contentsline {subsubsection}{Marking the Portfolio}{12}{subsubsection*.3}%
+\contentsline {subsubsection}{Parametrically Calculating the Value at Risk}{13}{subsubsection*.4}%
+\contentsline {subsection}{\numberline {2.3.4}Simulating the Portfolio}{16}{subsection.2.3.4}%
+\contentsline {subsubsection}{Simulating a Unit Resolution Distribution}{17}{subsubsection*.5}%
+\contentsline {subsubsection}{Simulating a Path Distribution}{18}{subsubsection*.6}%
+\contentsline {section}{\numberline {2.4}Summary}{19}{section.2.4}%
+\contentsline {chapter}{\numberline {3}risk\_dash Dash application documentation}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Overview}{21}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Getting Started \sphinxhyphen {} Locally Running the Dash App}{21}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Dash applications}{21}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}The risk\_dash Dash object}{23}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Running the application locally}{24}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Application Usage}{24}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Individual Equity Analysis Page \sphinxhyphen {} single\_ticker.py}{24}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Portfolio Metrics \sphinxhyphen {} portfolio\_metrics.py}{25}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Summary}{26}{section.3.4}%
+\contentsline {chapter}{\numberline {4}risk\_dash.securities}{27}{chapter.4}%
+\contentsline {chapter}{\numberline {5}risk\_dash.market\_data}{31}{chapter.5}%
+\contentsline {chapter}{\numberline {6}risk\_dash.simgen}{33}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Software License}{35}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Indices and tables}{37}{chapter.8}%
+\contentsline {chapter}{Python Module Index}{39}{section*.52}%
+\contentsline {chapter}{Index}{41}{section*.53}%

@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>risk_dash.simgen &#8212; risk_dash 0.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="license.html" />
+    <link rel="prev" title="risk_dash.market_data" href="market_data.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-risk_dash.simgen">
+<span id="risk-dash-simgen"></span><span id="simgen"></span><h1>risk_dash.simgen<a class="headerlink" href="#module-risk_dash.simgen" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="risk_dash.simgen._RandomGen">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.simgen.</span></code><code class="sig-name descname"><span class="pre">_RandomGen</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#_RandomGen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen._RandomGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class for a Random Variable Generator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – dict, a collection of necessary arguments to specify the RV distribution. See .NormalDistribution for an example</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="risk_dash.simgen._RandomGen.generate">
+<code class="sig-name descname"><span class="pre">generate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#_RandomGen.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen._RandomGen.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate random values given the RV distribution or other method of generating values</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="risk_dash.simgen._Simulation">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.simgen.</span></code><code class="sig-name descname"><span class="pre">_Simulation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Generator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#risk_dash.simgen._RandomGen" title="risk_dash.simgen._RandomGen"><span class="pre">risk_dash.simgen._RandomGen</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#_Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen._Simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class to create a simulation given a Random Variable Generator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Generator</strong> – _RandomGen, the RV distribution to use for a given simulation. See .NaiveMonteCarlo for an example</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="risk_dash.simgen._Simulation.set_var">
+<code class="sig-name descname"><span class="pre">set_var</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#_Simulation.set_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen._Simulation.set_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to set Value at Risk given a certain percentile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>percentile</strong> – float, default 2.5, represents the Value at Risk, as defined by a certain percentile, for a simulation</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="risk_dash.simgen.NormalDistribution">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.simgen.</span></code><code class="sig-name descname"><span class="pre">NormalDistribution</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#NormalDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen.NormalDistribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _RandomGen object that represents a normal/Gaussian. See [numpy documentation](<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html">https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html</a>) for more detail</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> – float, the mean/center of the distribution</p></li>
+<li><p><strong>scale</strong> – float, the standard deviation of the distribution. Must be non-negative.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="risk_dash.simgen.NormalDistribution.generate">
+<code class="sig-name descname"><span class="pre">generate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#NormalDistribution.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen.NormalDistribution.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to return a numpy.array of parametrically defined normally distributed random values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obs</strong> – int, number of values to be generated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy.array of numpy.float, represents a collection of randomly distributed values</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="risk_dash.simgen.NaiveMonteCarlo">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.simgen.</span></code><code class="sig-name descname"><span class="pre">NaiveMonteCarlo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Generator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#risk_dash.simgen._RandomGen" title="risk_dash.simgen._RandomGen"><span class="pre">risk_dash.simgen._RandomGen</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#NaiveMonteCarlo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen.NaiveMonteCarlo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _Simulation object to create a Naive Monte Carlo simulation of a Random Walk, with each step being i.i.d. given the _RandomGen RV Generator class</p>
+<dl class="py method">
+<dt id="risk_dash.simgen.NaiveMonteCarlo.simulate">
+<code class="sig-name descname"><span class="pre">simulate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods_forward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_simulations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/simgen.html#NaiveMonteCarlo.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.simgen.NaiveMonteCarlo.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to simulate each independent walk in the Monte Carlo simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods_forward</strong> – int, how many steps into the future each random simulated random walk will take</p></li>
+<li><p><strong>number_of_simulations</strong> – int, how many separate independent paths will be simulated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.array of shape (periods_forward, number_of_simulations), each row is an independent simulation, each column is a time period step</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="market_data.html" title="previous chapter">risk_dash.market_data</a></li>
+      <li>Next: <a href="license.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alexander van Oene.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/simulation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

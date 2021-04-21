@@ -3,16 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to risk_dash's documentation!
+Documentation for risk_dash
 =====================================
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
+   readme
    gettingstarted
+   dashapp_documentation
    securities
    market_data
+   simulation
+   license
 
 
 Indices and tables

@@ -1,19 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>risk_dash.securities &#8212; risk_dash 0.0.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -28,13 +26,15 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for risk_dash.securities</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">market_data</span> <span class="k">as</span> <span class="n">md</span>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">market_data</span> <span class="k">as</span> <span class="n">md</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">t</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">t</span>
 
 
 <div class="viewcode-block" id="_Security"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security">[docs]</a><span class="k">class</span> <span class="nc">_Security</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -42,36 +42,60 @@
 <span class="sd">    Template for _Security subclasses</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">market_data</span><span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">_MarketData</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">market_data</span><span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">_MarketData</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span>
 
-    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
-        <span class="k">pass</span>
+<div class="viewcode-block" id="_Security.valuation"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security.valuation">[docs]</a>    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to return the value of _Security at a given price</span>
 
-    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
-        <span class="k">pass</span>
+<span class="sd">        :param price: float, the price to value the _Security</span>
 
-    <span class="k">def</span> <span class="nf">get_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">)</span>
+<span class="sd">        :return: float, the value of the _Security given price</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="_Security.mark_to_market"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security.mark_to_market">[docs]</a>    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to value current _Security with current prices, marking the value to current prices</span>
+
+<span class="sd">        :param current_price: float, represents the current price for the _Security</span>
+
+<span class="sd">        :return: float, the value of the _Security at current market price</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="_Security.get_marketdata"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security.get_marketdata">[docs]</a>    <span class="k">def</span> <span class="nf">get_marketdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to return market_data attribute</span>
+
+<span class="sd">        :return: self.market_data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="_Security.simulate"><a class="viewcode-back" href="../../securities.html#risk_dash.securities._Security.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to run simulation on a _Security based level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
 <div class="viewcode-block" id="Equity"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity">[docs]</a><span class="k">class</span> <span class="nc">Equity</span><span class="p">(</span><span class="n">_Security</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Equity class represents an equity position in a publically traded company </span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">market_data</span> <span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">,</span> <span class="n">ordered_price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">date_ordered</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param ticker:</span>
+<span class="sd">    :param market_data:</span>
+<span class="sd">    :param ordered_price:</span>
+<span class="sd">    :param quantity:</span>
+<span class="sd">    :param date_ordered:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="sd">        :param ticker:</span>
-<span class="sd">        :param market_data:</span>
-<span class="sd">        :param ordered_price:</span>
-<span class="sd">        :param quantity:</span>
-<span class="sd">        :param date_ordered:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">,</span> <span class="n">market_data</span> <span class="p">:</span> <span class="n">md</span><span class="o">.</span><span class="n">QuandlStockData</span><span class="p">,</span> <span class="n">ordered_price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">date_ordered</span><span class="p">):</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ticker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_data</span> <span class="o">=</span> <span class="n">market_data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span> <span class="o">=</span> <span class="n">ordered_price</span>
@@ -80,25 +104,45 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">date_ordered</span> <span class="o">=</span> <span class="n">date_ordered</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;Equity&#39;</span>
 
-    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<div class="viewcode-block" id="Equity.valuation"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity.valuation">[docs]</a>    <span class="k">def</span> <span class="nf">valuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns value of the Equity given price input. Equity value is linear depending on a buy or sell, multiplied by the quantity of the position</span>
 
-    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
+<span class="sd">        :param price: float, represents a given price</span>
+
+<span class="sd">        :return: the value of the Equity at a given price</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_price</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Equity.mark_to_market"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity.mark_to_market">[docs]</a>    <span class="k">def</span> <span class="nf">mark_to_market</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_price</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current value of the Equity given current price</span>
+
+<span class="sd">        :param current_price: float, represents the current price of the Equity Security</span>
+
+<span class="sd">        :return: the value of the Equity at current market prices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">market_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span> <span class="o">*</span> <span class="n">current_price</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">marked_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valuation</span><span class="p">(</span><span class="n">current_price</span><span class="p">)</span>
-        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marked_change</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marked_change</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Equity.simulate"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Equity.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to run simulation at the Equity based level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">all_sims</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulation_mean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulation_std</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulated_distribution</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulated_distribution</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span></div></div>
 
 <span class="k">class</span> <span class="nc">Trade</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">securities</span> <span class="o">=</span> <span class="n">securities</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trade_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -121,22 +165,28 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Portfolio class handles interactions with the portfolio data and the associated securities in the portfolio.</span>
 
-<span class="sd">    :param securities:</span>
-<span class="sd">    :param data_input:</span>
-<span class="sd">    :param apikey:</span>
+<span class="sd">    :param securities: list of _Security objects or None, if None, the object will try to create the port attribute using other data, if a list it will use the list of _Security objects</span>
+<span class="sd">    :param data_input: pandas.DataFrame, str, or None. If None and securities is None, no port attribute will be made and be an empty portfolio. Either pandas DataFrame or string path to a portfolio matching &#39;./portfolio_example.csv&#39;</span>
+<span class="sd">    :param apikey: str, ApiKey for the market data object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">securities</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">securities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">securities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">securities</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_security</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">data_input</span> <span class="ow">and</span> <span class="n">apikey</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">data_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">apikey</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">construct_portfolio_csv</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="n">apikey</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">add_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Portfolio.add_security"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.add_security">[docs]</a>    <span class="k">def</span> <span class="nf">add_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to add _Security object to port attribute</span>
+
+<span class="sd">        :param security: _Security, _Security object to add to port dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">security</span>
@@ -144,18 +194,25 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Security type and name already in portfolio&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">security</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">[</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">security</span></div>
 
-    <span class="k">def</span> <span class="nf">remove_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Portfolio.remove_security"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.remove_security">[docs]</a>    <span class="k">def</span> <span class="nf">remove_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">security_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to remove _Security object from port attribute, either pass the object or name type string pair to remove from port dictionary</span>
+
+<span class="sd">        :param security: _Security, _Security object to remove</span>
+<span class="sd">        :param security_name: str, Name of the security for .port key, to match _Security.name</span>
+<span class="sd">        :param security_type: str, String to match _Security.type of the _Security object to be removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">security</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">security</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">security</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">security_name</span> <span class="ow">and</span> <span class="n">security_type</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">security_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">security_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">security_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">security_type</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Must pass in either security or name and type&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Security not in portfolio&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Security not in portfolio&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Portfolio.value"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -478,17 +535,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="p">{</span><span class="n">asset</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">asset</span><span class="o">.</span><span class="n">type</span> <span class="p">:</span> <span class="n">asset</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">assets</span><span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span></div>
 
-    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
+<div class="viewcode-block" id="Portfolio.simulate"><a class="viewcode-back" href="../../securities.html#risk_dash.securities.Portfolio.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SimulationGenerator</span><span class="p">,</span> <span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Primary function to simulate the entire portfolio</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">all_sims</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">periods_forward</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulation_mean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulation_std</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulated_distribution</span> <span class="o">=</span> <span class="n">SimulationGenerator</span><span class="o">.</span><span class="n">simulated_distribution</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_std</span></div></div>
 
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -502,17 +564,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -521,8 +581,8 @@
       &copy;2018, Alexander van Oene.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

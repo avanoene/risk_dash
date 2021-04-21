@@ -1,22 +1,24 @@
 
-# risk_dash
+# risk_dash Overview and Getting Started
 
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-    - [Security data, _Security objects, and creating Security Subclasses](#security-data-security-objects-and-creating-security-subclasses)
+- [risk_dash Overview and Getting Started](#risk_dash-overview-and-getting-started)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Getting Started](#getting-started)
+    - [Security data, Security objects, and creating Security Subclasses](#security-data-security-objects-and-creating-security-subclasses)
     - [Portfolio Data and creating a Portfolio](#portfolio-data-and-creating-a-portfolio)
-    - [Calculating Risk Metrics and Using the Portfolio Class](#calculating-risk-metrics-and-using-the-portfolio-class)
-        - [Mark the Portfolio](#mark-the-portfolio)
-        - [Parametrically Calculating the Value at Risk](#parametrically-calculating-the-value-at-risk)
+    - [Calculating Risk Metrics and Using the Portfolio class](#calculating-risk-metrics-and-using-the-portfolio-class)
+      - [Marking the Portfolio](#marking-the-portfolio)
+      - [Parametrically Calculating the Value at Risk](#parametrically-calculating-the-value-at-risk)
     - [Simulating the Portfolio](#simulating-the-portfolio)
-        - [Simulating a Unit Resolution Distribution](#simulating-a-unit-resolution-distribution)
-        - [Simulating a Path Distribution](#simulating-a-path-distribution)
-    - [Summary](#summary)
+      - [Simulating a Unit Resolution Distribution](#simulating-a-unit-resolution-distribution)
+      - [Simulating a Path Distribution](#simulating-a-path-distribution)
+  - [Summary](#summary)
 
 
 ## Overview
 
-[risk_dash][1] is a framework to help simplify the data flow for a portfolio of assets and handle market risk metrics at the asset and portfolio level. If you clone the source [repository][1], included is a [Dash][dash] application to be an example of some of the uses for the package. To run the Dash app, documentation is [here](dashdocumentation.html)
+[risk_dash][1] is a framework to help formalize the data flow for a portfolio of assets and handle market risk metrics at the asset and portfolio level. If you clone the source [repository][1], included is a [Dash][dash] application to be an example of some of the uses for the package. To run the Dash app, documentation is [here](dashapp_documentation.rst#risk_dash-dash-application-documentation)
 
 ## Installation
 
@@ -45,7 +47,7 @@ simgen
 
 Now that we have the package installed, let's go through the object workflow to construct a simple long/short equity portfolio.
 
-High level, we need to specify:
+From a high level, we need to specify:
 
 1. Portfolio Data
     - We need to know what's in the portfolio
@@ -68,9 +70,9 @@ C --- D[Market Data Store - risk_dash.market_data._MarketData]
 C --- E[Fundamental Data Store - not implemented]
 ```
 
-To do so, we'll need subclasses for the [_Security][3] and [_MarketData][2] classes to model specific types of securities. Currently supported is the Equity subclass. Once we have the portfolio constructed, we will specify and calculate parameters to simulate or look at historic distributions. We'll then create a subclass of [_Simulation][4] and [_RandomGen][5]
+To do so, we'll need subclasses for the `_Security` and `_MarketData` classes to model specific types of securities. Currently supported is the Equity subclass. Once we have the portfolio constructed, we will specify and calculate parameters to simulate or look at historic distributions. We'll then create a subclass of `_Simulation` and `_RandomGen`.
 
-### Security data, `_Security` objects, and creating Security Subclasses
+### Security data, Security objects, and creating Security Subclasses
 
 The core of the package is in the `_Security` and `Portfolio` objects. `Portfolio` objects are naturally a collection of Securities, however we want to specify the type of securities that are in the portfolio. Since we're focusing on a long/short equity portfolio we want to create an Equity subclass.
 
@@ -103,17 +105,17 @@ class Equity(_Security):
 
 ```
 
-To break down the inputs, we want to keep in mind that the goal of this subclass of the _Security object is to provide an interface to model the Equity data.
+To break down the inputs, we want to keep in mind that the goal of this subclass of the `_Security` object is to provide an interface to model the Equity data.
 
 * ticker is going to be the ticker code for the equity, such as 'AAPL'
-* market_data is going to be a subclass of the _MarketData object
+* market_data is going to be a subclass of the `_MarketData` object
 * ordered_price is going to be the price which the trade occurred
 * quantity for Equity will be the number of shares
 * date_ordered should be the date the order was placed
 
-> Note: Currently the implemented _MarketData subclass is QuandlStockData, which is a wrapper for [this Quandl dataset api](https://www.quandl.com/databases/WIKIP). This data is no longer being updated, for current market prices you must create a _MarketData subclass for your particular market data. Information to construct the subclass is on [Building Custom Classes][2].
+> Note: Currently the implemented `_MarketData` subclass is `QuandlStockData`, which is a wrapper for [this Quandl dataset api](https://www.quandl.com/databases/WIKIP). This data is no longer being updated, for current market prices you must create a _MarketData subclass for your particular market data.
 
-Required Inputs at the _Security level are intentionally limited, for example if we wanted to create a class for Fixed Income securities, we would want more information than this Equity subclass. An example Bond class might look like this:
+Required Inputs at the `_Security` level are intentionally limited, for example if we wanted to create a class for Fixed Income securities, we would want more information than this Equity subclass. An example Bond class might look like this:
 
 ```python
 class Bond(_Security):
@@ -137,9 +139,9 @@ class Bond(_Security):
         self.type = 'Bond'
 ```
 
-Similarly to the Equity subclass, we want identification information, market data, and arguments that will either help in calculating valuation, current returns, or risk measures.
+Similarly to the `Equity` subclass, we want identification information, market data, and arguments that will either help in calculating valuation, current returns, or risk measures.
 
-Returning to the Equity subclass, we now need to write the valuation and mark to market methods:
+Returning to the `Equity` subclass, we now need to write the valuation and mark to market methods:
 
 ```python
 class Equity(_Security):
@@ -154,19 +156,19 @@ class Equity(_Security):
       return(self.marked_change)
 ```
 
-For linear instruments such as equities, valuation of a position is just the price observed minus the price ordered at the size of the position. `valuation` is then used to pass a hypothetical price into the valuation function, in this case (Price - Ordered) * Quantity, where as `mark_to_market` is used to pass the current EOD price and mark the value of the position. This is an important distinction, if we had a nonlinear instrument such as a call option on a company's equity price, the valuation function would then be:
+For linear instruments such as equities, valuation of a position is just the price observed minus the price ordered at the size of the position. The `valuation` method is then used to pass a hypothetical price into the valuation function, in this case (Price - Ordered) * Quantity, where as `mark_to_market` method is used to pass the current EOD price and mark the value of the position. This is an important distinction, if we had a nonlinear instrument such as a call option on a company's equity price, the valuation function would then be:
 
 $$
 Value = min\{0, S_{T} - K\}
 $$
 
-Where $S_{T}$ is the spot price for the equity at expiry and $K$ is the agreed strike price. Valuation also is dependent on time for option data, however if you were to use a binomial tree to evaluate the option, you would want to use this same value function and discount the value a each node back to time=0.
+Where $S_{T}$ is the spot price for the equity at expiry and $K$ is the strike price of the call option contract. Valuation also is dependent on time for option data, however if you were to use a binomial tree to evaluate the option, you would want to use this same value function and discount the value a each node back to time=0.
 
 Our mark to market then would need to make the distinction between this valuation and the current market price for the call option. The mark would then keep track of what the current market value for the option to keep track of actualized returns.
 
-The final piece to creating the Equity subclass is then to add a `get_marketdata()`method. Since we just want a copy of the reference of the `market_data`, we can just inherit the `get_marketdata()` from the _Security class.
+The final piece to creating the Equity subclass is then to add a `get_marketdata()`method. Since we just want a copy of the reference of the `market_data`, we can just inherit the `get_marketdata()` from the `_Security` parent class.
 
-The Equity subclass is already implemented in the package, we can create an instance from `risk_dash.securities`. Let's make an instance that represents an order of 50 shares of AAPL, Apple Inc, at close on March 9th, 2018:
+The `Equity` subclass is already implemented in the package, we can create an instance from `risk_dash.securities`. Let's make an instance that represents an order of 50 shares of AAPL, Apple Inc, at close on March 9th, 2018:
 
 ```python
 >>> from risk_dash.market_data import QuandlStockData
@@ -205,11 +207,11 @@ The Equity subclass is already implemented in the package, we can create an inst
 
 ```
 
-As we can see `aapl_stock` now is a container that we can use to access it's attributes at the Portfolio level.
+As we can see `aapl_stock` now is a container that we can use to access it's attributes at the `Portfolio` level.
 
-> Note: Another important observation is that the Equity subclass will only keep a reference to the underlying QuandlStockData, which will minimize duplication of data. However, at scale, you'd want minimize price calls to your data source, you could then do one call at the Portfolio level then pass a reference to that market_data at the individual level. Then your Equity or other _Security subclasses can share the same _MarketData, you would then just write methods to interact with that data.
+> Note: Another important observation is that the `Equity` subclass will only keep a reference to the underlying `QuandlStockData`, which will minimize duplication of data. However, at scale, you'd want minimize price calls to your data source, you could then do one call at the `Portfolio` level then pass a reference to that market_data at the individual level. Then your `Equity` or other `_Security` subclasses can share the same `_MarketData`, you would then just write methods to interact with that data.
 
-Now that we have a feeling for the _Security class, we now want to build a Portfolio that contains the _Security instances.
+Now that we have a feeling for the `_Security` class, we now want to build a Portfolio that contains the `_Security` instances.
 
 ### Portfolio Data and creating a Portfolio
 
@@ -248,9 +250,9 @@ With a portfolio so small, it is very easily stored in a csv and each security c
  'type': 'Equity'}
 ```
 
-At this moment, the `current_portfolio` instance is only a wrapper for it's port attribute, a dictionary containing the securities in the Portfolio object. Soon we'll use this object to mark the portfolio, create a simulation to estimate value at risk, look at the covariance variance matrix to calculate a parameterized volatility measure, and much more.
+At this moment, the `current_portfolio` instance is only a wrapper for it's `port` attribute, a dictionary containing the securities in the `Portfolio` object. Soon we'll use this object to mark the portfolio, create a simulation to estimate value at risk, look at the covariance variance matrix to calculate a parameterized volatility measure, and much more.
 
-The `Portfolio` class handles interactions with the portfolio data and the associated securities in the portfolio.  If you have a list of securities you can also just pass the list into the Portfolio instance. The following code creates a portfolio of just the AAPL equity that we created earlier:
+The `Portfolio` class handles interactions with the portfolio data and the associated securities in the portfolio.  If you have a list of securities you can also just pass the list into the `Portfolio` instance. The following code creates a portfolio of just the AAPL equity that we created earlier:
 
 ```python
 >>> aapl_portfolio = sec.Portfolio([aapl_stock])
@@ -286,13 +288,13 @@ If we want to add a security to this portfolio, we can call the `add_security` m
 
 ### Calculating Risk Metrics and Using the Portfolio class
 
-Now that we have our `Portfolio` constructed with the securities we have on the book let's use the class to calculate some market risk metrics.
+Now that we have our `Portfolio` constructed with the securities we have on the book, let's use the class to calculate some market risk metrics.
 
-#### Mark the Portfolio
+#### Marking the Portfolio
 
 Let's first mark the current portfolio. Since we want to know the current value of the portfolio, the mark method will calculate the value of the portfolio at the current price for each security. The current price is going to be the last known mark, the price at the closest date to today.
 
-> Note: Since the QuandlStockData source hasn't been updated since 3/27/2018, we would expect the last shared date to be 3/27/2018. However, you should use the last shared date as a flag to see if an asset's _MarketData isn't updating. With certain assets, such as Bonds or illiquid securities, marking daily might not make as much sense, so common shared date doesn't mean as much.
+> Note: Since the `QuandlStockData` source hasn't been updated since 3/27/2018, we would expect the last shared date to be 3/27/2018. However, you should use the last shared date as a flag to see if an asset's `_MarketData` isn't updating. With certain assets, such as Bonds or illiquid securities, marking daily might not make as much sense, so common shared date doesn't mean as much.
 
 ```python
 >>> current_portfolio.mark()
@@ -311,7 +313,7 @@ Let's first mark the current portfolio. Since we want to know the current value 
 
 ```
 
-The `mark` method now creates the `marked_portfolio` dictionary that stores a tuple, (initial_value, market_value), for every security in the portfolio. We also now can calculate a quick holding period return, `holdingreturn = (current_portfolio.initial_value + current_portfolio.market_change)/current_portfolio.initial_value`
+The `mark` method now creates the `marked_portfolio` dictionary that stores a tuple, (initial_value, market_value), for every security in the portfolio. We also now can calculate a quick holding period return:
 
 ```python
 >>> holdingreturn = (current_portfolio.market_change)/current_portfolio.initial_value
@@ -319,13 +321,13 @@ The `mark` method now creates the `marked_portfolio` dictionary that stores a tu
 -0.11053391917483169
 ```
 
-This hypothetical portfolio apparently hasn't performed over the month since inception, it's lost 11%, but let's look at historic returns before we give up on the portfolio. We can call `portfolio.quick_plot` to look at a `matplotlib` generated cumulative return series of the portfolio. If you wanted more control over plotting, you could use the returned `pandas DataFrame. In fact, the current implementation is just using the `pandas DataFrame` method `plot()`:
+This hypothetical portfolio apparently hasn't performed over the month since inception, it's lost 11%, but let's look at historic returns before we give up on the portfolio. We can call `portfolio.quick_plot` to look at a `matplotlib` generated cumulative return series of the portfolio. If you wanted more control over plotting, you could use the returned `pandas DataFrame`. In fact, the current implementation is just using the `pandas DataFrame` method `plot()`:
 
 ```python
 >>> marketdata = current_portfolio.quick_plot()
 ```
 
-![quick_plot() Output](quick_plot_image.png)
+![quick_plot() Output](./quick_plot_image.png)
 
 #### Parametrically Calculating the Value at Risk
 
@@ -351,7 +353,7 @@ We calculated 1.3% daily standard deviation or daily volatility, if the distribu
 >>> plt.axvline(-temp * 1.96, color='r', linestyle='--') #
 ```
 
-![Portfolio Returns](portfolio_returns.png)
+![Portfolio Returns](./portfolio_returns.png)
 
 This distribution looks highly centered around zero, which could signal kurtosis. This seems indicative of equity data, especially for daily returns. Right now, a good place to start thinking about metric parameterization is to assume normality and independence in daily returns. While this assumption might not be very good or might vary between security to security in the portfolio, which we can account for in simulation or purely using historic returns to calculate risk metrics, we can use this distribution assumption to quickly get a Value at Risk metric over a time horizon.
 
@@ -368,7 +370,7 @@ $$
 VaR_{t, T} = \sigma \cdot \sqrt{T-t} \cdot Z^{*}_{p = \alpha}
 $$
 
-We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, a loss over 10 days less than 8.3% should occur 2.5% of the time, on average. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
+We can interpret this Value at Risk as being the lower bound of the 95% confidence interval for the 10 day distribution. For this portfolio, on average, a loss over 10 days less than 8.3% should occur 2.5% of the time. To get the dollar value of the 10 Day Value at Risk, we would just multiply this percent change by the current portfolio market value.
 
 ```python
 >>> dollar_value_at_risk = value_at_risk * (current_portfolio.initial_value + current_portfolio.marked_change)
@@ -386,7 +388,7 @@ Similarly, we could interpret as over the a 10 day period, on average, 2.5% of t
 
 This is calculated by doing a cumulative sum of returns over each horizon time period, then taking the appropriate percentile of the distribution to get a VaR based on historic prices. This is is smaller than the parametric VaR due to the fact that the distribution looks more right skewed as shown below
 
-![Historic 10D VaR](historic_10_return.png)
+![Historic 10D VaR](./historic_10_return.png)
 
 This method is fairly simple, however it is based on the assumption that the previous distribution of outcomes is a good representation of the future distribution.
 
@@ -427,6 +429,7 @@ Var(R_{t}) = E\left(\left(R_{t} - E(R_{t})\right)^{2}\right) + Var(R_{t}) = \fra
 $$
 
 Since each return is assumed independently and identically distributed, the above condenses to:
+
 $$
 Var(R_{t}) = t \cdot Var(R_{t})
 $$
@@ -514,6 +517,6 @@ array([ 0.01630096,  0.02311434,  0.0283451 ,  0.03211978,  0.03607576])
 
 The simulation distribution now is 5000 individual 5 day paths, represented as a `numpy` array of shape (5000,5). The `simulation_mean` and `simulation_std` are then calculated across the column axis, giving us the simulated generation through time. Since this method is fairly naive, essentially the cumulative sum of independent random normals, it makes sense that the `simulation_mean` vector is essentially $E(R_{t}) = t \cdot E(R_{t=1})$ and $S.D.(R_{t}) = \sqrt{t} * S.D.(R_{t=1})$. If we wanted to implement a more standard approach of simulating returns, we could then create a `_Simulation` class that would represent the value function. To simulate the portfolio from the top down approach, we would then just use the portfolio mean and variance to then simulate the portfolio.
 
-### Summary
+## Summary
 
 While this is just the first introduction to the package, there are many expandable directions to go. The aim for the package is to help formalize the development process by providing clear template classes and use cases. The next steps are to write `_Security` classes that match the portfolio that the analyst is trying to model and `_MarketData` classes that match the specific data store for the application.

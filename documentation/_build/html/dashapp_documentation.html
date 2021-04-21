@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>risk_dash Dash application documentation &#8212; risk_dash 0.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="risk_dash.securities" href="securities.html" />
+    <link rel="prev" title="risk_dash Overview and Getting Started" href="gettingstarted.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="risk-dash-dash-application-documentation">
+<span id="dashapp-documentation"></span><h1>risk_dash Dash application documentation<a class="headerlink" href="#risk-dash-dash-application-documentation" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference external" href="#risk_dash-dash-application-documentation">risk_dash Dash application
+documentation</a></p>
+<ul>
+<li><p><a class="reference external" href="#overview">Overview</a></p></li>
+<li><p><a class="reference external" href="#getting-started---locally-running-the-dash-app">Getting Started - Locally Running the Dash
+App</a></p>
+<ul>
+<li><p><a class="reference external" href="#dash-applications">Dash applications</a></p></li>
+<li><p><a class="reference external" href="#the-risk_dash-dash-object">The risk_dash Dash object</a></p></li>
+<li><p><a class="reference external" href="#running-the-application-locally">Running the application
+locally</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#application-usage">Application Usage</a></p>
+<ul>
+<li><p><a class="reference external" href="#individual-equity-analysis-page---single_tickerpy">Individual Equity Analysis Page -
+single_ticker.py</a></p></li>
+<li><p><a class="reference external" href="#portfolio-metrics---portfolio_metricspy">Portfolio Metrics -
+portfolio_metrics.py</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#summary">Summary</a></p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The included <a class="reference external" href="https://dash.plotly.com/">Dash</a> application is purely
+to demonstrate a use case for the <code class="docutils literal notranslate"><span class="pre">risk_dash</span></code> package. There is
+minimal css provided through using
+<a class="reference external" href="https://getbootstrap.com/docs/4.0/getting-started/introduction/">Bootstrap</a>
+and the <a class="reference external" href="https://dash-bootstrap-components.opensource.faculty.ai/">Dash Bootstrap
+Components</a>
+python library. For a complete overview of Dash, please check the
+respective documentation, as this will be very high level and explain
+the basics of how the sample application works.</p>
+</div>
+<div class="section" id="getting-started-locally-running-the-dash-app">
+<h2>Getting Started - Locally Running the Dash App<a class="headerlink" href="#getting-started-locally-running-the-dash-app" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dash-applications">
+<h3>Dash applications<a class="headerlink" href="#dash-applications" title="Permalink to this headline">¶</a></h3>
+<p>To quote the <a class="reference external" href="https://dash.plotly.com/introduction">Dash</a>
+documentation:</p>
+<blockquote>
+<div><p>Dash is a productive Python framework for building web analytic
+applications. Written on top of Flask, Plotly.js, and React.js, Dash
+is ideal for building data visualization apps with highly custom user
+interfaces in pure Python. It’s particularly suited for anyone who
+works with data in Python.</p>
+</div></blockquote>
+<p>Due to it’s lightweight nature and pure python syntax, it’s a great use
+case to show off the functionality of the <code class="docutils literal notranslate"><span class="pre">risk_dash</span></code> framework. Dash
+applications are typically single purpose and leverage <code class="docutils literal notranslate"><span class="pre">plotly.js</span></code> for
+it’s graphic capabilities. This application is structured in a way to
+have multiple pages using JavaScript callback functionality. These pages
+are rendered in the <code class="docutils literal notranslate"><span class="pre">app.layout</span></code> found in <code class="docutils literal notranslate"><span class="pre">dashapp.py</span></code>, then when an
+HTTP request is then made to the <code class="docutils literal notranslate"><span class="pre">Flask</span></code> server, the application’s
+callback structure then updates the HTML Div container on the main index
+page and renders the according webpage. Each HTML and interactive object
+is referenced by it’s <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute, so each callback uses those
+references to pass along data and respond interactively. For this Dash
+application, the main callback function is taking the individually
+described page layouts and displaying them in the main <code class="docutils literal notranslate"><span class="pre">Div</span></code>
+container.</p>
+<p>For example, from <code class="docutils literal notranslate"><span class="pre">dashapp.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;page_content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;pathname&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_layout</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">url</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">url</span> <span class="o">==</span> <span class="s1">&#39;/portfolio&#39;</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">portfolio_metrics</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">url</span> <span class="o">==</span> <span class="s1">&#39;/single&#39;</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">single_ticker</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">url</span> <span class="o">==</span> <span class="s1">&#39;/docs&#39;</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">dcc</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span><span class="n">docs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">dcc</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span><span class="n">readme</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The function takes the URL given as input, then returns the respective
+HTML object to populate the children attribute of the <code class="docutils literal notranslate"><span class="pre">page_content</span></code>
+<code class="docutils literal notranslate"><span class="pre">Div</span></code>-like object in the main <code class="docutils literal notranslate"><span class="pre">app.layout</span></code>. The decorator
+<code class="docutils literal notranslate"><span class="pre">&#64;app.callback</span></code> registers this function with the <code class="docutils literal notranslate"><span class="pre">app</span> <span class="pre">Dash</span></code> object,
+explained <a class="reference external" href="#the-risk_dash-dash-object">below</a>.</p>
+<p>Since one of the objects of the <code class="docutils literal notranslate"><span class="pre">risk_dash</span></code> framework is to create an
+in memory risk valuation engine, this included app has two main pages:</p>
+<ul class="simple">
+<li><p>Individual Equity Analysis <code class="docutils literal notranslate"><span class="pre">single_ticker.py</span></code></p>
+<ul>
+<li><p>Shows how the <code class="docutils literal notranslate"><span class="pre">_Security</span></code> and <code class="docutils literal notranslate"><span class="pre">_MarketData</span></code> can be used to
+value a single security and run a Monte Carlo simulation</p></li>
+</ul>
+</li>
+<li><p>Portfolio Dashboard <code class="docutils literal notranslate"><span class="pre">portfolio_metrics.py</span></code></p>
+<ul>
+<li><p>Shows how the <code class="docutils literal notranslate"><span class="pre">Portfolio</span></code> object can value a collection of
+<code class="docutils literal notranslate"><span class="pre">_Security</span></code> objects</p></li>
+</ul>
+</li>
+</ul>
+<p>As seen above, the URL ending in /portfolio/ returns the
+<code class="docutils literal notranslate"><span class="pre">portfolio_metrics.layout</span></code> member, the /single returns the
+<code class="docutils literal notranslate"><span class="pre">single_ticker.layout</span></code> member, /docs returns an HTML version of the
+getting started documentation, and any other URL returns the README.</p>
+<p>The file structure of the app is as follows with a bit more detail than
+the README.md:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">app</span><span class="o">.</span><span class="n">py</span> <span class="c1"># contains server level configurations</span>
+<span class="o">-</span><span class="n">dashapp</span><span class="o">.</span><span class="n">py</span> <span class="c1"># contains application level routing and main structure</span>
+<span class="o">-</span><span class="n">pages</span> <span class="c1"># the layout rendering and callback functions to create each page</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">portfolio_metrics</span><span class="o">.</span><span class="n">py</span> <span class="c1"># displays a portfolio level risk</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">single_ticker</span><span class="o">.</span><span class="n">py</span> <span class="c1"># displays a single equity position risk</span>
+<span class="o">-</span><span class="n">objects</span> <span class="c1"># risk_dash framework objects</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">securities</span><span class="o">.</span><span class="n">py</span> <span class="c1"># security objects</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">simgen</span><span class="o">.</span><span class="n">py</span> <span class="c1"># simulation objects</span>
+  <span class="o">|</span> <span class="o">--</span> <span class="n">market_data</span><span class="o">.</span><span class="n">py</span> <span class="c1"># market data objects</span>
+</pre></div>
+</div>
+<p>To add a page to the application, the process is simple:</p>
+<ul class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">.py</span></code> file that contains the following:</p>
+<ul>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">dash_html_components.Div</span></code> object to replace the children of
+the <code class="docutils literal notranslate"><span class="pre">app.layout#page_content</span></code> named <code class="docutils literal notranslate"><span class="pre">layout</span></code></p></li>
+<li><p>The respective callback functions to populate the content of the
+<code class="docutils literal notranslate"><span class="pre">dash_html_components.Div</span></code> and register them with the
+<code class="docutils literal notranslate"><span class="pre">app.app</span></code> object</p></li>
+</ul>
+</li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">dashapp.py</span></code> file, register the desired URL in the
+<code class="docutils literal notranslate"><span class="pre">get_layout</span></code> function and return the <code class="docutils literal notranslate"><span class="pre">layout</span></code> member of the
+created <code class="docutils literal notranslate"><span class="pre">.py</span></code> file</p></li>
+</ul>
+</div>
+<div class="section" id="the-risk-dash-dash-object">
+<h3>The risk_dash Dash object<a class="headerlink" href="#the-risk-dash-dash-object" title="Permalink to this headline">¶</a></h3>
+<p>Referring from the <a class="reference external" href="https://dash.plotly.com/">Dash</a> documentation and
+source code, the Dash object handles all of the rendering of the
+JavaScript and HTML components of our defined application. This object
+is defined in <code class="docutils literal notranslate"><span class="pre">app.py</span></code>, where we define a couple of server level
+configurations. Here are the important definitions below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+
+<span class="n">style_sheets</span> <span class="o">=</span> <span class="p">[</span><span class="n">dbc</span><span class="o">.</span><span class="n">themes</span><span class="o">.</span><span class="n">BOOTSTRAP</span><span class="p">]</span> <span class="c1">#add in the css stylesheets for Bootstrap</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">external_stylesheets</span><span class="o">=</span><span class="n">style_sheets</span><span class="p">,)</span> <span class="c1"># main application initialization</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">server</span> <span class="c1"># exposing the underlying Flask server</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">suppress_callback_exceptions</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># configuration to suppress exceptions relating to the multi-page configuration</span>
+</pre></div>
+</div>
+<p>The defined <code class="docutils literal notranslate"><span class="pre">app</span></code> object is the <code class="docutils literal notranslate"><span class="pre">Dash</span></code> instance that will need to
+register all of the defined callbacks we create. The <code class="docutils literal notranslate"><span class="pre">server</span></code> object
+is the underlying <code class="docutils literal notranslate"><span class="pre">Flask</span></code> server instance that hosts and interacts
+with the incoming HTTP requests. After defining these, we then import
+them to the <code class="docutils literal notranslate"><span class="pre">dashapp.py</span></code> file that will define the main, application
+level, functionality.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># dash dependencies/modules</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span>
+
+<span class="c1"># application level code</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">server</span>
+<span class="kn">from</span> <span class="nn">pages</span> <span class="kn">import</span> <span class="n">single_ticker</span><span class="p">,</span> <span class="n">portfolio_metrics</span>
+<span class="c1"># ...</span>
+
+<span class="c1"># the main application layout, defines the NavBar and the container that will store the rendered HTML from pages</span>
+<span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span>
+<span class="c1"># ...</span>
+<span class="p">)</span>
+
+<span class="c1"># if this is run as a script, then run the server</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running&#39;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When this script is then run with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dashapp.py</span></code> or otherwise,
+all of the namespaces are loaded in, thus the Dash object registers the
+defined callbacks with the associated component inputs and HTML outputs
+and is ready to receive HTTP requests.</p>
+<p>Next, we’ll briefly talk about how to run the server locally, though it
+could be deployed on a remote server and receive HTTP requests over the
+broader internet.</p>
+</div>
+<div class="section" id="running-the-application-locally">
+<h3>Running the application locally<a class="headerlink" href="#running-the-application-locally" title="Permalink to this headline">¶</a></h3>
+<p>To run the server locally using the underlying Flask Server, run the
+following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dashapp</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This runs the file as a script, loads in the necessary namespaces, and
+calls the <code class="docutils literal notranslate"><span class="pre">app.run_server()</span></code> method. Additonally, since the <code class="docutils literal notranslate"><span class="pre">Flask</span></code>
+app isn’t intended to be a production server, in a production
+environment we might want to use <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code> to run the server. We
+would just run <code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">dashapp:server</span></code> from the command line
+instead. Running the server with the <code class="docutils literal notranslate"><span class="pre">Flask</span></code> app locally for testing
+and proof of concept, calling <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dashapp.py</span></code> will run the server
+on the default port/local ip address, <a class="reference external" href="http://127.0.0.1:8050/">http://127.0.0.1:8050/</a>, where you
+can then open the application in a web browser like Chrome.</p>
+</div>
+</div>
+<div class="section" id="application-usage">
+<h2>Application Usage<a class="headerlink" href="#application-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="individual-equity-analysis-page-single-ticker-py">
+<h3>Individual Equity Analysis Page - single_ticker.py<a class="headerlink" href="#individual-equity-analysis-page-single-ticker-py" title="Permalink to this headline">¶</a></h3>
+<p>The intent for this page is to show the functionality of the
+<code class="docutils literal notranslate"><span class="pre">_MarketData</span></code> and <code class="docutils literal notranslate"><span class="pre">Equity</span></code> classes, with a simple data query and
+simulation run. The page is configured to run a Naive Monte Carlo
+simulation with a normal random walk, and a historic price simulation
+for comparison. The user puts in the ticker they want to evaluate, then
+the server calls the following callbacks:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_data</span></code></p>
+<ul>
+<li><p>Creates a MarketData object by calling the Quandl API for a given
+stock ticker from the <code class="docutils literal notranslate"><span class="pre">dash_core_components.Input</span></code> labeled
+‘stock’ and is called when the user hits the button labeled ‘Run’</p></li>
+<li><p>Creates a simulation object from the MarketData and computes a
+simulation and evaluates some metrics to be used later</p></li>
+<li><p>Stores the data in hidden <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> as a json object</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chart</span></code></p>
+<ul>
+<li><p>Takes the queried MarketData, appends the forward steps of the
+configured Monte Carlo simulation and plots it as a time series</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monte_carlo_histogram</span></code></p>
+<ul>
+<li><p>Takes the evaluated simulation data and plots it as a histogram</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">summary_table</span></code></p>
+<ul>
+<li><p>Takes the evaluated metrics and displays them as a HTML table</p></li>
+</ul>
+</li>
+</ul>
+<p>Here is a screenshot of the output from the <code class="docutils literal notranslate"><span class="pre">get_data</span></code> and <code class="docutils literal notranslate"><span class="pre">chart</span></code>
+call backs</p>
+<div class="figure align-default" id="id1">
+<img alt="Time Series plot for AAPL Adjusted Closing Prices" src="_images/aapl_marketdata.png" />
+<p class="caption"><span class="caption-text">Time Series plot for AAPL Adjusted Closing Prices</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Here is a screenshot of the output from the <code class="docutils literal notranslate"><span class="pre">monte_carlo_histogram</span></code>
+and <code class="docutils literal notranslate"><span class="pre">summary_table</span></code> call backs</p>
+<p>Again, the HTML layout is defined by the defined layout object, that
+contains the <code class="docutils literal notranslate"><span class="pre">dash</span></code> components to render the HTML and JavaScript as
+needed. In the future, this could be extended</p>
+</div>
+<div class="section" id="portfolio-metrics-portfolio-metrics-py">
+<h3>Portfolio Metrics - portfolio_metrics.py<a class="headerlink" href="#portfolio-metrics-portfolio-metrics-py" title="Permalink to this headline">¶</a></h3>
+<p>The intent for this page is to show the functionality of the
+<code class="docutils literal notranslate"><span class="pre">Portfolio</span></code> class, which is a collection of <code class="docutils literal notranslate"><span class="pre">Equity</span></code> object
+instances. An extension of this project could be to extend the object
+and run independent and correlated simulations as described in the
+<a class="reference external" href="gettingstarted.rst##parametrically-calculating-the-value-at-risk">getting started
+docs</a>.
+The user uploads a portfolio from a csv file, then the page pulls all
+the required data and evaluates the current value of the portfolio. When
+uploaded, the following callbacks are called:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">output_upload</span></code></p>
+<ul>
+<li><p>When a portfolio csv is uploaded, then a <code class="docutils literal notranslate"><span class="pre">Portfolio</span></code> object is
+created and the underlying market data is queried.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">displayport</span></code></p>
+<ul>
+<li><p>Once the data is queried and stored, some simple metrics are
+calculated and displayed in the HTML table</p></li>
+</ul>
+</li>
+</ul>
+<p>Here is a screenshot of the upload element</p>
+<div class="figure align-default" id="id2">
+<img alt="Portfolio Upload and Template Download" src="_images/portfolio_upload.png" />
+<p class="caption"><span class="caption-text">Portfolio Upload and Template Download</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>Here is the sample portfolio found in ‘./portfolio_example.csv’</p>
+<div class="figure align-default" id="id3">
+<img alt="HTML Table with Theoretical Portfolio Valuation" src="_images/portfolio_valuation.png" />
+<p class="caption"><span class="caption-text">HTML Table with Theoretical Portfolio Valuation</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This lightweight application is not intended to be the only use of the
+<code class="docutils literal notranslate"><span class="pre">risk_dash</span></code> framework, but to show the initial possibilities of using
+an in memory risk engine that is lightweight enough to value simple and
+complex securities.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="gettingstarted.html" title="previous chapter">risk_dash Overview and Getting Started</a></li>
+      <li>Next: <a href="securities.html" title="next chapter">risk_dash.securities</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alexander van Oene.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/dashapp_documentation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

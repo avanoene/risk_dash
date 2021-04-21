@@ -1,8 +1,11 @@
 from base64 import urlsafe_b64encode
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-import dash_table_experiments as dt
+import dash_defer_js_import as dji
+
+import dash_table as dt
 
 from app import app, server
 from pages import single_ticker, portfolio_metrics
@@ -11,96 +14,44 @@ from pages import single_ticker, portfolio_metrics
 with open('./README.md', 'r') as f:
     readme = f.read()
 
-with open('./Documentation.md', 'r') as f:
+with open('./documentation/gettingstarted.md', 'r') as f:
     docs = f.read()
 
-app.css.append_css(
-    {'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
-     'integrity' : 'sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u',
-     'crossOrigin' : 'anonymous'}
-)
 
-app.css.append_css(
-    {
-    'external_url':'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css',
-    'integrity':'sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp',
-    'crossOrigin':'anonymous'
-    }
-)
-
-app.scripts.append_script(
-    {'external_url':"https://code.jquery.com/jquery-3.2.1.slim.min.js",
-     'integrity':"sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN",
-     'crossorigin':"anonymous"
-     }
-)
-
-app.scripts.append_script(
-    {'external_url':"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js",
-     'integrity' : "sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q",
-     'crossorigin':"anonymous"
-     }
-)
-app.scripts.append_script(
-    {'external_url':"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js",
-     'integrity':"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl",
-     'crossorigin':"anonymous"
-    }
-)
-
-app.layout = html.Div(
+app.layout = dbc.Container(
     [
     dcc.Location(id='url', refresh=False),
-    html.Nav(
-        [
-            html.A(
-                'Risk Dash',
-                href='/',
-                className='navbar-brand'
-            ),
-            html.Div(
-                html.Ul(
-                    [
-                        html.Li(
-                            html.A(
-                                'Documentation',
-                                href='/docs',
-                                className='nav-link'
-                            ),
-                            className='nav-item'
-                        ),
-                        html.Li(
-                            html.A(
-                                'Portfolio',
-                                href='/portfolio',
-                                className='nav-link'
-                            ),
-                            className='nav-item'
-                        ),
-                        html.Li(
-                            html.A(
-                                'Individual Security',
-                                href='/single',
-                                className='nav-link'
-                            ),
-                            className='nav-item'
-                        )
-                    ],
-                    className='nav navbar-nav'
+    dbc.NavbarSimple(
+        children=[
+            dbc.NavItem(
+                dbc.NavLink(
+                    'Risk Dash Documentation',
+                    href='/docs',
                 ),
-                className='collapse navbar-collapse',
-                id='navitems'
-            )
-
-
+            ),
+            dbc.NavItem(
+                dbc.NavLink(
+                    'Portfolio Dashboard',
+                    href='/portfolio',
+                ),
+            ),
+            dbc.NavItem(
+                dbc.NavLink(
+                    'Individual Security Dashboard',
+                    href='/single',
+                ),
+            ),
         ],
-        className='navbar navbar-expand-lg navbar-light',
+        brand='Risk Dash',
+        brand_href='/',
+        color='light',
         id='nav'
     ),
-    html.Div(id='page_content', className = 'container'),
-    html.Div(dt.DataTable(rows=[{}]), style={'display' : 'none'}),
-
-]
+    dbc.Container(id='page_content',fluid=True),
+    html.Div(dt.DataTable(data=[{}]), style={'display' : 'none'}),
+    dji.Import(src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_SVG")
+    ],
+    fluid=True
 )
 
 @app.callback(

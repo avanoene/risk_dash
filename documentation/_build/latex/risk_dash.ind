@@ -1,0 +1,119 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter {\sphinxsymbolsname}
+  \item \spxentry{\_MarketData}\spxextra{class in risk\_dash.market\_data}, \hyperpage{31}
+  \item \spxentry{\_RandomGen}\spxextra{class in risk\_dash.simgen}, \hyperpage{33}
+  \item \spxentry{\_Security}\spxextra{class in risk\_dash.securities}, \hyperpage{27}
+  \item \spxentry{\_Simulation}\spxextra{class in risk\_dash.simgen}, \hyperpage{33}
+
+  \indexspace
+  \bigletter A
+  \item \spxentry{add\_security()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{28}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{calculate\_portfolio\_returns()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{28}
+  \item \spxentry{construct\_portfolio\_csv()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{28}
+  \item \spxentry{current\_price()}\spxextra{risk\_dash.market\_data.\_MarketData method}, 
+		\hyperpage{31}
+  \item \spxentry{current\_price()}\spxextra{risk\_dash.market\_data.QuandlStockData method}, 
+		\hyperpage{31}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{drawdown()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{28}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{Equity}\spxextra{class in risk\_dash.securities}, \hyperpage{27}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{gather()}\spxextra{risk\_dash.market\_data.\_MarketData method}, \hyperpage{31}
+  \item \spxentry{gather()}\spxextra{risk\_dash.market\_data.QuandlStockData method}, 
+		\hyperpage{31}
+  \item \spxentry{generate()}\spxextra{risk\_dash.simgen.\_RandomGen method}, \hyperpage{33}
+  \item \spxentry{generate()}\spxextra{risk\_dash.simgen.NormalDistribution method}, \hyperpage{33}
+  \item \spxentry{get\_date()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{28}
+  \item \spxentry{get\_last\_shared\_date()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{28}
+  \item \spxentry{get\_marketdata()}\spxextra{risk\_dash.securities.\_Security method}, 
+		\hyperpage{27}
+  \item \spxentry{get\_port\_variance()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{29}
+  \item \spxentry{get\_portfolio\_marketdata()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{29}
+  \item \spxentry{get\_weights()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{29}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{historic\_var()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{29}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{mark()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{29}
+  \item \spxentry{mark\_to\_market()}\spxextra{risk\_dash.securities.\_Security method}, 
+		\hyperpage{27}
+  \item \spxentry{mark\_to\_market()}\spxextra{risk\_dash.securities.Equity method}, \hyperpage{27}
+  \item \spxentry{module}
+    \subitem \spxentry{risk\_dash.market\_data}, \hyperpage{31}
+    \subitem \spxentry{risk\_dash.securities}, \hyperpage{27}
+    \subitem \spxentry{risk\_dash.simgen}, \hyperpage{33}
+
+  \indexspace
+  \bigletter N
+  \item \spxentry{NaiveMonteCarlo}\spxextra{class in risk\_dash.simgen}, \hyperpage{33}
+  \item \spxentry{NormalDistribution}\spxextra{class in risk\_dash.simgen}, \hyperpage{33}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{Portfolio}\spxextra{class in risk\_dash.securities}, \hyperpage{28}
+
+  \indexspace
+  \bigletter Q
+  \item \spxentry{QuandlStockData}\spxextra{class in risk\_dash.market\_data}, \hyperpage{31}
+  \item \spxentry{quick\_plot()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{29}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{remove\_security()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{30}
+  \item \spxentry{risk\_dash.market\_data}
+    \subitem \spxentry{module}, \hyperpage{31}
+  \item \spxentry{risk\_dash.securities}
+    \subitem \spxentry{module}, \hyperpage{27}
+  \item \spxentry{risk\_dash.simgen}
+    \subitem \spxentry{module}, \hyperpage{33}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{set\_expected()}\spxextra{risk\_dash.market\_data.QuandlStockData method}, 
+		\hyperpage{31}
+  \item \spxentry{set\_port\_variance()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{30}
+  \item \spxentry{set\_portfolio\_marketdata()}\spxextra{risk\_dash.securities.Portfolio method}, 
+		\hyperpage{30}
+  \item \spxentry{set\_price\_changes()}\spxextra{risk\_dash.market\_data.QuandlStockData method}, 
+		\hyperpage{31}
+  \item \spxentry{set\_var()}\spxextra{risk\_dash.simgen.\_Simulation method}, \hyperpage{33}
+  \item \spxentry{set\_volatility()}\spxextra{risk\_dash.market\_data.QuandlStockData method}, 
+		\hyperpage{31}
+  \item \spxentry{set\_weights()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{30}
+  \item \spxentry{simulate()}\spxextra{risk\_dash.securities.\_Security method}, \hyperpage{27}
+  \item \spxentry{simulate()}\spxextra{risk\_dash.securities.Equity method}, \hyperpage{27}
+  \item \spxentry{simulate()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{30}
+  \item \spxentry{simulate()}\spxextra{risk\_dash.simgen.NaiveMonteCarlo method}, \hyperpage{33}
+
+  \indexspace
+  \bigletter V
+  \item \spxentry{valuation()}\spxextra{risk\_dash.securities.\_Security method}, \hyperpage{27}
+  \item \spxentry{valuation()}\spxextra{risk\_dash.securities.Equity method}, \hyperpage{27}
+  \item \spxentry{value()}\spxextra{risk\_dash.securities.Portfolio method}, \hyperpage{30}
+
+\end{sphinxtheindex}

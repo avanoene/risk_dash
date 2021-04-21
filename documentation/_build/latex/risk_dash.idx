@@ -1,29 +1,51 @@
-\indexentry{risk\_dash.securities (module)|hyperpage}{17}
-\indexentry{\_Security (class in risk\_dash.securities)|hyperpage}{17}
-\indexentry{Equity (class in risk\_dash.securities)|hyperpage}{17}
-\indexentry{Portfolio (class in risk\_dash.securities)|hyperpage}{17}
-\indexentry{calculate\_portfolio\_returns() (risk\_dash.securities.Portfolio method)|hyperpage}{17}
-\indexentry{construct\_portfolio\_csv() (risk\_dash.securities.Portfolio method)|hyperpage}{17}
-\indexentry{drawdown() (risk\_dash.securities.Portfolio method)|hyperpage}{17}
-\indexentry{get\_date() (risk\_dash.securities.Portfolio method)|hyperpage}{17}
-\indexentry{get\_last\_shared\_date() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{get\_port\_variance() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{get\_portfolio\_marketdata() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{get\_weights() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{historic\_var() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{mark() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{quick\_plot() (risk\_dash.securities.Portfolio method)|hyperpage}{18}
-\indexentry{set\_port\_variance() (risk\_dash.securities.Portfolio method)|hyperpage}{19}
-\indexentry{set\_portfolio\_marketdata() (risk\_dash.securities.Portfolio method)|hyperpage}{19}
-\indexentry{set\_weights() (risk\_dash.securities.Portfolio method)|hyperpage}{19}
-\indexentry{value() (risk\_dash.securities.Portfolio method)|hyperpage}{19}
-\indexentry{risk\_dash.market\_data (module)|hyperpage}{21}
-\indexentry{\_MarketData (class in risk\_dash.market\_data)|hyperpage}{21}
-\indexentry{current\_price() (risk\_dash.market\_data.\_MarketData method)|hyperpage}{21}
-\indexentry{gather() (risk\_dash.market\_data.\_MarketData method)|hyperpage}{21}
-\indexentry{QuandlStockData (class in risk\_dash.market\_data)|hyperpage}{21}
-\indexentry{current\_price() (risk\_dash.market\_data.QuandlStockData method)|hyperpage}{21}
-\indexentry{gather() (risk\_dash.market\_data.QuandlStockData method)|hyperpage}{21}
-\indexentry{set\_expected() (risk\_dash.market\_data.QuandlStockData method)|hyperpage}{21}
-\indexentry{set\_price\_changes() (risk\_dash.market\_data.QuandlStockData method)|hyperpage}{21}
-\indexentry{set\_volatility() (risk\_dash.market\_data.QuandlStockData method)|hyperpage}{21}
+\indexentry{module@\spxentry{module}!risk\_dash.securities@\spxentry{risk\_dash.securities}|hyperpage}{27}
+\indexentry{risk\_dash.securities@\spxentry{risk\_dash.securities}!module@\spxentry{module}|hyperpage}{27}
+\indexentry{\_Security (class in risk\_dash.securities)@\spxentry{\_Security}\spxextra{class in risk\_dash.securities}|hyperpage}{27}
+\indexentry{get\_marketdata() (risk\_dash.securities.\_Security method)@\spxentry{get\_marketdata()}\spxextra{risk\_dash.securities.\_Security method}|hyperpage}{27}
+\indexentry{mark\_to\_market() (risk\_dash.securities.\_Security method)@\spxentry{mark\_to\_market()}\spxextra{risk\_dash.securities.\_Security method}|hyperpage}{27}
+\indexentry{simulate() (risk\_dash.securities.\_Security method)@\spxentry{simulate()}\spxextra{risk\_dash.securities.\_Security method}|hyperpage}{27}
+\indexentry{valuation() (risk\_dash.securities.\_Security method)@\spxentry{valuation()}\spxextra{risk\_dash.securities.\_Security method}|hyperpage}{27}
+\indexentry{Equity (class in risk\_dash.securities)@\spxentry{Equity}\spxextra{class in risk\_dash.securities}|hyperpage}{27}
+\indexentry{mark\_to\_market() (risk\_dash.securities.Equity method)@\spxentry{mark\_to\_market()}\spxextra{risk\_dash.securities.Equity method}|hyperpage}{27}
+\indexentry{simulate() (risk\_dash.securities.Equity method)@\spxentry{simulate()}\spxextra{risk\_dash.securities.Equity method}|hyperpage}{27}
+\indexentry{valuation() (risk\_dash.securities.Equity method)@\spxentry{valuation()}\spxextra{risk\_dash.securities.Equity method}|hyperpage}{27}
+\indexentry{Portfolio (class in risk\_dash.securities)@\spxentry{Portfolio}\spxextra{class in risk\_dash.securities}|hyperpage}{28}
+\indexentry{add\_security() (risk\_dash.securities.Portfolio method)@\spxentry{add\_security()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{calculate\_portfolio\_returns() (risk\_dash.securities.Portfolio method)@\spxentry{calculate\_portfolio\_returns()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{construct\_portfolio\_csv() (risk\_dash.securities.Portfolio method)@\spxentry{construct\_portfolio\_csv()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{drawdown() (risk\_dash.securities.Portfolio method)@\spxentry{drawdown()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{get\_date() (risk\_dash.securities.Portfolio method)@\spxentry{get\_date()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{get\_last\_shared\_date() (risk\_dash.securities.Portfolio method)@\spxentry{get\_last\_shared\_date()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{28}
+\indexentry{get\_port\_variance() (risk\_dash.securities.Portfolio method)@\spxentry{get\_port\_variance()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{get\_portfolio\_marketdata() (risk\_dash.securities.Portfolio method)@\spxentry{get\_portfolio\_marketdata()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{get\_weights() (risk\_dash.securities.Portfolio method)@\spxentry{get\_weights()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{historic\_var() (risk\_dash.securities.Portfolio method)@\spxentry{historic\_var()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{mark() (risk\_dash.securities.Portfolio method)@\spxentry{mark()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{quick\_plot() (risk\_dash.securities.Portfolio method)@\spxentry{quick\_plot()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{29}
+\indexentry{remove\_security() (risk\_dash.securities.Portfolio method)@\spxentry{remove\_security()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{set\_port\_variance() (risk\_dash.securities.Portfolio method)@\spxentry{set\_port\_variance()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{set\_portfolio\_marketdata() (risk\_dash.securities.Portfolio method)@\spxentry{set\_portfolio\_marketdata()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{set\_weights() (risk\_dash.securities.Portfolio method)@\spxentry{set\_weights()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{simulate() (risk\_dash.securities.Portfolio method)@\spxentry{simulate()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{value() (risk\_dash.securities.Portfolio method)@\spxentry{value()}\spxextra{risk\_dash.securities.Portfolio method}|hyperpage}{30}
+\indexentry{module@\spxentry{module}!risk\_dash.market\_data@\spxentry{risk\_dash.market\_data}|hyperpage}{31}
+\indexentry{risk\_dash.market\_data@\spxentry{risk\_dash.market\_data}!module@\spxentry{module}|hyperpage}{31}
+\indexentry{\_MarketData (class in risk\_dash.market\_data)@\spxentry{\_MarketData}\spxextra{class in risk\_dash.market\_data}|hyperpage}{31}
+\indexentry{current\_price() (risk\_dash.market\_data.\_MarketData method)@\spxentry{current\_price()}\spxextra{risk\_dash.market\_data.\_MarketData method}|hyperpage}{31}
+\indexentry{gather() (risk\_dash.market\_data.\_MarketData method)@\spxentry{gather()}\spxextra{risk\_dash.market\_data.\_MarketData method}|hyperpage}{31}
+\indexentry{QuandlStockData (class in risk\_dash.market\_data)@\spxentry{QuandlStockData}\spxextra{class in risk\_dash.market\_data}|hyperpage}{31}
+\indexentry{current\_price() (risk\_dash.market\_data.QuandlStockData method)@\spxentry{current\_price()}\spxextra{risk\_dash.market\_data.QuandlStockData method}|hyperpage}{31}
+\indexentry{gather() (risk\_dash.market\_data.QuandlStockData method)@\spxentry{gather()}\spxextra{risk\_dash.market\_data.QuandlStockData method}|hyperpage}{31}
+\indexentry{set\_expected() (risk\_dash.market\_data.QuandlStockData method)@\spxentry{set\_expected()}\spxextra{risk\_dash.market\_data.QuandlStockData method}|hyperpage}{31}
+\indexentry{set\_price\_changes() (risk\_dash.market\_data.QuandlStockData method)@\spxentry{set\_price\_changes()}\spxextra{risk\_dash.market\_data.QuandlStockData method}|hyperpage}{31}
+\indexentry{set\_volatility() (risk\_dash.market\_data.QuandlStockData method)@\spxentry{set\_volatility()}\spxextra{risk\_dash.market\_data.QuandlStockData method}|hyperpage}{31}
+\indexentry{module@\spxentry{module}!risk\_dash.simgen@\spxentry{risk\_dash.simgen}|hyperpage}{33}
+\indexentry{risk\_dash.simgen@\spxentry{risk\_dash.simgen}!module@\spxentry{module}|hyperpage}{33}
+\indexentry{\_RandomGen (class in risk\_dash.simgen)@\spxentry{\_RandomGen}\spxextra{class in risk\_dash.simgen}|hyperpage}{33}
+\indexentry{generate() (risk\_dash.simgen.\_RandomGen method)@\spxentry{generate()}\spxextra{risk\_dash.simgen.\_RandomGen method}|hyperpage}{33}
+\indexentry{\_Simulation (class in risk\_dash.simgen)@\spxentry{\_Simulation}\spxextra{class in risk\_dash.simgen}|hyperpage}{33}
+\indexentry{set\_var() (risk\_dash.simgen.\_Simulation method)@\spxentry{set\_var()}\spxextra{risk\_dash.simgen.\_Simulation method}|hyperpage}{33}
+\indexentry{NormalDistribution (class in risk\_dash.simgen)@\spxentry{NormalDistribution}\spxextra{class in risk\_dash.simgen}|hyperpage}{33}
+\indexentry{generate() (risk\_dash.simgen.NormalDistribution method)@\spxentry{generate()}\spxextra{risk\_dash.simgen.NormalDistribution method}|hyperpage}{33}
+\indexentry{NaiveMonteCarlo (class in risk\_dash.simgen)@\spxentry{NaiveMonteCarlo}\spxextra{class in risk\_dash.simgen}|hyperpage}{33}
+\indexentry{simulate() (risk\_dash.simgen.NaiveMonteCarlo method)@\spxentry{simulate()}\spxextra{risk\_dash.simgen.NaiveMonteCarlo method}|hyperpage}{33}

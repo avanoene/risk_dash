@@ -1,21 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>risk_dash.market_data &#8212; risk_dash 0.0.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="risk_dash.simgen" href="simulation.html" />
     <link rel="prev" title="risk_dash.securities" href="securities.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -29,106 +28,101 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-risk_dash.market_data">
 <span id="risk-dash-market-data"></span><span id="market-data"></span><h1>risk_dash.market_data<a class="headerlink" href="#module-risk_dash.market_data" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="risk_dash.market_data._MarketData">
-<em class="property">class </em><code class="descclassname">risk_dash.market_data.</code><code class="descname">_MarketData</code><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.market_data.</span></code><code class="sig-name descname"><span class="pre">_MarketData</span></code><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data._MarketData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Template for _MarketData subclasses</p>
+<dl class="py method">
 <dt id="risk_dash.market_data._MarketData.current_price">
-<code class="descname">current_price</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.current_price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.current_price" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">current_price</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.current_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.current_price" title="Permalink to this definition">¶</a></dt>
 <dd><p>This should return the current market price, the price at the last available time period</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float the market price</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>float the market price</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.market_data._MarketData.gather">
-<code class="descname">gather</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.gather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.gather" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">gather</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#_MarketData.gather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data._MarketData.gather" title="Permalink to this definition">¶</a></dt>
 <dd><p>This should gather data from the source and store it into memory or dictate how to interact with the source</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a pandas DataFrame, market_data or other data type to interact with</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a pandas DataFrame, market_data or other data type to interact with</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="risk_dash.market_data.QuandlStockData">
-<em class="property">class </em><code class="descclassname">risk_dash.market_data.</code><code class="descname">QuandlStockData</code><span class="sig-paren">(</span><em>apikey</em>, <em>ticker</em>, <em>days=80</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">risk_dash.market_data.</span></code><code class="sig-name descname"><span class="pre">QuandlStockData</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">apikey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData" title="Permalink to this definition">¶</a></dt>
+<dd><p>_MarketData class for Quandl’s WIKI/EOD price data base (<a class="reference external" href="https://www.quandl.com/databases/WIKIP">https://www.quandl.com/databases/WIKIP</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>apikey</strong> – string, a valid Quandl apikey</p></li>
+<li><p><strong>ticker</strong> – string, ticker symbol to query</p></li>
+<li><p><strong>days</strong> – int, how many days back to use for rolling metrics</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
 <dt id="risk_dash.market_data.QuandlStockData.current_price">
-<code class="descname">current_price</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.current_price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.current_price" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">current_price</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.current_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.current_price" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the latest available market price</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float, latest available market price</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>float, latest available market price</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.market_data.QuandlStockData.gather">
-<code class="descname">gather</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.gather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.gather" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">gather</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.gather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.gather" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers the data from the Quandl api and returns a pandas DataFrame</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pandas DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.market_data.QuandlStockData.set_expected">
-<code class="descname">set_expected</code><span class="sig-paren">(</span><em>days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_expected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_expected" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_expected</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_expected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_expected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate exponentially and simply weighted rolling averages</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>days</strong> – int, look back days to compute rolling averages</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>days</strong> – int, look back days to compute rolling averages</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.market_data.QuandlStockData.set_price_changes">
-<code class="descname">set_price_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_price_changes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_price_changes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_price_changes</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_price_changes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_price_changes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set daily price changes and logged percent changes</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="risk_dash.market_data.QuandlStockData.set_volatility">
-<code class="descname">set_volatility</code><span class="sig-paren">(</span><em>days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_volatility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_volatility" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_volatility</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/risk_dash/market_data.html#QuandlStockData.set_volatility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#risk_dash.market_data.QuandlStockData.set_volatility" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate exponentially and simply weighted rolling standard deviations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>days</strong> – int, look back days to compute rolling std deviation</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>days</strong> – int, look back days to compute rolling std deviation</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -137,6 +131,7 @@
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -145,21 +140,20 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="securities.html" title="previous chapter">risk_dash.securities</a></li>
+      <li>Next: <a href="simulation.html" title="next chapter">risk_dash.simgen</a></li>
   </ul></li>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -168,8 +162,8 @@
       &copy;2018, Alexander van Oene.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/market_data.rst.txt"
